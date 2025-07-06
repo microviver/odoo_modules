@@ -1,26 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <template id="custom_checkout_fields" inherit_id="website_sale.address" priority="20">
-    <!-- Substitui o campo 'name' por firstname + lastname -->
-    <xpath expr="//input[@name='name']" position="replace">
-      <div class="row">
-        <div class="form-group col-lg-6">
-          <label for="firstname" class="form-label">Nombre</label>
-          <input type="text" name="firstname" class="form-control" required="required"/>
-        </div>
-        <div class="form-group col-lg-6">
-          <label for="lastname" class="form-label">Apellidos</label>
-          <input type="text" name="lastname" class="form-control" required="required"/>
-        </div>
-      </div>
-    </xpath>
+    <template id="custom_checkout_fields" inherit_id="website_sale.address" name="Custom Checkout Fields">
+        <xpath expr="//div[label[@for='name']]" position="replace">
+            <div class="form-group">
+                <label for="firstname" class="col-form-label">Nombre</label>
+                <input type="text" name="firstname" t-att-value="partner.firstname or ''" class="form-control" required="required"/>
+            </div>
+            <div class="form-group">
+                <label for="lastname" class="col-form-label">Apellidos</label>
+                <input type="text" name="lastname" t-att-value="partner.lastname or ''" class="form-control" required="required"/>
+            </div>
+        </xpath>
 
-    <!-- Adiciona campo DNI antes do código postal -->
-    <xpath expr="//input[@name='zip']" position="before">
-      <div class="form-group col-lg-6">
-        <label for="dni" class="form-label">DNI</label>
-        <input type="text" name="dni" class="form-control" required="required"/>
-      </div>
-    </xpath>
-
-  </template>
+        <!-- ✅ Campo DNI -->
+        <xpath expr="//div[label[@for='email']]" position="before">
+            <div class="form-group">
+                <label for="dni" class="col-form-label">DNI</label>
+                <input type="text" name="dni" t-att-value="partner.dni or ''" class="form-control" required="required"/>
+            </div>
+        </xpath>
+    </template>
 </odoo>
