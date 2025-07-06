@@ -1,24 +1,26 @@
 <template id="custom_checkout_fields" inherit_id="website_sale.address">
     <xpath expr="//div[label[@for='name']]" position="before">
-        <!-- First Name -->
+
+        <!-- Firstname -->
         <div class="form-group col-lg-6 col-md-6">
-            <label for="firstname" class="form-label">Nombre</label>
-            <input type="text" id="firstname" name="firstname" class="form-control" required="required"
-                t-att-value="checkout_form.get('firstname')"/>
+            <label class="form-label" for="firstname">Nombre</label>
+            <input type="text" id="firstname" name="firstname" class="form-control"
+                   t-att-value="checkout_form.get('firstname')" required="required"/>
         </div>
 
-        <!-- Last Name -->
+        <!-- Lastname -->
         <div class="form-group col-lg-6 col-md-6">
-            <label for="lastname" class="form-label">Apellidos</label>
-            <input type="text" id="lastname" name="lastname" class="form-control" required="required"
-                t-att-value="checkout_form.get('lastname')"/>
+            <label class="form-label" for="lastname">Apellidos</label>
+            <input type="text" id="lastname" name="lastname" class="form-control"
+                   t-att-value="checkout_form.get('lastname')" required="required"/>
         </div>
 
         <!-- DNI -->
         <div class="form-group col-lg-12 col-md-12">
-            <label for="dni" class="form-label">DNI</label>
-            <input type="text" id="dni" name="dni" class="form-control" required="required"
-                t-att-value="checkout_form.get('dni')"/>
+            <label class="form-label" for="dni">DNI</label>
+            <input type="text" id="dni" name="dni" class="form-control"
+                   t-att-value="checkout_form.get('dni')" required="required"/>
         </div>
+
     </xpath>
 </template>
