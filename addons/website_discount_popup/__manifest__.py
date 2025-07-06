@@ -9,10 +9,10 @@
         "views/discount_popup_template.xml",
     ],
     "assets": {
-        "web.assets_frontend": [
-            "website_discount_popup/static/src/js/popup.js",
-            "website_discount_popup/static/src/css/popup.css",
-        ],
+    "website.assets_frontend": [
+        "website_discount_popup/static/src/js/popup.js",
+        "website_discount_popup/static/src/css/popup.css",
+    ],
     },
     "installable": True,
     "application": False,
