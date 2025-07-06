@@ -6,16 +6,7 @@
     "license": "LGPL-3",
     "depends": ["website"],
     "data": [
-    "views/assets.xml",
-    "views/discount_popup_template.xml",
+        "views/assets.xml",
+        "views/discount_popup_template.xml",
     ],
-    # "assets": {
-#     "website.assets_frontend": [
-#         "website_discount_popup/static/src/js/popup.js",
-#         "website_discount_popup/static/src/css/popup.css",
-#     ],
-# },
-
     "installable": True,
-    "application": False,
-}
