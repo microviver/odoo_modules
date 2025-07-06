@@ -7,6 +7,8 @@
     "depends": ["website"],
     "data": [
         "views/assets.xml",
-        "views/discount_popup_template.xml",
+        "views/discount_popup_template.xml"
     ],
     "installable": True,
+    "application": False
+}
