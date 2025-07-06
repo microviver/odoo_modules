@@ -1,1 +1,17 @@
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_custom_fields" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.firstname.lastname.dni</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <group string="Identidade" col="2">
+                    <field name="firstname"/>
+                    <field name="lastname"/>
+                    <field name="dni"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
