@@ -1,31 +1,27 @@
 <odoo>
-<template id="popup_template" inherit_id="website.layout">
+  <template id="popup_snippet" inherit_id="website.layout">
     <xpath expr="//body" position="inside">
-        <div id="discount-popup" style="display:none; position:fixed; top:20%; left:30%; background:white; padding:2em; border:1px solid #ccc; z-index:9999;">
-            <h3>Receba 5% de desconto!</h3>
-            <input type="email" id="discount_email" placeholder="Digite seu e-mail"/>
-            <button type="button" onclick="submitEmailForDiscount()">Quero meu desconto</button>
-        </div>
-        <script>
-        function submitEmailForDiscount() {
-            var email = document.getElementById("discount_email").value;
-            if (!email) return;
-            fetch('/discount_popup/submit', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({email: email})
-            }).then(resp => resp.json()).then(data => {
-                if(data.success){ document.getElementById("discount-popup").style.display = "none"; }
-            });
-        }
-
-        window.addEventListener('load', function () {
-            if (!sessionStorage.getItem('popup_shown')) {
-                document.getElementById("discount-popup").style.display = "block";
-                sessionStorage.setItem('popup_shown', '1');
-            }
-        });
-        </script>
+      <div id="discountPopup">
+        <h3>Quer um 5% de desconto?</h3>
+        <p>Insira seu email para receber o desconto:</p>
+        <input type="email" id="discountEmail" placeholder="Digite seu email..." />
+        <button onclick="submitEmail()">Enviar</button>
+      </div>
     </xpath>
-</template>
+  </template>
+
+  <script type="text/javascript">
+    function submitEmail() {
+      const email = document.getElementById("discountEmail").value;
+      if (!email) return alert("Digite um email válido!");
+      fetch("/discount/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email }),
+      }).then(() => {
+        document.getElementById("discountPopup").innerHTML = "<p>Obrigado! Desconto aplicado.</p>";
+      });
+    }
+  </script>
 </odoo>
+
