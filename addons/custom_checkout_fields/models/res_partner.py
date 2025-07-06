@@ -3,9 +3,9 @@ from odoo import models, fields, api
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    firstname = fields.Char('Nombre', required=False)
-    lastname = fields.Char('Apellidos', required=False)
-    dni = fields.Char('DNI', required=False)
+    firstname = fields.Char('Nombre')
+    lastname = fields.Char('Apellidos')
+    dni = fields.Char('DNI')
 
     @api.model
     def create(self, vals):
