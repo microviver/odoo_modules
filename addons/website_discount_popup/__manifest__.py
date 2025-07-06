@@ -6,7 +6,8 @@
     "license": "LGPL-3",
     "depends": ["website"],
     "data": [
-        "views/discount_popup_template.xml",
+    "views/assets.xml",
+    "views/discount_popup_template.xml",
     ],
     "assets": {
     "website.assets_frontend": [
