@@ -1,34 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <template id="custom_checkout_fields" inherit_id="website_sale.address" name="Custom Checkout Fields">
+  <template id="custom_checkout_fields" inherit_id="website_sale.address" name="Custom Checkout Fields (FULL OVERRIDE)">
+    <field name="inherit_id" ref="website_sale.address"/>
+    <field name="arch" type="xml">
+      <form>
+        <div class="row">
 
-    <!-- Substituir campo "name" -->
-    <xpath expr="//div[label[@for='name']]" position="replace">
-      <div class="row">
-        <div class="form-group col-lg-6">
-          <label for="firstname">Nombre</label>
-          <input type="text" id="firstname" name="firstname"
-                 t-att-value="partner.firstname or ''"
-                 class="form-control" required="required"/>
+          <div class="form-group col-lg-6">
+            <label for="firstname">Nombre</label>
+            <input type="text"
+                   id="firstname"
+                   name="firstname"
+                   t-att-value="partner.firstname or ''"
+                   class="form-control"
+                   required="required"/>
+          </div>
+
+          <div class="form-group col-lg-6">
+            <label for="lastname">Apellidos</label>
+            <input type="text"
+                   id="lastname"
+                   name="lastname"
+                   t-att-value="partner.lastname or ''"
+                   class="form-control"
+                   required="required"/>
+          </div>
+
+          <div class="form-group col-lg-6">
+            <label for="dni">DNI</label>
+            <input type="text"
+                   id="dni"
+                   name="dni"
+                   t-att-value="partner.dni or ''"
+                   class="form-control"
+                   required="required"/>
+          </div>
+
+          <!-- Mantém outros campos básicos -->
+          <div class="form-group col-lg-6">
+            <label for="email">Email</label>
+            <input type="email"
+                   id="email"
+                   name="email"
+                   t-att-value="partner.email or ''"
+                   class="form-control"
+                   required="required"/>
+          </div>
+
         </div>
-        <div class="form-group col-lg-6">
-          <label for="lastname">Apellidos</label>
-          <input type="text" id="lastname" name="lastname"
-                 t-att-value="partner.lastname or ''"
-                 class="form-control" required="required"/>
-        </div>
-      </div>
-    </xpath>
-
-    <!-- Inserir DNI antes de email -->
-    <xpath expr="//div[label[@for='email']]" position="before">
-      <div class="form-group col-lg-6">
-        <label for="dni">DNI</label>
-        <input type="text" id="dni" name="dni"
-               t-att-value="partner.dni or ''"
-               class="form-control" required="required"/>
-      </div>
-    </xpath>
-
+      </form>
+    </field>
   </template>
 </odoo>
