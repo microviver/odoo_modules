@@ -1,4 +1,3 @@
-console.log("popup.js carregado")
 odoo.define('website_discount_popup.popup', function (require) {
     'use strict';
 
