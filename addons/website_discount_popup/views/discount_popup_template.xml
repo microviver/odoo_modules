@@ -1,27 +1,12 @@
 <odoo>
   <template id="popup_snippet" inherit_id="website.layout">
     <xpath expr="//body" position="inside">
-      <div id="discountPopup">
+      <div id="discountPopup" style="display:none;">
         <h3>Quer um 5% de desconto?</h3>
         <p>Insira seu email para receber o desconto:</p>
         <input type="email" id="discountEmail" placeholder="Digite seu email..." />
-        <button onclick="submitEmail()">Enviar</button>
+        <button id="submitDiscountBtn">Enviar</button>
       </div>
     </xpath>
   </template>
-
-  <script type="text/javascript">
-    function submitEmail() {
-      const email = document.getElementById("discountEmail").value;
-      if (!email) return alert("Digite um email válido!");
-      fetch("/discount/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email }),
-      }).then(() => {
-        document.getElementById("discountPopup").innerHTML = "<p>Obrigado! Desconto aplicado.</p>";
-      });
-    }
-  </script>
 </odoo>
-
