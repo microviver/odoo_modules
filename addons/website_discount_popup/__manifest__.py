@@ -1,5 +1,5 @@
 {
-    "name": "Website Discount Popup",
+    "name": "website_discount_popup",
     "version": "1.0",
     "summary": "Show popup asking email in exchange for 5% discount",
     "author": "Wadiana",
