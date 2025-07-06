@@ -1,7 +1,6 @@
 {
     "name": "Website Discount Popup",
     "version": "1.0",
-    "summary": "Popup for email capture and discount offer",
     "summary": "Show popup asking email in exchange for 5% discount",
     "author": "Wadiana",
     "license": "LGPL-3",
@@ -18,4 +17,3 @@
     "installable": True,
     "application": False,
 }
-
