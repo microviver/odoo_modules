@@ -2,40 +2,31 @@
 <odoo>
   <template id="custom_checkout_fields" inherit_id="website_sale.address" name="Custom Checkout Fields">
 
-    <!-- Substitui campo 'name' por firstname + lastname -->
+    <!-- Substituir campo "name" -->
     <xpath expr="//div[label[@for='name']]" position="replace">
       <div class="row">
         <div class="form-group col-lg-6">
-          <label t-att-for="'firstname'" class="form-label">Nombre</label>
-          <input type="text"
-                 t-att-id="'firstname'"
-                 t-att-name="'firstname'"
+          <label for="firstname">Nombre</label>
+          <input type="text" id="firstname" name="firstname"
                  t-att-value="partner.firstname or ''"
-                 class="form-control"
-                 required="required"/>
+                 class="form-control" required="required"/>
         </div>
         <div class="form-group col-lg-6">
-          <label t-att-for="'lastname'" class="form-label">Apellidos</label>
-          <input type="text"
-                 t-att-id="'lastname'"
-                 t-att-name="'lastname'"
+          <label for="lastname">Apellidos</label>
+          <input type="text" id="lastname" name="lastname"
                  t-att-value="partner.lastname or ''"
-                 class="form-control"
-                 required="required"/>
+                 class="form-control" required="required"/>
         </div>
       </div>
     </xpath>
 
-    <!-- Campo DNI -->
+    <!-- Inserir DNI antes de email -->
     <xpath expr="//div[label[@for='email']]" position="before">
       <div class="form-group col-lg-6">
-        <label t-att-for="'dni'" class="form-label">DNI</label>
-        <input type="text"
-               t-att-id="'dni'"
-               t-att-name="'dni'"
+        <label for="dni">DNI</label>
+        <input type="text" id="dni" name="dni"
                t-att-value="partner.dni or ''"
-               class="form-control"
-               required="required"/>
+               class="form-control" required="required"/>
       </div>
     </xpath>
 
