@@ -1,6 +1,5 @@
 <odoo>
   <template id="custom_checkout_fields" inherit_id="website_sale.address" priority="20">
-
     <!-- Substitui o campo 'name' por firstname + lastname -->
     <xpath expr="//input[@name='name']" position="replace">
       <div class="row">
