@@ -6,6 +6,6 @@
     "data": [
         "views/website_sale_checkout.xml"
     ],
-    "installable": true,
-    "application": false
+    "installable": True,
+    "application": False
 }
