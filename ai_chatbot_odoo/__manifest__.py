@@ -3,7 +3,7 @@
     'version': '1.0',
     'category': 'Tools',
     'summary': 'Chatbot integrado com OpenAI Assistant',
-    'depends': ['base', 'web'],
+    'depends': ['base', 'web', 'website'],
     'data': [
         'views/chatbot_template.xml',
     ],
