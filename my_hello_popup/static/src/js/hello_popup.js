@@ -1,4 +1,6 @@
 /** @odoo-module **/
 
-console.log("Carregando hello_popup.js: pronto para exibir o popup.");
-window.alert("Hello !");
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ hello_popup.js carregado com sucesso.");
+    alert("Hello!");
+});
