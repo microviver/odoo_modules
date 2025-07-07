@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<odoo>
-  <template id="assets" inherit_id="web.assets_frontend" name="Add Discount Assets">
-    <xpath expr="." position="inside">
-      <script type="text/javascript" src="/website_discount_popup/static/src/js/popup.js"/>
-      <link rel="stylesheet" href="/website_discount_popup/static/src/css/popup.css"/>
-    </xpath>
-  </template>
-</odoo>
