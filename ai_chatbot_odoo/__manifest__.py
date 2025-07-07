@@ -7,7 +7,7 @@
     'data': [
         'views/chatbot_template.xml',
     ],
-    'assets': {
+    'assets': { 
         'web.assets_frontend': [
             'ai_chatbot_odoo/static/src/js/chatbot.js',
             'ai_chatbot_odoo/static/src/css/chatbot.css',
