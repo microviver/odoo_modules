@@ -7,9 +7,13 @@
     'depends': ['base', 'web', 'website'],
     "assets": {
         "web.assets_frontend": [
-            "/website_discount_popup/static/src/js/popup.js",
-            "/website_discount_popup/static/src/css/popup.css",
-            ],
+            # Dependência crítica que está a faltar:
+            "web/static/src/js/public/public_widget.js",
+
+            # Agora os teus próprios ficheiros:
+            "website_discount_popup/static/src/js/popup.js",
+            "website_discount_popup/static/src/css/popup.css",
+        ],
     },
     "data": [
         "views/discount_popup_template.xml"
