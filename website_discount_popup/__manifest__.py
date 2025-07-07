@@ -5,8 +5,13 @@
     "author": "Wadiana",
     "license": "LGPL-3",
     'depends': ['base', 'web', 'website'],
+    "assets": {
+        "web.assets_frontend": [
+            "/website_discount_popup/static/src/js/popup.js",
+            "/website_discount_popup/static/src/css/popup.css",
+            ],
+    },
     "data": [
-        "views/assets.xml",
         "views/discount_popup_template.xml"
     ],
     "installable": True,
