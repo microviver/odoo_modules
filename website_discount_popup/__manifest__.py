@@ -4,7 +4,7 @@
     "summary": "Show popup asking email in exchange for 5% discount",
     "author": "Wadiana",
     "license": "LGPL-3",
-    "depends": ["website"],
+    'depends': ['base', 'web', 'website'],
     "data": [
         "views/assets.xml",
         "views/discount_popup_template.xml"
