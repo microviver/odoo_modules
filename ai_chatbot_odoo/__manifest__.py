@@ -7,7 +7,6 @@
     "depends": ["base", "web", "website"],
     "assets": {
     "web.assets_frontend": [
-        "web/static/src/js/public/public_widget.js",
         "web/static/lib/owl/owl.js",
         "web/static/src/core/utils/functions.js",
         "website/static/src/js/website.utils.js",
@@ -15,6 +14,7 @@
         "ai_chatbot_odoo/static/src/css/chatbot.css"
         ]
     },
+    "views/chatbot_template.xml",
     "installable": True,
     "application": False,
     "test_disable": True,

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+  <template id="chatbot_box_template" name="AI Chatbot Box" inherit_id="website.layout">
+    <xpath expr="//body" position="inside">
+      <div id="chatbot-box" class="o_chatbot_box">
+        <div id="chatbot-header">Simbi 🤖</div>
+        <div id="chatbot-messages"></div>
+        <div id="chatbot-typing"><em>piensando...</em></div>
+        <input type="text" id="chatbot-input" placeholder="Escreve algo..." />
+      </div>
+    </xpath>
+  </template>
+</odoo>
+
