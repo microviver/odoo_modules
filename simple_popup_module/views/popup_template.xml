@@ -1,0 +1,11 @@
+<odoo>
+  <template id="SimplePopup" name="Simple Popup">
+    <div class="modal">
+      <div class="modal-content">
+        <h2>Olá, este é um popup!</h2>
+        <button t-on-click="() => console.log('Fechar')">Fechar</button>
+      </div>
+    </div>
+  </template>
+</odoo>
+

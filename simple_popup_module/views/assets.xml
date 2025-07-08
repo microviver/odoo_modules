@@ -1,0 +1,8 @@
+<odoo>
+  <template id="assets_frontend" name="popup assets" inherit_id="web.assets_frontend">
+    <xpath expr="." position="inside">
+      <script type="module" src="/popup_demo/static/src/js/popup.js"/>
+    </xpath>
+  </template>
+</odoo>
+
