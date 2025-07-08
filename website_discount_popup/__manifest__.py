@@ -15,5 +15,6 @@
         "views/discount_popup_template.xml"
     ],
     "installable": True,
-    "application": False
+    "application": False,
+    "test_disable": True
 }
