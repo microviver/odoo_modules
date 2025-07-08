@@ -14,6 +14,7 @@
     "data": [
         "views/chatbot_template.xml"
     ],
+    "views": ["views/chatbot_template.xml"],
     "installable": True,
     "application": False,
     "test_disable": True
