@@ -7,7 +7,8 @@
     'depends': ['base', 'web', 'website'],
     "assets": {
         "web.assets_frontend": [
-            "web/static/src/legacy/js/public/public_widget.js",
+            "web/static/src/js/public/public_widget.js",
+            #"web/static/src/legacy/js/public/public_widget.js",
             "web/static/lib/owl/owl.js",  # OWL core, necessário para componentes OWL
             "web/static/src/core/utils/functions.js",
             "website/static/src/js/website.utils.js",
