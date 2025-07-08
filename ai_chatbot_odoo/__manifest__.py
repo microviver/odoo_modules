@@ -7,8 +7,6 @@
     "depends": ["base", "web", "website"],
     "assets": {
         "web.assets_frontend": [
-            "web/static/lib/owl/owl.js",
-            "web/static/src/core/utils/functions.js",
             "ai_chatbot_odoo/static/src/js/chatbot.js",
             "ai_chatbot_odoo/static/src/css/chatbot.css"
         ]
