@@ -12,6 +12,5 @@
     },
     "data": [],
     "installable": True,
-    "application": False,
-    "test_disable": True
+    "application": False
 }
