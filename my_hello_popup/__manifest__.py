@@ -1,16 +1,21 @@
 {
-    "name": "my_hello_popup",
+    "name": "website_discount_popup",
     "version": "1.0",
-    "summary": "Show hello popup on backend",
+    "summary": "Show popup asking email in exchange for 5% discount",
     "author": "Wadiana",
     "license": "LGPL-3",
-    "depends": ["web"],  # só precisa do 'web' para backend
+    "depends": ["base", "web", "website"],
     "assets": {
-        "web.assets_backend": [
-            "my_hello_popup/static/src/js/hello_popup.js",
-        ]
+        "web.assets_frontend": [
+            "website_discount_popup/static/src/js/hello_popup.js",   # só website
+            "website_discount_popup/static/src/js/popup.js",
+            "website_discount_popup/static/src/css/popup.css",
+        ],
     },
+    "data": [
+        "views/discount_popup_template.xml"
+    ],
     "installable": True,
     "application": False,
-    "test_disable": True
+    "test_disable": True  # se queres evitar testes de core no build
 }
