@@ -1,0 +1,23 @@
+<odoo>
+    <templates id="template" xml:space="preserve">
+        <t t-name="PopupButton" owl="1">
+            <button class="control-button" t-on-click="onClick">
+                <i class="fa fa-bell"/> Popup
+            </button>
+        </t>
+
+        <t t-name="MyPopup" owl="1">
+            <div class="popup">
+                <div class="popup-content">
+                    <h2 t-esc="props.title"/>
+                    <p t-esc="props.body"/>
+                    <input t-model="state.userInput" placeholder="Type something..." />
+                    <div class="footer">
+                        <button t-on-click="cancel">Cancel</button>
+                        <button t-on-click="confirm">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </templates>
+</odoo>
