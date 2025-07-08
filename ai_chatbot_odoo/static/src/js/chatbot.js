@@ -1,9 +1,6 @@
 /** @odoo-module **/
 
-import { loadAssets } from "@web/core/assets";
-
-document.addEventListener("DOMContentLoaded", async function () {
-    // Criar estrutura HTML
+document.addEventListener("DOMContentLoaded", () => {
     const chatbotBox = document.createElement("div");
     chatbotBox.id = "chatbot-box";
     chatbotBox.innerHTML = `
@@ -14,48 +11,45 @@ document.addEventListener("DOMContentLoaded", async function () {
     `;
     document.body.appendChild(chatbotBox);
 
-    const typingIndicator = document.getElementById("chatbot-typing");
-    const inputField = document.getElementById("chatbot-input");
-    const messageContainer = document.getElementById("chatbot-messages");
+    const typing = document.getElementById("chatbot-typing");
+    const input = document.getElementById("chatbot-input");
+    const messages = document.getElementById("chatbot-messages");
 
-    typingIndicator.style.display = "none";
+    typing.style.display = "none";
 
-    inputField.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
-            const question = inputField.value.trim();
-            if (!question) return;
+    input.addEventListener("keypress", (e) => {
+        if (e.key !== "Enter") return;
 
-            // Adicionar pergunta do utilizador
-            const userMsg = document.createElement("div");
-            userMsg.className = "user-msg";
-            userMsg.textContent = question;
-            messageContainer.appendChild(userMsg);
+        const question = input.value.trim();
+        if (!question) return;
 
-            inputField.value = "";
-            typingIndicator.style.display = "block";
+        appendMessage(question, "user-msg");
+        input.value = "";
+        typing.style.display = "block";
 
-            fetch("/ai_chatbot/ask", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ question }),
+        fetch("/ai_chatbot/ask", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ question }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                typing.style.display = "none";
+                const answer = data.answer || `Erro: ${data.error}`;
+                appendMessage(answer, "bot-msg");
             })
-                .then((res) => res.json())
-                .then((data) => {
-                    typingIndicator.style.display = "none";
-                    const botMsg = document.createElement("div");
-                    botMsg.className = "bot-msg";
-                    botMsg.textContent = data.answer || `Erro: ${data.error}`;
-                    messageContainer.appendChild(botMsg);
-                })
-                .catch(() => {
-                    typingIndicator.style.display = "none";
-                    const errorMsg = document.createElement("div");
-                    errorMsg.className = "bot-msg error";
-                    errorMsg.textContent = "Erro de comunicação com o servidor.";
-                    messageContainer.appendChild(errorMsg);
-                });
-        }
+            .catch(() => {
+                typing.style.display = "none";
+                appendMessage("Erro de comunicação com o servidor.", "bot-msg error");
+            });
     });
+
+    function appendMessage(text, className) {
+        const msg = document.createElement("div");
+        msg.className = className;
+        msg.textContent = text;
+        messages.appendChild(msg);
+    }
 });
