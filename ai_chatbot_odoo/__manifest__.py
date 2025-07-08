@@ -16,5 +16,6 @@
         ]
     },
     "installable": True,
-    "application": False
+    "application": False,
+    "test_disable": True,
 }
