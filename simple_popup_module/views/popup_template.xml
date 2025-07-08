@@ -1,5 +1,5 @@
 <odoo>
-  <template id="SimplePopup" name="Simple Popup">
+  <template id="SimplePopup" name="Simple Popup" t-name="popup_demo.SimplePopup">
     <div class="modal">
       <div class="modal-content">
         <h2>Olá, este é um popup!</h2>
