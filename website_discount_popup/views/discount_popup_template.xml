@@ -1,7 +1,7 @@
 <odoo>
-  <template id="popup_snippet" inherit_id="website.layout" priority="20">
+  <template id="popup_snippet_discount" inherit_id="website.layout" name="Popup de Desconto" priority="20">
     <xpath expr="//body" position="inside">
-      <div id="discountPopup" style="display:none;">
+      <div id="discountPopup" style="display: none;">
         <h3>Quer um 5% de desconto?</h3>
         <p>Insira seu email para receber o desconto:</p>
         <input type="email" id="discountEmail" placeholder="Digite seu email..." />
@@ -10,4 +10,3 @@
     </xpath>
   </template>
 </odoo>
-
