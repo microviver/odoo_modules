@@ -1,19 +1,27 @@
 /** @odoo-module **/
 
-import { publicWidget } from "@web/env";
+import publicWidget from 'web.public.widget';
 
 publicWidget.registry.ChatbotToggle = publicWidget.Widget.extend({
     selector: '.activate-chatbot',
+
     events: {
         click: '_onToggleChatbot',
-        'click #chatbot-header': '_onToggleChatbot',
+    },
+
+    start() {
+        const header = document.querySelector('#chatbot-header');
+        if (header) {
+            header.addEventListener('click', this._onToggleChatbot.bind(this));
+        }
+        return this._super(...arguments);
     },
 
     _onToggleChatbot() {
-        const chatbotBox = document.querySelector('#chatbot-box');
-        if (chatbotBox) {
-            const isVisible = chatbotBox.style.display === 'block';
-            chatbotBox.style.display = isVisible ? 'none' : 'block';
+        const box = document.querySelector('#chatbot-box');
+        if (box) {
+            const visible = box.style.display === 'block';
+            box.style.display = visible ? 'none' : 'block';
         }
     }
 });
