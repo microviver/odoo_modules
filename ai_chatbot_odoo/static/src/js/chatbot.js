@@ -1,94 +1,84 @@
-odoo.define('ai_chatbot_odoo.chatbot', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const publicWidget = require('web.public.widget');
+import publicWidget from "@web/legacy/js/public/public_widget";
 
-    publicWidget.registry.chatbotWidget = publicWidget.Widget.extend({
-        selector: '#chatbot-box',
+publicWidget.registry.chatbotWidget = publicWidget.Widget.extend({
+    selector: '#chatbot-box',
 
-        start() {
-            this._setupChatbot();
-            return this._super(...arguments);
-        },
+    start() {
+        this._setupChatbot();
+        return this._super(...arguments);
+    },
 
-        _setupChatbot() {
-            this.typingIndicator = document.getElementById("chatbot-typing");
-            this.inputField = document.getElementById("chatbot-input");
-            this.messageContainer = document.getElementById("chatbot-messages");
+    _setupChatbot() {
+        this.typingIndicator = document.getElementById("chatbot-typing");
+        this.inputField = document.getElementById("chatbot-input");
+        this.messageContainer = document.getElementById("chatbot-messages");
 
-            if (this.typingIndicator) {
-                this.typingIndicator.style.display = "none";
-            }
+        // Esconde inicialmente o box
+        const box = document.getElementById("chatbot-box");
+        if (box) {
+            box.style.display = "none";
+        }
 
-            if (this.inputField) {
-                this.inputField.addEventListener("keypress", (e) => {
-                    if (e.key === "Enter") {
-                        this._handleInput();
-                    }
-                });
-            }
-        },
+        // Ativa manualmente ao clicar no botão
+        const btn = document.querySelector(".activate-chatbot");
+        if (btn) {
+            btn.addEventListener("click", () => {
+                box.style.display = "block";
+                this.inputField.focus();
+            });
+        }
 
-        _handleInput() {
-            const message = this.inputField.value.trim();
-            if (!message) return;
+        if (this.typingIndicator) {
+            this.typingIndicator.style.display = "none";
+        }
 
-            this._appendMessage("user-msg", message);
-            this.inputField.value = '';
-            this.typingIndicator.style.display = "block";
+        if (this.inputField) {
+            this.inputField.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    this._handleInput();
+                }
+            });
+        }
+    },
 
-            this._askChatbot(message);
-        },
+    _handleInput() {
+        const question = this.inputField.value.trim();
+        if (!question) return;
 
-        _appendMessage(type, text) {
-            const div = document.createElement("div");
-            div.className = type;
-            div.innerText = text;
-            this.messageContainer.appendChild(div);
-            this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
-        },
+        this._appendMessage("user", question);
+        this.inputField.value = "";
+        this.typingIndicator.style.display = "block";
 
-        _askChatbot(message) {
-            fetch('/ai_chatbot/ask', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ question: message }),
-            })
-            .then(response => response.json())
-            .then(data => {
+        fetch("/ai_chatbot/ask", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ question }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
                 this.typingIndicator.style.display = "none";
                 if (data.answer) {
-                    this._appendMessage("bot-msg", data.answer);
-                } else if (data.error) {
-                    this._appendMessage("bot-msg error", "Erro: " + data.error);
+                    this._appendMessage("bot", data.answer);
+                } else {
+                    this._appendMessage("bot", "Erro: " + data.error);
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 this.typingIndicator.style.display = "none";
-                this._appendMessage("bot-msg error", "Erro na requisição.");
+                this._appendMessage("bot", "Falha de conexão.");
             });
-        }
-    });
+    },
 
-    // Ativação manual via botão
-    document.addEventListener('DOMContentLoaded', () => {
-        const activateBtn = document.getElementById("activate-chatbot-btn");
-        const chatbotBox = document.getElementById("chatbot-box");
-
-        if (activateBtn && chatbotBox) {
-            activateBtn.addEventListener("click", () => {
-                chatbotBox.style.display = chatbotBox.style.display === "none" ? "block" : "none";
-                if (chatbotBox.style.display === "block") {
-                    publicWidget.registry.chatbotWidget.prototype.start.call({
-                        el: chatbotBox,
-                        $el: $(chatbotBox),
-                        _super: function () {},
-                    });
-                }
-            });
-        }
-    });
+    _appendMessage(from, text) {
+        const message = document.createElement("div");
+        message.className = `chatbot-message ${from}`;
+        message.textContent = text;
+        this.messageContainer.appendChild(message);
+        this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
+    },
 });
 
