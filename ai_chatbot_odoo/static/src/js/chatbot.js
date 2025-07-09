@@ -1,84 +1,32 @@
 /** @odoo-module */
 
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { loadJS } from "@web/core/assets";
+import { jsonrpc } from "@web/core/network/rpc";
 
-publicWidget.registry.chatbotWidget = publicWidget.Widget.extend({
-    selector: '#chatbot-box',
+document.addEventListener("DOMContentLoaded", () => {
+    const box = document.getElementById("chatbot-box");
+    const input = document.getElementById("chatbot-input");
+    const messages = document.getElementById("chatbot-messages");
+    const typing = document.getElementById("chatbot-typing");
 
-    start() {
-        this._setupChatbot();
-        return this._super(...arguments);
-    },
+    if (!box || !input) return;
 
-    _setupChatbot() {
-        this.typingIndicator = document.getElementById("chatbot-typing");
-        this.inputField = document.getElementById("chatbot-input");
-        this.messageContainer = document.getElementById("chatbot-messages");
+    input.addEventListener("keypress", async (event) => {
+        if (event.key === "Enter" && input.value.trim() !== "") {
+            const question = input.value.trim();
+            input.value = "";
+            typing.style.display = "block";
+            messages.innerHTML += `<div class="user-message">${question}</div>`;
 
-        // Esconde inicialmente o box
-        const box = document.getElementById("chatbot-box");
-        if (box) {
-            box.style.display = "none";
+            try {
+                const response = await jsonrpc("/ai_chatbot/ask", { question });
+                messages.innerHTML += `<div class="bot-message">${response.answer || "..."}</div>`;
+            } catch (error) {
+                messages.innerHTML += `<div class="bot-message error">Erro: ${error.message}</div>`;
+            }
+
+            typing.style.display = "none";
         }
-
-        // Ativa manualmente ao clicar no botão
-        const btn = document.querySelector(".activate-chatbot");
-        if (btn) {
-            btn.addEventListener("click", () => {
-                box.style.display = "block";
-                this.inputField.focus();
-            });
-        }
-
-        if (this.typingIndicator) {
-            this.typingIndicator.style.display = "none";
-        }
-
-        if (this.inputField) {
-            this.inputField.addEventListener("keypress", (e) => {
-                if (e.key === "Enter") {
-                    this._handleInput();
-                }
-            });
-        }
-    },
-
-    _handleInput() {
-        const question = this.inputField.value.trim();
-        if (!question) return;
-
-        this._appendMessage("user", question);
-        this.inputField.value = "";
-        this.typingIndicator.style.display = "block";
-
-        fetch("/ai_chatbot/ask", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ question }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                this.typingIndicator.style.display = "none";
-                if (data.answer) {
-                    this._appendMessage("bot", data.answer);
-                } else {
-                    this._appendMessage("bot", "Erro: " + data.error);
-                }
-            })
-            .catch((err) => {
-                this.typingIndicator.style.display = "none";
-                this._appendMessage("bot", "Falha de conexão.");
-            });
-    },
-
-    _appendMessage(from, text) {
-        const message = document.createElement("div");
-        message.className = `chatbot-message ${from}`;
-        message.textContent = text;
-        this.messageContainer.appendChild(message);
-        this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
-    },
+    });
 });
 
