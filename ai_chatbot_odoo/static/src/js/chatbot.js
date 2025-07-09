@@ -2,10 +2,13 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 
-publicWidget.registry.chatbotWidget = publicWidget.Widget.extend({
-    selector: '.activate-chatbot', // Botão que ativa o chatbot
+publicWidget.registry.chatbotController = publicWidget.Widget.extend({
+    selector: 'body',
+
     events: {
-        'click': '_onActivateClick',
+        'click .activate-chatbot': '_onActivateClick',
+        'click #chatbot-header': '_onHeaderClick',
+        'keypress #chatbot-input': '_onKeyPress',
     },
 
     start() {
@@ -13,25 +16,13 @@ publicWidget.registry.chatbotWidget = publicWidget.Widget.extend({
         this.typingIndicator = document.getElementById('chatbot-typing');
         this.inputField = document.getElementById('chatbot-input');
         this.messageContainer = document.getElementById('chatbot-messages');
-        this.chatHeader = document.getElementById('chatbot-header');
+
+        if (this.chatbox) {
+            this.chatbox.style.display = 'none'; // Oculta no início
+        }
 
         if (this.typingIndicator) {
             this.typingIndicator.style.display = "none";
-        }
-
-        if (this.inputField) {
-            this.inputField.addEventListener("keypress", (e) => {
-                if (e.key === "Enter") {
-                    this._handleInput();
-                }
-            });
-        }
-
-        if (this.chatHeader && this.chatbox) {
-            this.chatHeader.style.cursor = "pointer";
-            this.chatHeader.addEventListener("click", () => {
-                this.chatbox.style.display = "none";
-            });
         }
 
         return this._super(...arguments);
@@ -39,7 +30,19 @@ publicWidget.registry.chatbotWidget = publicWidget.Widget.extend({
 
     _onActivateClick() {
         if (this.chatbox) {
-            this.chatbox.style.display = "block";
+            this.chatbox.style.display = 'block';
+        }
+    },
+
+    _onHeaderClick() {
+        if (this.chatbox) {
+            this.chatbox.style.display = 'none';
+        }
+    },
+
+    _onKeyPress(ev) {
+        if (ev.key === "Enter") {
+            this._handleInput();
         }
     },
 
@@ -62,6 +65,7 @@ publicWidget.registry.chatbotWidget = publicWidget.Widget.extend({
 
             const data = await response.json();
             this.typingIndicator.style.display = "none";
+
             if (data.answer) {
                 this._appendMessage("bot", data.answer);
             } else {
