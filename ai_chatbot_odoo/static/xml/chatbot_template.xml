@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ai_chatbot_odoo.ChatbotToggle">
+        <div>
+            <button t-ref="toggleButton" class="btn btn-primary" style="position: fixed; bottom: 30px; right: 30px; z-index: 1001;">
+                Ativar Simbi 🤖
+            </button>
+            <div t-ref="chatbotBox" id="chatbot-box" class="o_chatbot_box" style="display: none;">
+                <div id="chatbot-header">Simbi 🤖</div>
+                <div id="chatbot-messages"></div>
+                <div id="chatbot-typing"><em>piensando...</em></div>
+                <input type="text" id="chatbot-input" placeholder="Escreve algo..."/>
+            </div>
+        </div>
+    </t>
+</templates>
+

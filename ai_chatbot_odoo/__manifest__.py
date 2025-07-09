@@ -7,12 +7,12 @@
     "license": "LGPL-3",
     "depends": ["website"],
     "assets": {
-        "web.assets_frontend": [
-            "ai_chatbot_odoo/static/src/js/chatbot_toggle.js",
-            "ai_chatbot_odoo/static/src/css/chatbot.css",
-            "ai_chatbot_odoo/static/src/js/chatbot.js"
-        ],
-    },
+    "web.assets_frontend": [
+        "ai_chatbot_odoo/static/src/js/chatbot_toggle.js",
+        "ai_chatbot_odoo/static/src/css/chatbot.css",
+        "ai_chatbot_odoo/static/src/xml/chatbot_toggle.xml",
+    	],
+	},
     "data": [
         "views/chatbot_template.xml",
     ],

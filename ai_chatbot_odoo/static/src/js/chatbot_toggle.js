@@ -1,28 +1,37 @@
 /** @odoo-module **/
 
-import publicWidget from 'web.public.widget';
+import { Component, onMounted, useRef } from "@odoo/owl";
+import { mount } from "@odoo/owl";
 
-publicWidget.registry.ChatbotToggle = publicWidget.Widget.extend({
-    selector: '.activate-chatbot',
+class ChatbotToggle extends Component {
+    setup() {
+        this.chatbotBox = useRef("chatbotBox");
+        this.button = useRef("toggleButton");
 
-    events: {
-        click: '_onToggleChatbot',
-    },
+        onMounted(() => {
+            this.button.el.addEventListener("click", this.toggleChat.bind(this));
+        });
+    }
 
-    start() {
-        const header = document.querySelector('#chatbot-header');
-        if (header) {
-            header.addEventListener('click', this._onToggleChatbot.bind(this));
+    toggleChat() {
+        const box = this.chatbotBox.el;
+        if (box.style.display === "none" || !box.style.display) {
+            box.style.display = "block";
+        } else {
+            box.style.display = "none";
         }
-        return this._super(...arguments);
-    },
+    }
+}
 
-    _onToggleChatbot() {
-        const box = document.querySelector('#chatbot-box');
-        if (box) {
-            const visible = box.style.display === 'block';
-            box.style.display = visible ? 'none' : 'block';
-        }
+ChatbotToggle.template = "ai_chatbot_odoo.ChatbotToggle";
+
+export default ChatbotToggle;
+
+// Mount it manually
+document.addEventListener("DOMContentLoaded", () => {
+    const target = document.getElementById("chatbotContainer");
+    if (target) {
+        mount(ChatbotToggle, { target });
     }
 });
 
