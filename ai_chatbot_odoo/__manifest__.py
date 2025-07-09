@@ -10,7 +10,7 @@
     "web.assets_frontend": [
         "ai_chatbot_odoo/static/src/js/chatbot_toggle.js",
         "ai_chatbot_odoo/static/src/css/chatbot.css",
-        "ai_chatbot_odoo/static/src/xml/chatbot_toggle.xml",
+        "ai_chatbot_odoo/static/src/xml/chatbot_template.xml",
     	],
 	},
     "data": [
