@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState, onMounted, xml } from "@odoo/owl";
-import { chatbotTemplate } from "@ai_chatbot_odoo/components/chatbot/chatbot_template";
+import { Component, useState, onMounted } from "@odoo/owl";
 
 export class Chatbot extends Component {
     setup() {
@@ -18,7 +17,7 @@ export class Chatbot extends Component {
 
     async sendMessage() {
         const question = this.state.input.trim();
-        if (!question) return; 
+        if (!question) return;
 
         this.state.messages.push({ sender: "user", text: question });
         this.state.input = "";
@@ -69,5 +68,5 @@ export class Chatbot extends Component {
     }
 }
 
-Chatbot.template = chatbotTemplate;
+Chatbot.template = "ai_chatbot_odoo.components.chatbot.chatbot_template";
 
