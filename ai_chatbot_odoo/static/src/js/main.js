@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import { ChatbotComponent } from "@ai_chatbot_odoo/components/chatbot/chatbot_component";
 import { mount } from "@odoo/owl";
+import { Chatbot } from "@ai_chatbot_odoo/components/chatbot/chatbot_component";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const target = document.querySelector("#chatbot-placeholder") || document.body;
-
-    mount(ChatbotComponent, {
-        target,
-        position: "last",  // Ou "first" / "before" / "after"
-    });
+    const el = document.getElementById("chatbot-mount");
+    if (el) {
+        mount(Chatbot, { target: el });
+    } else {
+        console.warn("chatbot-mount não encontrado.");
+    }
 });
 
