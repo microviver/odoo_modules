@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { Component, useState, onMounted } from "@odoo/owl";
+import { Component, useState, onMounted, xml } from "@odoo/owl";
+import { chatbotTemplate } from "@ai_chatbot_odoo/components/chatbot/chatbot_template";
 
 export class Chatbot extends Component {
     setup() {
@@ -68,5 +69,5 @@ export class Chatbot extends Component {
     }
 }
 
-Chatbot.template = "ai_chatbot.Chatbot";
+Chatbot.template = chatbotTemplate;
 

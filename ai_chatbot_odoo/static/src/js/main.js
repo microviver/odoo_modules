@@ -3,12 +3,12 @@
 import { mount } from "@odoo/owl";
 import { Chatbot } from "@ai_chatbot_odoo/components/chatbot/chatbot_component";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const el = document.getElementById("chatbot-mount");
-    if (el) {
-        mount(Chatbot, { target: el });
+document.addEventListener("DOMContentLoaded", async () => {
+    const mountEl = document.getElementById("chatbot-mount");
+    if (mountEl) {
+        await mount(Chatbot, { target: mountEl });
     } else {
-        console.warn("chatbot-mount não encontrado.");
+        console.warn("Elemento #chatbot-mount não encontrado.");
     }
 });
 
