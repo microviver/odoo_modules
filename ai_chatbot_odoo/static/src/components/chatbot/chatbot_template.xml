@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF‑8"?>
 <templates xml:space="preserve">
-    <t t-name="ai_chatbot.Chatbot" t-component="Chatbot" owl="1">
+    <t t-name="ai_chatbot.Chatbot" owl="1">
       <div class="chatbot-launcher">
         <button class="activate-chatbot" t-on-click="toggleBox">Abrir Chatbot</button>
 
