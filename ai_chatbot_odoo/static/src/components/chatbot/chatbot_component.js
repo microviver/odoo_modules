@@ -18,7 +18,7 @@ export class Chatbot extends Component {
 
     async sendMessage() {
         const question = this.state.input.trim();
-        if (!question) return;
+        if (!question) return; 
 
         this.state.messages.push({ sender: "user", text: question });
         this.state.input = "";
