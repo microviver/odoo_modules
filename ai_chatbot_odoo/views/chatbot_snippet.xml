@@ -1,4 +1,4 @@
-chatbot_snippet.xml<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
   <template id="chatbot_mount_hook" inherit_id="website.layout" name="Chatbot Mount Placeholder">
     <xpath expr="//div[@id='wrap']" position="inside">
