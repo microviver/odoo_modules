@@ -1,4 +1,4 @@
-<t t-name="ai_chatbot.Chatbot" t-component="chatbotTemplate" owl="1">
+<t t-name="ai_chatbot.Chatbot" t-component="Chatbot" owl="1">
   <div class="chatbot-launcher">
     <button class="activate-chatbot" t-on-click="toggleBox">Abrir Chatbot</button>
 
