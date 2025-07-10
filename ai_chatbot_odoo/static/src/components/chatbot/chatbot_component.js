@@ -68,5 +68,5 @@ export class Chatbot extends Component {
     }
 }
 
-Chatbot.template = "ai_chatbot_odoo.components.chatbot.chatbot_template";
+Chatbot.template = "ai_chatbot.Chatbot";
 

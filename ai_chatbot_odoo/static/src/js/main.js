@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { mount } from "@odoo/owl";
-import { Chatbot } from "@ai_chatbot_odoo/components/chatbot/chatbot_component";
+import { Chatbot } from "../components/chatbot/chatbot_component";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mountEl = document.getElementById("chatbot-mount");
@@ -12,4 +12,3 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.warn("Elemento #chatbot-mount não encontrado.");
     }
 });
-
