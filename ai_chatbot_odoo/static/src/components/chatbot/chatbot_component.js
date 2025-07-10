@@ -2,7 +2,7 @@
 
 import { Component, useState, onMounted } from "@odoo/owl";
 
-export class Chatbot extends Component {
+class Chatbot extends Component
     setup() {
         this.state = useState({
             messages: [],
@@ -70,3 +70,7 @@ export class Chatbot extends Component {
 
 Chatbot.template = "ai_chatbot.Chatbot";
 
+// Registra no registry
+registry.category("public_components").add("ai_chatbot.Chatbot", Chatbot);
+
+export { Chatbot };
