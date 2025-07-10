@@ -1,0 +1,25 @@
+<t t-name="ai_chatbot.Chatbot" owl="1">
+  <div class="chatbot-launcher">
+    <button class="activate-chatbot" t-on-click="toggleBox">Abrir Chatbot</button>
+
+    <div id="chatbot-box" class="chatbot-container hidden">
+      <div id="chatbot-header" t-on-click="toggleBox">Chatbot</div>
+
+      <div id="chatbot-messages" class="chatbot-messages">
+        <t t-foreach="state.messages" t-as="msg" t-key="msg">
+          <div t-attf-class="chatbot-#{msg.sender}"><t t-esc="msg.text" /></div>
+        </t>
+      </div>
+
+      <div t-if="state.typing" class="chatbot-typing">Digitando...</div>
+
+      <input
+        id="chatbot-input"
+        t-model="state.input"
+        t-on-keypress="onKeyPress"
+        placeholder="Digite sua pergunta..."
+      />
+    </div>
+  </div>
+</t>
+

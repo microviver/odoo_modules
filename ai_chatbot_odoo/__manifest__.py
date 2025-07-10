@@ -1,21 +1,19 @@
 {
-    "name": "AI Chatbot Odoo",
-    "version": "1.0",
-    "category": "Website",
-    "summary": "Chatbot com OpenAI integrado ao website",
-    "author": "Espírito Digital",
+    "name": "AI Chatbot OWL",
+    "summary": "Chatbot integrado com OpenAI usando OWL",
+    "version": "1.0.0",
+    "author": "wadiana",
     "license": "LGPL-3",
+    "category": "Website",
     "depends": ["website"],
     "assets": {
-    "web.assets_frontend": [
-        "ai_chatbot_odoo/static/src/js/chatbot_toggle.js",
-        "ai_chatbot_odoo/static/src/css/chatbot.css",
-        "ai_chatbot_odoo/static/src/xml/chatbot_template.xml",
-    	],
-	},
-    "data": [
-        "views/chatbot_template.xml",
-    ],
+        "web.assets_frontend": [
+            "ai_chatbot_odoo/static/src/js/main.js",
+            "ai_chatbot_odoo/static/src/components/Chatbot/chatbot_component.js",
+            "ai_chatbot_odoo/static/src/components/Chatbot/chatbot_template.xml",
+            "ai_chatbot_odoo/static/src/css/chatbot.css",
+        ],
+    },
     "installable": True,
     "application": False,
 }
