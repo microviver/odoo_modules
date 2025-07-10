@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { Component, useState, onMounted } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 
-class Chatbot extends Component
+class Chatbot extends Component {
     setup() {
         this.state = useState({
             messages: [],
