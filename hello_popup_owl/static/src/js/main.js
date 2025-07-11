@@ -1,11 +1,13 @@
 /** @odoo-module **/
-
 import { mount } from "@odoo/owl";
-import { Popup } from "@hello_popup_owl/components/popup/popup_component";
+import { Component } from "@odoo/owl";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const mountEl = document.getElementById("popup-mount");
-    if (mountEl) {
-        mount(Popup, { target: mountEl });
-    }
+  const el = document.getElementById("popup-mount");
+  if (el) {
+    const publicComponent = registry
+      .category("public_components")
+      .get("hello_popup_owl.PopupComponent");
+    mount(publicComponent, { target: el });
+  }
 });
