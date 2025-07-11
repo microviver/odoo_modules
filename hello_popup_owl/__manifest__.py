@@ -1,14 +1,15 @@
 {
-    'name': 'Hello Popup OWL',
-    'version': '1.0.0',
-    'depends': ['website'],
-    'assets': {
-        'web.assets_frontend': [
-            'hello_popup_owl/static/src/components/popup/popup_template.xml',
-            'hello_popup_owl/static/src/components/popup/popup_component.js',
-            'hello_popup_owl/static/src/js/main.js',
+    "name": "Hello Popup OWL",
+    "version": "1.0",
+    "category": "Website",
+    "depends": ["website"],
+    "assets": {
+        "web.assets_frontend": [
+            "hello_popup_owl/static/src/components/popup/popup_template.xml",
+            "hello_popup_owl/static/src/main.js",
+            "hello_popup_owl/static/src/components/popup/popup_component.js"
         ],
     },
-    'data': ['views/popup_snippet.xml'],
-    'installable': True,
+    "installable": True,
+    "application": False,
 }

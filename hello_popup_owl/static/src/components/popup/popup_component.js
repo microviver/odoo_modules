@@ -1,16 +1,17 @@
 /** @odoo-module **/
 
 import { Component, useState } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { Dialog } from "@web/core/dialog/dialog";
 
 export class PopupComponent extends Component {
     static template = "hello_popup_owl.PopupComponent";
+    static components = { Dialog };
+
     setup() {
-        this.state = useState({ show: true });
+        this.state = useState({ visible: true });
     }
+
     close() {
-        this.state.show = false;
+        this.state.visible = false;
     }
 }
-
-registry.category("public_components").add("hello_popup_owl.PopupComponent", PopupComponent);
