@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-  <template id="popup_mount_hook" inherit_id="website.layout" name="Popup Mount Placeholder">
-    <xpath expr="//div[@id='wrap']" position="inside">
-      <div id="popup-mount"></div>
-    </xpath>
-  </template>
+    <!-- Montagem do div para o componente OWL -->
+    <template id="popup_mount_hook" inherit_id="website.layout" name="Popup Mount Placeholder">
+        <xpath expr="//main" position="inside">
+            <div id="popup-mount"></div>
+        </xpath>
+    </template>
+
+    <!-- Carregamento de assets OWL -->
+    <template id="popup_assets" inherit_id="website.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="module" src="/hello_popup_owl/static/src/js/main.js"/>
+            <link rel="stylesheet" href="/hello_popup_owl/static/src/css/popup.css"/>
+        </xpath>
+    </template>
 </odoo>
