@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <template id="popup_mount_hook" inherit_id="website.layout" name="Popup Mount Placeholder">
-    <xpath expr="//div[@id='wrapwrap']" position="inside">
-      <div id="popup-mount"/>
+  <template id="popup_mount_hook" name="Popup Mount Hook" inherit_id="website.layout">
+    <xpath expr="//div[@id='wrapwrap']" position="before">
+      <div id="popup-mount"></div>
     </xpath>
   </template>
 </odoo>
