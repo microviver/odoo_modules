@@ -16,7 +16,7 @@
 },
 
     "data": [
-	    "views/chatbot_snippet.xml",
+	    
 	],
     "installable": True,
     "application": False,
