@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<odoo>
-  <template id="chatbot_mount_hook" inherit_id="website.layout" name="Chatbot Mount Placeholder">
-    <xpath expr="//main" position="inside">
-      <div id="chatbot-mount"></div>
+<template id="popup_mount_hook" inherit_id="website.assets_frontend" name="Popup Mount Assets">
+    <xpath expr="." position="inside">
+        <div id="popup-mount"></div>
     </xpath>
-  </template>
-</odoo>
+</template>
+ 
