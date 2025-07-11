@@ -1,6 +1,0 @@
-<template id="popup_mount_hook" inherit_id="website.assets_frontend" name="Popup Mount Assets">
-    <xpath expr="." position="inside">
-        <div id="popup-mount"></div>
-    </xpath>
-</template>
- 
