@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF‑8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-  <t t-name="hello_popup_owl.PopupComponent">
+  <t t-name="hello_popup_owl.PopupComponent" owl="1">
     <div class="modal" t-att-class="state.show ? 'd-block' : 'd-none'" style="position:fixed;top:20%;left:50%;transform:translateX(-50%);background:white;padding:20px;border:1px solid #ccc;z-index:1000;">
       <span>Hello!</span>
       <button t-on-click="close">Close</button>
