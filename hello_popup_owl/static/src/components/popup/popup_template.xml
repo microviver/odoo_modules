@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<odoo>
-    <templates>
-        <t t-name="hello_popup_owl.PopupComponent" owl="1">
-            <t t-if="state.visible">
-                <Dialog title="Hello!">
-                    <div class="modal-body">
-                        <p>Quer um 5% de desconto?</p>
-                        <input type="email" placeholder="Digite seu email..." class="form-control mb-2"/>
-                        <button t-on-click="close" class="btn btn-primary">Enviar</button>
-                    </div>
-                </Dialog>
-            </t>
+<templates xml:space="preserve">
+    <t t-name="hello_popup_owl.PopupComponent">
+        <t t-if="state.visible">
+            <Dialog title="Hello!">
+                <div class="modal-body">
+                    <p>Quer um 5% de desconto?</p>
+                    <input type="email" placeholder="Digite seu email..." class="form-control mb-2"/>
+                    <button t-on-click="close" class="btn btn-primary">Enviar</button>
+                </div>
+            </Dialog>
         </t>
-    </templates>
-</odoo>
+    </t>
+</templates>

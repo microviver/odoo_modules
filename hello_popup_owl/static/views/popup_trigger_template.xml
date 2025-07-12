@@ -1,0 +1,48 @@
+<odoo>
+    <template id="hello_popup_owl_template" inherit_id="website.layout" name="Hello Popup OWL Integration">
+        <xpath expr="//body" position="inside">
+            <script type="module">
+                // Adjust the import path if your module name is different or if it's not directly under the root.
+                // The '@hello_popup_owl' syntax assumes the module is correctly mapped.
+                // If you encounter issues, try the full path: '/hello_popup_owl/static/src/components/popup/popup_component.js'
+                // However, the registry approach is better.
+
+                // To get the component from the registry:
+                import { Component } from "@odoo/owl";
+                import { registry } from "@web/core/registry";
+                import { makeEnv, startService, mount } from "@odoo/owl";
+                import { services } from "@web/core/utils/services";
+
+                // Ensure all necessary services are available
+                async function showMyPopup() {
+                    const owl_services = await startService(services);
+                    const env = makeEnv({ services: owl_services });
+
+                    const dialogService = registry.category("services").get("dialog");
+                    const PopupComponent = registry.category("public_components").get("hello_popup_owl.PopupComponent");
+
+                    if (dialogService && PopupComponent) {
+                        dialogService.add(PopupComponent, {
+                            title: "Oferta Especial!", // Title for the dialog
+                            onClose: () => {
+                                console.log("Popup fechado.");
+                                // Optional: set a flag in sessionStorage so it doesn't show again
+                                sessionStorage.setItem('helloPopupShown', 'true');
+                            },
+                        });
+                    } else {
+                        console.error("Dialog service or PopupComponent not found.");
+                    }
+                }
+
+                // Trigger the popup when the page loads (or based on your logic)
+                // You might want to check if it has been shown before using localStorage/sessionStorage
+                // For example:
+                if (!sessionStorage.getItem('helloPopupShown')) {
+                    showMyPopup();
+                }
+
+            </script>
+        </xpath>
+    </template>
+</odoo>
