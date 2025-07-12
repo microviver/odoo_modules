@@ -5,12 +5,14 @@
     "category": "Website",
     "depends": ["website"],
     "assets": {
-        "web.assets_frontend": [
-            "hello_popup_owl/static/src/components/popup/popup_component.js",
-            "hello_popup_owl/static/src/components/popup/popup_template.xml", # This is a QWeb template
-            "hello_popup_owl/static/src/css/popup.css",
-            "hello_popup_owl/static/src/js/popup_main.js", # <--- ADD THIS LINE
-        ],
-    },
+    "web.assets_frontend": [
+        "hello_popup_owl/static/src/js/main.js",
+        "hello_popup_owl/static/src/js/popup_trigger.js",
+        "hello_popup_owl/static/src/components/popup/popup_component.js",
+        "hello_popup_owl/static/src/components/popup/popup_template.xml",
+        "hello_popup_owl/static/src/css/popup.css"
+    ]
+},
+
     "license": "LGPL-3",
 }

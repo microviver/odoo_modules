@@ -1,0 +1,16 @@
+/** @odoo-module **/
+import { registry } from "@web/core/registry";
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const dialogService = registry.category("services").get("dialog");
+    const PopupComponent = registry.category("public_components").get("hello_popup_owl.PopupComponent");
+
+    if (!sessionStorage.getItem('helloPopupShown') && dialogService && PopupComponent) {
+        dialogService.add(PopupComponent, {
+            title: "Oferta Especial!",
+            onClose: () => {
+                sessionStorage.setItem('helloPopupShown', 'true');
+            },
+        });
+    }
+});
