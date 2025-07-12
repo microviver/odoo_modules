@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { mount } from "@odoo/owl";
-import { PopupComponent } from "./components/popup/popup_component";
+import { PopupComponent } from "../components/popup/popup_component";
+
 
 window.addEventListener("DOMContentLoaded", () => {
     const target = document.getElementById("popup-mount");
@@ -9,3 +10,4 @@ window.addEventListener("DOMContentLoaded", () => {
         mount(PopupComponent, target, {});
     }
 });
+
