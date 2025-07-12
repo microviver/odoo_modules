@@ -2,14 +2,13 @@
     <template id="hello_popup_owl_template" inherit_id="website.layout" name="Hello Popup OWL Integration">
         <xpath expr="//body" position="inside">
             <script type="module">
+                <![CDATA[
                 import { Component } from "@odoo/owl";
                 import { registry } from "@web/core/registry";
-                import { makeEnv, startService, mount } from "@odoo/owl";
+                import { makeEnv, startService } from "@odoo/owl";
                 import { services } from "@web/core/utils/services";
 
                 async function showMyPopup() {
-                    // These lines are crucial for setting up the OWL environment
-                    // when you're running isolated JS code in a template like this.
                     const owl_services = await startService(services);
                     const env = makeEnv({ services: owl_services });
 
@@ -18,7 +17,7 @@
 
                     if (dialogService && PopupComponent) {
                         dialogService.add(PopupComponent, {
-                            title: "Oferta Especial!", // Title for the dialog
+                            title: "Oferta Especial!",
                             onClose: () => {
                                 console.log("Popup fechado.");
                                 sessionStorage.setItem('helloPopupShown', 'true');
@@ -29,10 +28,10 @@
                     }
                 }
 
-                // Trigger the popup when the page loads
                 if (!sessionStorage.getItem('helloPopupShown')) {
                     showMyPopup();
                 }
+                ]]>
             </script>
         </xpath>
     </template>
