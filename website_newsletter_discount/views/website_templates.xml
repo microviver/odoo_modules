@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="newsletter_subscription_homepage" inherit_id="website.homepage" name="Newsletter Subscription on Homepage">
+        <xpath expr="//div[@id='wrap']" position="after">
+            <section>
+                <div>
+                    <h2>Insira o seu email e receba 5% de desconto!</h2>
+                    <div data-snippet="s_newsletter_subscribe" data-list-id="1">
+                        <input type="email" name="email" required="required"/>
+                        <a role="button" href="#" class="btn btn-primary">Subscrever</a>
+                    </div>
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+    <record id="main_mailing_list" model="mailing.list" forcecreate="True">
+        <field name="name">General Newsletter</field>
+    </record>
+</odoo>

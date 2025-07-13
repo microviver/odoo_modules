@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<odoo>
-  <template id="hello_popup_owl_template" inherit_id="website.layout" name="Hello Popup OWL Integration">
-    <xpath expr="//body" position="inside">
-      <script type="module" src="/hello_popup_owl/static/src/js/popup_trigger.js"/>
-    </xpath>
-  </template>
-</odoo>
