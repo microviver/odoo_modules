@@ -1,4 +1,4 @@
-// File: static/src/components/chatbot/chatbot_component.js
+/** static/src/components/chatbot/chatbot_component.js **/
 import { Component, useState, onMounted } from "@odoo/owl";
 
 export class ChatbotComponent extends Component {
@@ -6,31 +6,22 @@ export class ChatbotComponent extends Component {
 
     setup() {
         this.messages = useState([]);
-        this.inputValue = useState("");
-        this.loading = useState(false);
+        this.userInput = useState("");
+    }
 
-        this.sendMessage = async () => {
-            const question = this.inputValue.trim();
-            if (!question) return;
-            this.messages.push({ text: question, type: "user" });
-            this.inputValue = "";
-            this.loading = true;
+    async sendMessage(ev) {
+        ev.preventDefault();
+        if (this.userInput.trim()) {
+            this.messages.push({ from: "user", text: this.userInput });
+            const userMessage = this.userInput;
+            this.userInput = "";
 
-            try {
-                const res = await fetch("/ai_chatbot/ask", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ question }),
-                });
-                const data = await res.json();
-                this.messages.push({
-                    text: data.answer || data.error || "Erro",
-                    type: "bot",
-                });
-            } catch (e) {
-                this.messages.push({ text: "Erro de rede", type: "bot" });
-            }
-            this.loading = false;
-        };
+            // Simula resposta (ou conecta à tua API)
+            this.messages.push({ from: "bot", text: "🤖 Estou a pensar..." });
+
+            setTimeout(() => {
+                this.messages.push({ from: "bot", text: "Resposta automática para: " + userMessage });
+            }, 1000);
+        }
     }
 }

@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-  <t t-name="ai_chatbot_odoo.ChatbotTemplate" owl="1">
+<t t-name="ai_chatbot_odoo.ChatbotTemplate" owl="1">
+  <t t-if="props.visible">
     <div class="chatbot-box">
-      <div class="chatbot-header">Simbi 🤖</div>
+      <div class="chatbot-header">🤖 Microviver Chat</div>
       <div class="chatbot-messages">
-        <t t-foreach="messages" t-as="msg">
-          <div t-att-class="msg.type === 'user' ? 'user-msg' : 'bot-msg'">
+        <t t-foreach="messages" t-as="msg" t-key="msg.text">
+          <div t-attf-class="message #{msg.from}">
             <t t-esc="msg.text"/>
           </div>
         </t>
-        <div t-if="loading" class="chatbot-typing"><em>piensando...</em></div>
       </div>
-      <input type="text" class="chatbot-input"
-             t-model="inputValue"
-             t-on-keydown.enter.prevent="sendMessage"/>
+      <form class="chatbot-input" t-on-submit.prevent="sendMessage">
+        <input type="text" t-model="userInput" placeholder="Escreve a tua mensagem..." />
+        <button type="submit">Enviar</button>
+      </form>
     </div>
   </t>
+</t>
+  
 </templates>
