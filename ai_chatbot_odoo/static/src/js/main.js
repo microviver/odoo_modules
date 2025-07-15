@@ -22,15 +22,38 @@ class ChatbotWrapper extends Component {
     }
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("✅ DOMContentLoaded disparado");
+    const isWebsiteEditor = !!document.body.classList.contains("editor_enable");
+    if (isWebsiteEditor) {
+        console.warn("🛑 Website Builder ativo - chatbot não será montado.");
+        return;
+    }
+
+    console.log("✅ DOM pronto - montando ChatbotWrapper...");
 
     const target = document.createElement("div");
-    target.style.position = "relative";
     target.id = "chatbot-wrapper-root";
-
+    target.style.position = "relative";
     document.body.appendChild(target);
 
-    console.log("📌 Mounting chatbot...");
     mount(ChatbotWrapper, { target });
 });
+
+const style = document.createElement("style");
+style.textContent = `
+    .chatbot-toggle-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 99999;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+    }
+`;
+document.head.appendChild(style);
