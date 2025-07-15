@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const target = document.createElement("div");
     target.id = "chatbot-wrapper-root";
-    target.style.position = "relative";
+    target.style.position = "relative";  
     document.body.appendChild(target);
 
     mount(ChatbotWrapper, { target });
