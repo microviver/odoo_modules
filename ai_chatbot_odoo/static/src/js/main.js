@@ -12,23 +12,25 @@ class ChatbotWrapper extends Component {
     </div>`;
 
     setup() {
+        console.log("✅ ChatbotWrapper.setup");
         this.state = useState({ visible: false });
 
         this.toggle = () => {
+            console.log("🔁 Toggle chamado");
             this.state.visible = !this.state.visible;
         };
     }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("✅ DOMContentLoaded disparado");
+
     const target = document.createElement("div");
-
-    // Isso evita que o website builder tente editar a UI do botão
-    target.dataset.oeContext = "non-editable";
-    target.setAttribute("data-no-drag", "true");
-    target.setAttribute("data-no-highlight", "true");
-
     target.style.position = "relative";
+    target.id = "chatbot-wrapper-root";
+
     document.body.appendChild(target);
+
+    console.log("📌 Mounting chatbot...");
     mount(ChatbotWrapper, { target });
 });
