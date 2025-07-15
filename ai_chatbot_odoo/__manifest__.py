@@ -4,9 +4,6 @@
     'category': 'Tools',
     'summary': 'Chatbot integrado com OpenAI Assistant',
     'depends': ['base', 'web'],
-    'data': [
-        'views/chatbot_template.xml',
-    ],
     'assets': {
     'web.assets_frontend': [
         'ai_chatbot_odoo/static/src/js/main.js',
