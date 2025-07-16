@@ -10,7 +10,7 @@ class ChatbotWrapper extends Component {
         <ChatbotComponent/>
       </t>
     </div>`;
-
+ 
     setup() {
         console.log("✅ ChatbotWrapper.setup");
         this.state = useState({ visible: false });
