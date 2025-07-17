@@ -4,7 +4,7 @@
     'category': 'Tools',
     'summary': 'Chatbot integrado com OpenAI Assistant',
     "license": "OEEL-1",
-    'depends': ['base', 'web'],
+    'depends': ['base', 'web', 'website'],
    'assets': {
     'web.assets_frontend': [
         'ai_chatbot_odoo/static/src/js/main.js',
@@ -20,3 +20,4 @@
 
     'installable': True,
 }
+
