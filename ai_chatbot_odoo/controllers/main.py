@@ -6,7 +6,13 @@ import time
 client = OpenAI(api_key="SUA_CHAVE_OPENAI_AQUI")
 ASSISTANT_ID = "asst_..."
 
+
+
 class AIChatbotController(http.Controller):
+
+    @http.route('/chatbot', type='http', auth='public', website=True)
+    def chatbot_page(self, **kw):
+        return request.render("ai_chatbot_odoo.chatbot_injector_page")
 
     @http.route('/ai_chatbot/ask', type='json', auth='public', csrf=False)
     def ask_openai(self, **kwargs):

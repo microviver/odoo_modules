@@ -13,5 +13,10 @@
         'ai_chatbot_odoo/static/src/styles/chatbot.scss',
     ],
 }, 
+'data': [
+    'views/assets.xml',
+    'views/chatbot_snippet.xml',
+],
+
     'installable': True,
 }
