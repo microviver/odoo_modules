@@ -1,0 +1,8 @@
+<odoo>
+    <template id="inject_homepage_alert" inherit_id="website.layout">
+        <xpath expr="//main" position="inside">
+            <div id="homepage-alert-root"></div>
+        </xpath>
+    </template>
+</odoo>
+

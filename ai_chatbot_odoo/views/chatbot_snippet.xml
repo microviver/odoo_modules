@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<odoo>
-  <template id="chatbot_injector_page" name="Chatbot Injector Page">
-    <t t-call="website.layout">
-      <t t-set="title">Chatbot Injector</t>
-      <div id="chatbot-wrapper-root"></div>
-    </t>
-  </template>
-</odoo>

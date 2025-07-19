@@ -1,8 +1,0 @@
-<odoo>
-  <template id="assets_chatbot" name="Chatbot Assets" inherit_id="web.assets_website">
-    <xpath expr="." position="inside">
-      <script type="module" src="/ai_chatbot_odoo/static/src/components/chatbot/main.js"/>
-      <link rel="stylesheet" href="/ai_chatbot_odoo/static/src/components/chatbot/chatbot.scss"/>
-    </xpath>
-  </template>
-</odoo>
