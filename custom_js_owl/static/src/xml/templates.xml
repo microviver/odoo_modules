@@ -1,0 +1,10 @@
+<odoo>
+    <templates xml:space="preserve">
+        <t t-name="custom_js_owl.SimpleCounter" owl="1">
+            <div>
+                <span>Valor: <t t-esc="state.value" /></span>
+                <button t-on-click="increment">Incrementar</button>
+            </div>
+        </t>
+    </templates>
+</odoo>
