@@ -1,5 +1,6 @@
 {
-    'name': 'Homepage Alert',
+    'name': 'my_homepage_module',
+
     'version': '1.0',
     'depends': ['website'],
     'assets': {
