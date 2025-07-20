@@ -20,6 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 console.error("Dialog service ou PopupComponent não encontrado.");
             }
-        });
+         });
     }
 });
