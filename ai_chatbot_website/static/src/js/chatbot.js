@@ -1,9 +1,10 @@
-console.log("✅ chatbot.js carregado com sucesso!");
 
 odoo.define('ai_chatbot_website.chatbot', function (require) {
     "use strict";
     
 document.addEventListener('DOMContentLoaded', function() {
+	    console.log("✅ chatbot.js carregado com sucesso!");	
+
             const toggleButton = document.getElementById('chatbot-toggle-button');
             let chatbotBox = null;
             let typingIndicator = null;
@@ -212,3 +213,4 @@ document.addEventListener('DOMContentLoaded', function() {
                 toggleButton.addEventListener('click', toggleChatbotVisibility);
             }
         });
+  });
