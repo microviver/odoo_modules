@@ -7,11 +7,6 @@
     "data": [
         "views/website_templates.xml",
     ],
-    "assets": {
-        "web.assets_frontend": [
-            "ai_chatbot_website/static/src/js/chatbot.js",
-        ],
-    },
     "installable": True,
     "application": False,
     "license": "LGPL-3",
