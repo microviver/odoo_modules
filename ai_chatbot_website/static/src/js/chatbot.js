@@ -1,5 +1,4 @@
-
-odoo.define('ai_chatbot_website.chatbot', function (require) {
+odoo.define('ai_chatbot_website.chatbot', [], function(require) {
     "use strict";
     
 document.addEventListener('DOMContentLoaded', function() {
