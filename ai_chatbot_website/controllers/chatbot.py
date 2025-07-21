@@ -14,10 +14,11 @@ class AIChatbotController(http.Controller):
     @staticmethod
     def carregar_api_key():
         try:
-            with open('config.txt', 'r') as f:
-                for linha in f:
-                    if linha.startswith('OPENAI_API_KEY='):
-                        return linha.strip().split('=', 1)[1]
+            caminho = os.path.join(os.path.dirname(__file__), 'config.txt')
+                with open(caminho, 'r') as f:
+                    for linha in f:
+                        if linha.startswith('OPENAI_API_KEY='):
+                            return linha.strip().split('=', 1)[1].strip()
                         
         except Exception as e:
             _logger.error(f"[AI Chatbot] Erro ao ler config.txt: {str(e)}")
@@ -48,7 +49,12 @@ class AIChatbotController(http.Controller):
             _logger.info(f"[AI Chatbot] Pergunta recebida: {question}")
 
             # OpenAI setup
-            client = OpenAI(api_key=AIChatbotController.carregar_api_key())
+            api_key = AIChatbotController.carregar_api_key()
+	    if not api_key:
+	       _logger.error("[AI Chatbot] API Key não encontrada ou inválida")
+	       return {'error': 'API Key ausente ou malformada'}
+
+	    client = OpenAI(api_key=api_key)
             assistant_id = "asst_jixSPwckEBK7bR6jxIYZP3K0"
 
             thread = client.beta.threads.create()
