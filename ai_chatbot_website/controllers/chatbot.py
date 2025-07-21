@@ -5,15 +5,10 @@ import time
 import json
 from openai import OpenAI
 import os
-from dotenv import load_dotenv
-
-load_dotenv()  # Carrega variáveis do .env
-
-_logger = logging.getLogger(__name__)
-
 
 class AIChatbotController(http.Controller):
 
+    @staticmethod
     def carregar_api_key():
         try:
             with open('config.txt', 'r') as f:
