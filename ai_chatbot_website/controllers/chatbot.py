@@ -6,6 +6,9 @@ import json
 from openai import OpenAI
 import os
 
+
+_logger = logging.getLogger(__name__)
+
 class AIChatbotController(http.Controller):
 
     @staticmethod
