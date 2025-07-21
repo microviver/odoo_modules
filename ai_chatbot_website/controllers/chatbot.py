@@ -4,8 +4,10 @@ import logging
 import time
 import json
 from openai import OpenAI
+import os
+from dotenv import load_dotenv
 
-_logger = logging.getLogger(__name__)
+load_dotenv()  # Carrega variáveis do .env
 
 class AIChatbotController(http.Controller):
     @http.route('/ai_chatbot/ask', type='json', auth='public', csrf=False)
@@ -34,7 +36,7 @@ class AIChatbotController(http.Controller):
 
             # OpenAI setup
             client = OpenAI(
-                api_key="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"
+                api_key=os.getenv("OPENAI_API_KEY")
             )  # USE VARIÁVEL DE AMBIENTE NO FUTURO
             assistant_id = "asst_jixSPwckEBK7bR6jxIYZP3K0"
 
