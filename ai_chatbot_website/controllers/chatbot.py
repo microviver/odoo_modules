@@ -47,7 +47,7 @@ class AIChatbotController(http.Controller):
             _logger.info(f"[AI Chatbot] Pergunta recebida: {question}")
 
             # OpenAI setup
-            client = OpenAI(api_key=carregar_api_key())
+            client = OpenAI(api_key=AIChatbotController.carregar_api_key())
             assistant_id = "asst_jixSPwckEBK7bR6jxIYZP3K0"
 
             thread = client.beta.threads.create()
