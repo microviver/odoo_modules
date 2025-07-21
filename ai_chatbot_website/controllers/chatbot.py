@@ -18,6 +18,7 @@ class AIChatbotController(http.Controller):
                 for linha in f:
                     if linha.startswith('OPENAI_API_KEY='):
                         return linha.strip().split('=', 1)[1]
+                        
         except Exception as e:
             _logger.error(f"[AI Chatbot] Erro ao ler config.txt: {str(e)}")
             return None
