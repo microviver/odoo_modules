@@ -12,19 +12,18 @@ class AIChatbotController(http.Controller):
     def ask_openai(self, **kwargs):
         try:
             # Diagnóstico: conteúdo da requisição
-           try:
-               if hasattr(request, 'jsonrequest') and request.jsonrequest:
-                   data = request.jsonrequest
-                   _logger.info(f"[AI Chatbot] jsonrequest OK: {data}")
-               else:
-                   raw_data = request.httprequest.data
-                   _logger.info(f"[AI Chatbot] httprequest raw data: {raw_data}")
-                   data = json.loads(raw_data.decode('utf-8'))
-                   _logger.info(f"[AI Chatbot] httprequest fallback: {data}")
+            try:
+                if hasattr(request, 'jsonrequest') and request.jsonrequest:
+                    data = request.jsonrequest
+                    _logger.info(f"[AI Chatbot] jsonrequest OK: {data}")
+                else:
+                    raw_data = request.httprequest.data
+                    _logger.info(f"[AI Chatbot] httprequest raw data: {raw_data}")
+                    data = json.loads(raw_data.decode('utf-8'))
+                    _logger.info(f"[AI Chatbot] httprequest fallback: {data}")
             except Exception as e:
                 _logger.error(f"[AI Chatbot] Falha ao ler corpo da requisição: {str(e)}")
                 return {'error': 'Falha ao ler JSON'}
-
 
             # Pegando a pergunta
             question = data.get('question', '').strip()
@@ -34,7 +33,9 @@ class AIChatbotController(http.Controller):
             _logger.info(f"[AI Chatbot] Pergunta recebida: {question}")
 
             # OpenAI setup
-            client = OpenAI(api_key="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")  # USE VARIÁVEL DE AMBIENTE NO FUTURO
+            client = OpenAI(
+                api_key="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"
+            )  # USE VARIÁVEL DE AMBIENTE NO FUTURO
             assistant_id = "asst_jixSPwckEBK7bR6jxIYZP3K0"
 
             thread = client.beta.threads.create()
@@ -76,3 +77,4 @@ class AIChatbotController(http.Controller):
         except Exception as e:
             _logger.exception("[AI Chatbot] Erro inesperado")
             return {'error': f'Erro interno: {str(e)}'}
+
