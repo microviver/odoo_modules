@@ -1,153 +1,153 @@
-odoo.define('ai_chatbot_website.chatbot', [], function(require) {
+odoo.define('ai_chatbot_website.chatbot', [], function (require) {
     "use strict";
-    
-document.addEventListener('DOMContentLoaded', function() {
-	    console.log("✅ chatbot.js carregado com sucesso!");	
 
-            const toggleButton = document.getElementById('chatbot-toggle-button');
-            let chatbotBox = null;
-            let typingIndicator = null;
-            let inputField = null;
-            let messageContainer = null;
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("✅ chatbot.js carregado com sucesso!");
 
-            function renderChatbotBox() {
-                if (!chatbotBox) {
-                    chatbotBox = document.createElement("div");
-                    chatbotBox.id = "chatbot-box";
-                    chatbotBox.style.cssText = `
-                        display: none;
-                        position: fixed;
-                        bottom: 90px;
-                        right: 20px;
-                        width: 350px;
-                        height: 450px;
-                        background-color: white;
-                        border: 1px solid #ccc;
-                        border-radius: 10px;
-                        box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-                        z-index: 9999;
-                        flex-direction: column;
-                        overflow: hidden;
-                    `;
-                    chatbotBox.innerHTML = `
-                        <div id="chatbot-header" style="
-                            background-color: #007bff;
-                            color: white;
-                            padding: 10px;
-                            border-top-left-radius: 9px;
-                            border-top-right-radius: 9px;
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                        ">
-                            <span>Simbi 🤖</span>
-                            <button id="chatbot-inline-close-button" style="
-                                background: none;
-                                border: none;
-                                color: white;
-                                font-size: 20px;
-                                cursor: pointer;
-                            ">
-                                X
-                            </button>
-                        </div>
-                        <div id="chatbot-messages-container" style="
-                            flex-grow: 1;
-                            padding: 10px;
-                            overflow-y: auto;
-                            background-color: #f9f9f9;
-                        "></div>
-                        <div id="chatbot-typing" style="
-                            padding: 5px 10px;
-                            font-style: italic;
-                            color: #666;
-                            text-align: center;
-                            display: none;
-                        ">
-                            <em>piensando...</em>
-                        </div>
-                        <div style="
-                            padding: 10px;
-                            border-top: 1px solid #eee;
-                            display: flex;
-                        ">
-                            <input type="text" id="chatbot-input" placeholder="Escreve algo..." style="
-                                flex-grow: 1;
-                                padding: 8px;
-                                border: 1px solid #ddd;
-                                border-radius: 5px;
-                                margin-right: 10px;
-                            "/>
-                            <button id="chatbot-send-button" style="
-                                background-color: #28a745;
-                                color: white;
-                                border: none;
-                                padding: 8px 15px;
-                                border-radius: 5px;
-                                cursor: pointer;
-                            ">
-                                Enviar
-                            </button>
-                        </div>
-                    `;
-                    document.body.appendChild(chatbotBox);
+        const toggleButton = document.getElementById('chatbot-toggle-button');
+        let chatbotBox = null;
+        let typingIndicator = null;
+        let inputField = null;
+        let messageContainer = null;
 
-                    typingIndicator = document.getElementById("chatbot-typing");
-                    inputField = document.getElementById("chatbot-input");
-                    messageContainer = document.getElementById("chatbot-messages-container");
-                    const sendButton = document.getElementById("chatbot-send-button");
-                    const closeButton = document.getElementById("chatbot-inline-close-button");
-
-                    inputField.addEventListener("keypress", (e) => {
-                        if (e.key === "Enter") handleInput();
-                    });
-                    sendButton.addEventListener("click", handleInput);
-                    closeButton.addEventListener("click", toggleChatbotVisibility);
-                }
-            }
-
-            function toggleChatbotVisibility() {
-                renderChatbotBox();
-                if (chatbotBox.style.display === 'none' || chatbotBox.style.display === '') {
-                    chatbotBox.style.display = 'flex';
-                    toggleButton.textContent = '✖️';
-                    toggleButton.style.backgroundColor = '#dc3545';
-                } else {
-                    chatbotBox.style.display = 'none';
-                    toggleButton.textContent = '💬';
-                    toggleButton.style.backgroundColor = '#007bff';
-                }
-            }
-
-            function handleInput() {
-                const question = inputField.value.trim();
-                if (!question) return;
-
-                const userMsg = document.createElement("div");
-                userMsg.className = "user-msg";
-                userMsg.style.cssText = `
-                    margin-bottom: 5px;
-                    text-align: right;
-                    background-color: #e0f7fa;
-                    padding: 8px;
-                    border-radius: 5px;
-                    max-width: 80%;
-                    margin-left: auto;
+        function renderChatbotBox() {
+            if (!chatbotBox) {
+                chatbotBox = document.createElement("div");
+                chatbotBox.id = "chatbot-box";
+                chatbotBox.style.cssText = `
+                    display: none;
+                    position: fixed;
+                    bottom: 90px;
+                    right: 20px;
+                    width: 350px;
+                    height: 450px;
+                    background-color: white;
+                    border: 1px solid #ccc;
+                    border-radius: 10px;
+                    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+                    z-index: 9999;
+                    flex-direction: column;
+                    overflow: hidden;
                 `;
-                userMsg.textContent = question;
-                messageContainer.appendChild(userMsg);
+                chatbotBox.innerHTML = `
+                    <div id="chatbot-header" style="
+                        background-color: #007bff;
+                        color: white;
+                        padding: 10px;
+                        border-top-left-radius: 9px;
+                        border-top-right-radius: 9px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    ">
+                        <span>Simbi 🤖</span>
+                        <button id="chatbot-inline-close-button" style="
+                            background: none;
+                            border: none;
+                            color: white;
+                            font-size: 20px;
+                            cursor: pointer;
+                        ">
+                            X
+                        </button>
+                    </div>
+                    <div id="chatbot-messages-container" style="
+                        flex-grow: 1;
+                        padding: 10px;
+                        overflow-y: auto;
+                        background-color: #f9f9f9;
+                    "></div>
+                    <div id="chatbot-typing" style="
+                        padding: 5px 10px;
+                        font-style: italic;
+                        color: #666;
+                        text-align: center;
+                        display: none;
+                    ">
+                        <em>piensando...</em>
+                    </div>
+                    <div style="
+                        padding: 10px;
+                        border-top: 1px solid #eee;
+                        display: flex;
+                    ">
+                        <input type="text" id="chatbot-input" placeholder="Escreve algo..." style="
+                            flex-grow: 1;
+                            padding: 8px;
+                            border: 1px solid #ddd;
+                            border-radius: 5px;
+                            margin-right: 10px;
+                        "/>
+                        <button id="chatbot-send-button" style="
+                            background-color: #28a745;
+                            color: white;
+                            border: none;
+                            padding: 8px 15px;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        ">
+                            Enviar
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(chatbotBox);
 
-                inputField.value = "";
-                typingIndicator.style.display = "block";
-                messageContainer.scrollTop = messageContainer.scrollHeight;
+                typingIndicator = document.getElementById("chatbot-typing");
+                inputField = document.getElementById("chatbot-input");
+                messageContainer = document.getElementById("chatbot-messages-container");
+                const sendButton = document.getElementById("chatbot-send-button");
+                const closeButton = document.getElementById("chatbot-inline-close-button");
 
-                fetch("/ai_chatbot/ask", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ question }),
-                })
+                inputField.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter") handleInput();
+                });
+                sendButton.addEventListener("click", handleInput);
+                closeButton.addEventListener("click", toggleChatbotVisibility);
+            }
+        }
+
+        function toggleChatbotVisibility() {
+            renderChatbotBox();
+            if (chatbotBox.style.display === 'none' || chatbotBox.style.display === '') {
+                chatbotBox.style.display = 'flex';
+                toggleButton.textContent = '✖️';
+                toggleButton.style.backgroundColor = '#dc3545';
+            } else {
+                chatbotBox.style.display = 'none';
+                toggleButton.textContent = '💬';
+                toggleButton.style.backgroundColor = '#007bff';
+            }
+        }
+
+        function handleInput() {
+            const question = inputField.value.trim();
+            if (!question) return;
+
+            const userMsg = document.createElement("div");
+            userMsg.className = "user-msg";
+            userMsg.style.cssText = `
+                margin-bottom: 5px;
+                text-align: right;
+                background-color: #e0f7fa;
+                padding: 8px;
+                border-radius: 5px;
+                max-width: 80%;
+                margin-left: auto;
+            `;
+            userMsg.textContent = question;
+            messageContainer.appendChild(userMsg);
+
+            inputField.value = "";
+            typingIndicator.style.display = "block";
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+
+            fetch("/ai_chatbot/ask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ question }),
+            })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
@@ -172,10 +172,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         margin-right: auto;
                     `;
 
-                    if (data && data.result && data.result.answer) {
-                        botMsg.textContent = data.result.answer;
-                    } else if (data && data.result && data.result.error) {
-                        botMsg.textContent = `Erro: ${data.result.error}`;
+                    if (data && data.answer) {
+                        botMsg.textContent = data.answer;
+                    } else if (data && data.error) {
+                        botMsg.textContent = `Erro: ${data.error}`;
                         botMsg.style.backgroundColor = '#ffe0e0';
                         botMsg.style.color = '#d32f2f';
                     } else {
@@ -206,10 +206,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     messageContainer.appendChild(errorMsg);
                     messageContainer.scrollTop = messageContainer.scrollHeight;
                 });
-            }
+        }
 
-            if (toggleButton) {
-                toggleButton.addEventListener('click', toggleChatbotVisibility);
-            }
-        });
-  });
+        if (toggleButton) {
+            toggleButton.addEventListener('click', toggleChatbotVisibility);
+        }
+    });
+});
+
