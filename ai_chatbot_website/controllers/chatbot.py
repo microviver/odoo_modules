@@ -34,7 +34,7 @@ class AIChatbotController(http.Controller):
 
             # OpenAI setup
             client = OpenAI(
-                api_key="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"
+                api_key="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"
             )  # USE VARIÁVEL DE AMBIENTE NO FUTURO
             assistant_id = "asst_jixSPwckEBK7bR6jxIYZP3K0"
 
