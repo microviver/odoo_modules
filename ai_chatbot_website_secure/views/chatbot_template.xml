@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<odoo>
-    <template id="chatbot_template" inherit_id="website.layout" name="Chatbot Button">
-        <xpath expr="." position="inside">
-            <button id="chatbot-toggle-button" style="position: fixed; bottom: 20px; right: 20px; background-color: #007bff; color: white; border: none; border-radius: 50%; width: 60px; height: 60px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); font-size: 30px; z-index: 10000; cursor: pointer;">💬</button>
-            <script type="module" src="/ai_chatbot_website/static/src/js/chatbot.js"></script>
-        </xpath>
-    </template>
-</odoo>
