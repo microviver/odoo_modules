@@ -9,7 +9,21 @@ from dotenv import load_dotenv
 
 load_dotenv()  # Carrega variáveis do .env
 
+_logger = logging.getLogger(__name__)
+
+
 class AIChatbotController(http.Controller):
+
+    def carregar_api_key():
+        try:
+            with open('config.txt', 'r') as f:
+                for linha in f:
+                    if linha.startswith('OPENAI_API_KEY='):
+                        return linha.strip().split('=', 1)[1]
+        except Exception as e:
+            _logger.error(f"[AI Chatbot] Erro ao ler config.txt: {str(e)}")
+            return None
+
     @http.route('/ai_chatbot/ask', type='json', auth='public', csrf=False)
     def ask_openai(self, **kwargs):
         try:
@@ -35,9 +49,7 @@ class AIChatbotController(http.Controller):
             _logger.info(f"[AI Chatbot] Pergunta recebida: {question}")
 
             # OpenAI setup
-            client = OpenAI(
-                api_key=os.getenv("OPENAI_API_KEY")
-            )  # USE VARIÁVEL DE AMBIENTE NO FUTURO
+            client = OpenAI(api_key=carregar_api_key())
             assistant_id = "asst_jixSPwckEBK7bR6jxIYZP3K0"
 
             thread = client.beta.threads.create()
