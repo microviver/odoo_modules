@@ -14,80 +14,19 @@ odoo.define('ai_chatbot_website.chatbot', [], function (require) {
             if (!chatbotBox) {
                 chatbotBox = document.createElement("div");
                 chatbotBox.id = "chatbot-box";
-                chatbotBox.style.cssText = `
-                    display: none;
-                    position: fixed;
-                    bottom: 90px;
-                    right: 20px;
-                    width: 350px;
-                    height: 450px;
-                    background-color: white;
-                    border: 1px solid #ccc;
-                    border-radius: 10px;
-                    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-                    z-index: 9999;
-                    flex-direction: column;
-                    overflow: hidden;
-                `;
+                chatbotBox.style.cssText = "display: none; position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px; background-color: white; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.4); z-index: 9999; flex-direction: column; overflow: hidden;";
                 chatbotBox.innerHTML = `
-                    <div id="chatbot-header" style="
-                        background-color: #007bff;
-                        color: white;
-                        padding: 10px;
-                        border-top-left-radius: 9px;
-                        border-top-right-radius: 9px;
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                    ">
+                    <div id="chatbot-header" style="background-color: #007bff; color: white; padding: 10px; border-top-left-radius: 9px; border-top-right-radius: 9px; display: flex; justify-content: space-between; align-items: center;">
                         <span>Simbi 🤖</span>
-                        <button id="chatbot-inline-close-button" style="
-                            background: none;
-                            border: none;
-                            color: white;
-                            font-size: 20px;
-                            cursor: pointer;
-                        ">
-                            X
-                        </button>
+                        <button id="chatbot-inline-close-button" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">X</button>
                     </div>
-                    <div id="chatbot-messages-container" style="
-                        flex-grow: 1;
-                        padding: 10px;
-                        overflow-y: auto;
-                        background-color: #f9f9f9;
-                    "></div>
-                    <div id="chatbot-typing" style="
-                        padding: 5px 10px;
-                        font-style: italic;
-                        color: #666;
-                        text-align: center;
-                        display: none;
-                    ">
+                    <div id="chatbot-messages-container" style="flex-grow: 1; padding: 10px; overflow-y: auto; background-color: #f9f9f9;"></div>
+                    <div id="chatbot-typing" style="padding: 5px 10px; font-style: italic; color: #666; text-align: center; display: none;">
                         <em>piensando...</em>
                     </div>
-                    <div style="
-                        padding: 10px;
-                        border-top: 1px solid #eee;
-                        display: flex;
-                    ">
-                        <input type="text" id="chatbot-input" placeholder="Escreve algo..." style="
-                            flex-grow: 1;
-                            padding: 8px;
-                            border: 1px solid #ddd;
-                            border-radius: 5px;
-                            margin-right: 10px;
-                        "/>
-                        <button id="chatbot-send-button" style="
-                            background-color: #28a745;
-                            color: white;
-                            border: none;
-                            padding: 8px 15px;
-                            border-radius: 5px;
-                            cursor: pointer;
-                        ">
-                            Enviar
-                        </button>
+                    <div style="padding: 10px; border-top: 1px solid #eee; display: flex;">
+                        <input type="text" id="chatbot-input" placeholder="Escreve algo..." style="flex-grow: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-right: 10px;"/>
+                        <button id="chatbot-send-button" style="background-color: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">Enviar</button>
                     </div>
                 `;
                 document.body.appendChild(chatbotBox);
@@ -125,15 +64,7 @@ odoo.define('ai_chatbot_website.chatbot', [], function (require) {
 
             const userMsg = document.createElement("div");
             userMsg.className = "user-msg";
-            userMsg.style.cssText = `
-                margin-bottom: 5px;
-                text-align: right;
-                background-color: #e0f7fa;
-                padding: 8px;
-                border-radius: 5px;
-                max-width: 80%;
-                margin-left: auto;
-            `;
+            userMsg.style.cssText = "margin-bottom: 5px; text-align: right; background-color: #e0f7fa; padding: 8px; border-radius: 5px; max-width: 80%; margin-left: auto;";
             userMsg.textContent = question;
             messageContainer.appendChild(userMsg);
 
@@ -144,72 +75,46 @@ odoo.define('ai_chatbot_website.chatbot', [], function (require) {
             fetch("/ai_chatbot/ask", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ question }),
+                body: JSON.stringify({ question })
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const contentType = response.headers.get("content-type");
-                    if (!contentType || !contentType.includes("application/json")) {
-                        throw new TypeError("Não recebeu JSON!");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    typingIndicator.style.display = "none";
-                    const botMsg = document.createElement("div");
-                    botMsg.className = "bot-msg";
-                    botMsg.style.cssText = `
-                        margin-bottom: 5px;
-                        text-align: left;
-                        background-color: #f1f0f0;
-                        padding: 8px;
-                        border-radius: 5px;
-                        max-width: 80%;
-                        margin-right: auto;
-                    `;
+            .then(response => response.json())
+            .then(data => {
+                typingIndicator.style.display = "none";
+                const botMsg = document.createElement("div");
+                botMsg.className = "bot-msg";
+                botMsg.style.cssText = "margin-bottom: 5px; text-align: left; background-color: #f1f0f0; padding: 8px; border-radius: 5px; max-width: 80%; margin-right: auto;";
 
-                    if (data && data.answer) {
-                        botMsg.textContent = data.answer;
-                    } else if (data && data.error) {
-                        botMsg.textContent = `Erro: ${data.error}`;
-                        botMsg.style.backgroundColor = '#ffe0e0';
-                        botMsg.style.color = '#d32f2f';
-                    } else {
-                        botMsg.textContent = 'Resposta inesperada do servidor';
-                        botMsg.style.backgroundColor = '#ffe0e0';
-                        botMsg.style.color = '#d32f2f';
-                    }
+                if (data && data.answer) {
+                    botMsg.textContent = data.answer;
+                } else if (data && data.error) {
+                    botMsg.textContent = `Erro: ${data.error}`;
+                    botMsg.style.backgroundColor = '#ffe0e0';
+                    botMsg.style.color = '#d32f2f';
+                } else {
+                    botMsg.textContent = "Resposta inesperada do servidor";
+                    botMsg.style.backgroundColor = '#ffe0e0';
+                    botMsg.style.color = '#d32f2f';
+                }
 
-                    messageContainer.appendChild(botMsg);
-                    messageContainer.scrollTop = messageContainer.scrollHeight;
-                })
-                .catch(error => {
-                    console.error("Erro:", error);
-                    typingIndicator.style.display = "none";
-                    const errorMsg = document.createElement("div");
-                    errorMsg.className = "bot-msg error";
-                    errorMsg.style.cssText = `
-                        margin-bottom: 5px;
-                        text-align: left;
-                        background-color: #ffe0e0;
-                        padding: 8px;
-                        border-radius: 5px;
-                        max-width: 80%;
-                        margin-right: auto;
-                        color: #d32f2f;
-                    `;
-                    errorMsg.textContent = "Erro de comunicação com o servidor.";
-                    messageContainer.appendChild(errorMsg);
-                    messageContainer.scrollTop = messageContainer.scrollHeight;
-                });
+                messageContainer.appendChild(botMsg);
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            })
+            .catch(error => {
+                console.error("Erro:", error);
+                typingIndicator.style.display = "none";
+                const errorMsg = document.createElement("div");
+                errorMsg.className = "bot-msg error";
+                errorMsg.style.cssText = "margin-bottom: 5px; text-align: left; background-color: #ffe0e0; padding: 8px; border-radius: 5px; max-width: 80%; margin-right: auto; color: #d32f2f;";
+                errorMsg.textContent = "Erro de comunicação com o servidor.";
+                messageContainer.appendChild(errorMsg);
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            });
         }
 
         if (toggleButton) {
-            toggleButton.addEventListener('click', toggleChatbotVisibility);
+            toggleButton.addEventListener("click", toggleChatbotVisibility);
         }
     });
 });
