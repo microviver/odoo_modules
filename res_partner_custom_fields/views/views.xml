@@ -1,30 +1,8 @@
 <odoo>
-  <template id="custom_checkout_fields" inherit_id="website_sale.address" priority="100">
-    
-    <!-- Teste para confirmar que o template carrega -->
+  <template id="teste_simples" inherit_id="website_sale.address">
     <xpath expr="//form" position="before">
-      <h1 style="color:red;">TEMPLATE CARREGADO ✅</h1>
+      <p style="color:blue;">TEMPLATE SIMPLES CARREGOU?</p>
     </xpath>
-
-    <!-- Substituir nome -->
-    <xpath expr="//div[label[@for='name']]" position="replace">
-      <div class="form-group">
-        <label for="nombre">Nombre</label>
-        <input type="text" name="nombre" class="form-control" t-att-value="partner.nombre or ''" required="1"/>
-
-        <label for="apellido">Apellido</label>
-        <input type="text" name="apellido" class="form-control" t-att-value="partner.apellido or ''" required="1"/>
-      </div>
-    </xpath>
-
-    <!-- Adicionar campo DNI -->
-    <xpath expr="//div[label[@for='email']]" position="before">
-      <div class="form-group">
-        <label for="dni">DNI</label>
-        <input type="text" name="dni" class="form-control" t-att-value="partner.dni or ''" required="1"/>
-      </div>
-    </xpath>
-
   </template>
 </odoo>
 
