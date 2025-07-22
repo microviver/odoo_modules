@@ -7,7 +7,7 @@
     'data': [
     'views/res_partner_views.xml',
     'views/website_sale_address_inherit.xml',
-	],
+],
     'installable': True,
     'auto_install': False,
 }
