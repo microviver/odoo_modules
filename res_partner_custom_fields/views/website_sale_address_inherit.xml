@@ -10,7 +10,7 @@
     <xpath expr="//input[@name='name']" position="replace">
       <div class="form-group">
         <input type="text" name="nombre" class="form-control" placeholder="Nombre" required="1"/>
-        <input type="text" name="apelido" class="form-control" placeholder="Apelido" required="1"/>
+	<input type="text" name="apellido" class="form-control" placeholder="Apellido" required="1"/>
       </div>
     </xpath>
 

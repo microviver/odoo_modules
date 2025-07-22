@@ -7,6 +7,8 @@ class ResPartner(models.Model):
     nombre = fields.Char(string="Nombre", required=True)
     apellido = fields.Char(string="Apellido", required=True)
     dni = fields.Char(string="DNI", required=True)
+    
+    name = fields.Char(compute="_compute_name", store=True)
 
     @api.depends('nombre', 'apellido')
     def _compute_name(self):
