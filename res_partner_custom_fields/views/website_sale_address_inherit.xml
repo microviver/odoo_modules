@@ -1,23 +1,23 @@
 <odoo>
   <template id="custom_website_address_fields" inherit_id="website_sale.address" priority="20">
     
-    <!-- Substitui o label "Full Name" por "Nombre" -->
-    <xpath expr="//label[@for='name']" position="replace">
-      <label for="nombre">Nombre</label>
-    </xpath>
-
-    <!-- Substitui campo 'name' por 'nombre' + 'apelido' -->
-    <xpath expr="//input[@name='name']" position="replace">
+    <!-- Substitui o label e input do campo name -->
+    <xpath expr="//div[label[@for='name']]" position="replace">
       <div class="form-group">
-        <input type="text" name="nombre" class="form-control" placeholder="Nombre" required="1"/>
-	<input type="text" name="apellido" class="form-control" placeholder="Apellido" required="1"/>
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" class="form-control" t-att-value="partner.nombre or ''" required="1"/>
+
+        <label for="apellido">Apellido</label>
+        <input type="text" name="apellido" class="form-control" t-att-value="partner.apellido or ''" required="1"/>
       </div>
     </xpath>
 
     <!-- Insere campo DNI antes de email -->
-    <xpath expr="//label[@for='email']" position="before">
-      <label for="dni">DNI</label>
-      <input type="text" name="dni" class="form-control" placeholder="DNI" required="1"/>
+    <xpath expr="//div[label[@for='email']]" position="before">
+      <div class="form-group">
+        <label for="dni">DNI</label>
+        <input type="text" name="dni" class="form-control" t-att-value="partner.dni or ''" required="1"/>
+      </div>
     </xpath>
 
   </template>
