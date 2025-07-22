@@ -1,6 +1,9 @@
 <odoo>
   <template id="custom_website_address_fields" inherit_id="website_sale.address" priority="20">
-    
+    <xpath expr="//form" position="before">
+  <h1 style="color:red;">TESTE TEMPLATE APLICADO</h1>
+</xpath>
+
     <!-- Substitui o label e input do campo name -->
     <xpath expr="//div[label[@for='name']]" position="replace">
       <div class="form-group">
