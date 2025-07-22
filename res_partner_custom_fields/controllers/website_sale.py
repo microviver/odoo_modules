@@ -31,3 +31,4 @@ class WebsiteSaleInherit(WebsiteSale):
         # Uncomment next line if you want DNI to be mandatory for shipping
         # mandatory_fields.append('dni')
         return mandatory_fields
+
