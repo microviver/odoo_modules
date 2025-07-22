@@ -1,0 +1,19 @@
+<odoo>
+  <template id="custom_address_fields" inherit_id="website_sale.address">
+    <xpath expr="//div[@class='form-group o_website_form_required']/label[@for='name']" position="replace">
+      <label for="nombre">Nombre</label>
+    </xpath>
+
+    <xpath expr="//div[@class='form-group o_website_form_required']/input[@name='name']" position="replace">
+      <input type="text" name="nombre" required="1" class="form-control" placeholder="Nombre"/>
+      <input type="text" name="apelido" required="1" class="form-control" placeholder="Apelido"/>
+    </xpath>
+
+    <xpath expr="//div[@class='form-group o_website_form_required']/label[@for='email']" position="before">
+      <label for="dni">DNI</label>
+      <input type="text" name="dni" required="1" class="form-control" placeholder="DNI"/>
+    </xpath>
+  </template>
+</odoo>
+
+
