@@ -1,16 +1,11 @@
+# __manifest__.py
 {
-    'name': 'Dividir Nome e Adicionar DNI',
+    'name': 'Website Sale DNI Field',
     'version': '1.0',
-    'category': 'Contactos',
-    'summary': 'Divide campo Full Name e adiciona campo DNI obrigatório',
-    'depends': ['base', 'contacts', 'website_sale'],
+    'depends': ['website_sale'],
     'data': [
-    'views/res_partner_views.xml',
-    'views/views.xml',
-    'views/website_sale_templates.xml',  # Adicione esta linha
-],
-    'installable': True,
-    'auto_install': False,
-    'application': False,
+        'views/shop_address_inherit.xml',
+        'views/res_partner_form_inherit.xml',  # <--- adiciona aqui!
+    ],
 }
 
