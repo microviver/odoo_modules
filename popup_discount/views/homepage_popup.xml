@@ -10,7 +10,7 @@
             console.log("✅ DOMContentLoaded fired. Checking popup_shown status.");
 
             // Limpe esta chave no localStorage para testar sempre
-            // localStorage.removeItem("popup_shown"); // Descomente temporariamente para forçar o aparecimento em todos os recarregamentos
+            localStorage.removeItem("popup_shown"); // Descomente temporariamente para forçar o aparecimento em todos os recarregamentos
 
             if (!localStorage.getItem("popup_shown")) {
               console.log("LocalStorage 'popup_shown' not found. Creating popup.");
