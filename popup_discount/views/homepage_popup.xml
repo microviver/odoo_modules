@@ -2,78 +2,80 @@
   <template id="homepage_popup_script_injection" name="Popup Email Capture Injection" inherit_id="website.layout">
     <xpath expr="//body" position="bottom">
       <script type="module">
-        // Adicionar um console.log inicial para verificar se o script está sequer a ser carregado
-        console.log("🚀 Popup module script started loading.");
+        <![CDATA[
+          // Adicionar um console.log inicial para verificar se o script está sequer a ser carregado
+          console.log("🚀 Popup module script started loading.");
 
-        document.addEventListener("DOMContentLoaded", function () {
-          console.log("✅ DOMContentLoaded fired. Checking popup_shown status.");
+          document.addEventListener("DOMContentLoaded", function () {
+            console.log("✅ DOMContentLoaded fired. Checking popup_shown status.");
 
-          // Limpe esta chave no localStorage para testar sempre
-          // localStorage.removeItem("popup_shown"); // Temporário para forçar o aparecimento em todos os recarregamentos
+            // Limpe esta chave no localStorage para testar sempre
+            // localStorage.removeItem("popup_shown"); // Descomente temporariamente para forçar o aparecimento em todos os recarregamentos
 
-          if (!localStorage.getItem("popup_shown")) {
-            console.log("LocalStorage 'popup_shown' not found. Creating popup.");
-            var popup = document.createElement("div");
-            // Adicione um ID ao div principal para fácil inspeção
-            popup.id = "main-discount-popup-container";
-            popup.innerHTML = `
-              <div style="position:fixed;top:20%;left:50%;transform:translateX(-50%);
-                          background:#fff;padding:20px;border-radius:8px;box-shadow:0 0 10px #000;z-index:9999;">
-                <h3>🎉 ¡Obtén un 5% de desconto!</h3>
-                <p>Introduce tu correo electrónico para recibir tu código exclusivo.</p>
-                <input type="email" id="popup_email" placeholder="Tu correo" style="width: calc(100% - 20px); padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;" />
-                <button id="popup_send_email_button" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer;">Enviar</button>
-                <button id="popup_close_button" style="background-color: #dc3545; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">X</button>
-              </div>
-            `;
-            document.body.appendChild(popup);
-            localStorage.setItem("popup_shown", "true");
-            console.log("🌟 Popup added to DOM and popup_shown set in localStorage.");
+            if (!localStorage.getItem("popup_shown")) {
+              console.log("LocalStorage 'popup_shown' not found. Creating popup.");
+              var popup = document.createElement("div");
+              // Adicione um ID ao div principal para fácil inspeção
+              popup.id = "main-discount-popup-container";
+              popup.innerHTML = `
+                <div style="position:fixed;top:20%;left:50%;transform:translateX(-50%);
+                            background:#fff;padding:20px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,0.5);z-index:9999;">
+                  <h3>🎉 ¡Obtén un 5% de desconto!</h3>
+                  <p>Introduce tu correo electrónico para recibir tu código exclusivo.</p>
+                  <input type="email" id="popup_email" placeholder="Tu correo" style="width: calc(100% - 22px); padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;" />
+                  <button id="popup_send_email_button" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer;">Enviar</button>
+                  <button id="popup_close_button" style="background-color: #dc3545; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">X</button>
+                </div>
+              `;
+              document.body.appendChild(popup);
+              localStorage.setItem("popup_shown", "true");
+              console.log("🌟 Popup added to DOM and popup_shown set in localStorage.");
 
-            // Adicionar event listeners via JS, em vez de onclick no HTML, é uma prática mais robusta para modules
-            document.getElementById('popup_send_email_button').addEventListener('click', enviarCorreo);
-            document.getElementById('popup_close_button').addEventListener('click', function() {
-                document.getElementById('main-discount-popup-container').remove();
-                console.log("Popup closed by user.");
-            });
+              // Adicionar event listeners via JS, em vez de onclick no HTML, é uma prática mais robusta para modules
+              document.getElementById('popup_send_email_button').addEventListener('click', enviarCorreo);
+              document.getElementById('popup_close_button').addEventListener('click', function() {
+                  document.getElementById('main-discount-popup-container').remove();
+                  console.log("Popup closed by user.");
+              });
 
-          } else {
-            console.log("💡 Popup not shown. 'popup_shown' already exists in localStorage.");
-          }
-        });
-
-        // Esta função precisa de estar no escopo global para ser acessível via onclick
-        // Se usar addEventListener (recomendado), não precisa de ser global
-        window.enviarCorreo = async function() {
-          var email = document.getElementById("popup_email").value;
-          if (email) {
-            console.log("Attempting to send email:", email);
-            try {
-                const response = await fetch("/newsletter/popup", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ email: email }),
-                });
-                if (response.ok) {
-                    alert("¡Correo enviado! Revisa tu bandeja.");
-                    // Fechar o popup após o envio bem-sucedido
-                    document.getElementById('main-discount-popup-container').remove();
-                } else {
-                    const errorData = await response.json();
-                    alert(`Ocorreu um erro: ${errorData.message || response.statusText}`);
-                    console.error("Server error:", errorData);
-                }
-            } catch (error) {
-                alert("Ocorreu um erro de rede ou servidor.");
-                console.error("Fetch error:", error);
+            } else {
+              console.log("💡 Popup not shown. 'popup_shown' already exists in localStorage.");
             }
-          } else {
-              alert("Por favor, insira o seu e-mail.");
-              console.log("Email field is empty.");
-          }
-        };
+          });
+
+          // Esta função precisa de estar no escopo global para ser acessível via onclick
+          // Se usar addEventListener (recomendado), não precisa de ser global
+          window.enviarCorreo = async function() {
+            var email = document.getElementById("popup_email").value;
+            if (email) {
+              console.log("Attempting to send email:", email);
+              try {
+                  const response = await fetch("/newsletter/popup", {
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ email: email }),
+                  });
+                  if (response.ok) {
+                      alert("¡Correo enviado! Revisa tu bandeja.");
+                      // Fechar o popup após o envio bem-sucedido
+                      document.getElementById('main-discount-popup-container').remove();
+                  } else {
+                      const errorData = await response.json();
+                      alert(`Ocorreu um erro: ${errorData.message || response.statusText}`);
+                      console.error("Server error:", errorData);
+                  }
+              } catch (error) {
+                  alert("Ocorreu um erro de rede ou servidor.");
+                  console.error("Fetch error:", error);
+              }
+            } else {
+                alert("Por favor, insira o seu e-mail.");
+                console.log("Email field is empty.");
+            }
+          };
+        ]]>
       </script>
     </xpath>
   </template>
