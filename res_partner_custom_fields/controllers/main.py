@@ -12,7 +12,6 @@ class WebsiteSaleCustom(WebsiteSale):
 
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
     def checkout(self, **post):
-        """Garante que os campos custom aparecem no form já preenchidos"""
         response = super().checkout(**post)
         order = request.website.sale_get_order()
         if order:

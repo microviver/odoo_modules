@@ -1,8 +1,12 @@
 <odoo>
-  <!-- Template para substituir nome por nombre + apellido + DNI -->
-  <template id="custom_website_address_fields" inherit_id="website_sale.address" priority="30">
+  <template id="custom_checkout_fields" inherit_id="website_sale.address" priority="100">
+    
+    <!-- Teste para confirmar que o template carrega -->
+    <xpath expr="//form" position="before">
+      <h1 style="color:red;">TEMPLATE CARREGADO ✅</h1>
+    </xpath>
 
-    <!-- Substitui o campo 'name' -->
+    <!-- Substituir nome -->
     <xpath expr="//div[label[@for='name']]" position="replace">
       <div class="form-group">
         <label for="nombre">Nombre</label>
@@ -13,17 +17,12 @@
       </div>
     </xpath>
 
-    <!-- Adiciona o campo DNI antes do email -->
+    <!-- Adicionar campo DNI -->
     <xpath expr="//div[label[@for='email']]" position="before">
       <div class="form-group">
         <label for="dni">DNI</label>
         <input type="text" name="dni" class="form-control" t-att-value="partner.dni or ''" required="1"/>
       </div>
-    </xpath>
-
-    <!-- Injetar texto de teste para garantir que está a funcionar -->
-    <xpath expr="//form" position="before">
-      <h1 style="color:red;">TESTE TEMPLATE APLICADO</h1>
     </xpath>
 
   </template>

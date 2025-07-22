@@ -4,20 +4,15 @@
     <field name="model">res.partner</field>
     <field name="inherit_id" ref="base.view_partner_form"/>
     <field name="arch" type="xml">
-      
-      <!-- Substituir campo name por nombre + apellido -->
       <xpath expr="//field[@name='name']" position="replace">
         <group>
           <field name="nombre"/>
           <field name="apellido"/>
         </group>
       </xpath>
-
-      <!-- Adiciona campo DNI depois do email -->
       <xpath expr="//field[@name='email']" position="after">
         <field name="dni"/>
       </xpath>
-
     </field>
   </record>
 </odoo>
