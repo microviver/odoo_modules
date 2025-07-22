@@ -1,5 +1,5 @@
 <odoo>
-  <template id="custom_address_fields" inherit_id="website_sale.address">
+<template id="custom_address_fields" inherit_id="website_sale.address" priority="20">
     <xpath expr="//div[@class='form-group o_website_form_required']/label[@for='name']" position="replace">
       <label for="nombre">Nombre</label>
     </xpath>
