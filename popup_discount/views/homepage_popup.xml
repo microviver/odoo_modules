@@ -27,7 +27,7 @@
                   <button id="popup_close_button" style="background-color: #dc3545; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">X</button>
                 </div>
               `;
-              document.body.appendChild(popup);
+              document.body.appendChild(popup); 
               localStorage.setItem("popup_shown", "true");
               console.log("🌟 Popup added to DOM and popup_shown set in localStorage.");
 
