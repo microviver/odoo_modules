@@ -1,14 +1,15 @@
 <odoo>
-  <template id="assets_frontend" name="Popup Email Capture" inherit_id="website.assets_frontend" priority="50">
+  <template id="homepage_popup_script_injection" name="Popup Email Capture Injection" inherit_id="website.layout">
     <xpath expr="//body" position="inside">
-      <script type="text/javascript">
+      <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
+          console.log("✅ Popup script loaded via website.layout"); // Adicionado para depuração
           if (!localStorage.getItem("popup_shown")) {
             var popup = document.createElement("div");
             popup.innerHTML = `
               <div style="position:fixed;top:20%;left:50%;transform:translateX(-50%);
                           background:#fff;padding:20px;border-radius:8px;box-shadow:0 0 10px #000;z-index:9999;">
-                <h3>🎉 ¡Obtén un 5% de descuento!</h3>
+                <h3>🎉 ¡Obtén un 5% de desconto!</h3>
                 <p>Introduce tu correo electrónico para recibir tu código exclusivo.</p>
                 <input type="email" id="popup_email" placeholder="Tu correo" />
                 <button onclick="enviarCorreo()">Enviar</button>
@@ -16,10 +17,14 @@
             `;
             document.body.appendChild(popup);
             localStorage.setItem("popup_shown", "true");
+            console.log("Popup shown for the first time."); // Adicionado para depuração
+          } else {
+            console.log("Popup not shown (popup_shown already exists in localStorage)."); // Adicionado para depuração
           }
         });
 
-        function enviarCorreo() {
+        // Esta função precisa de estar no escopo global para ser acessível via onclick
+        window.enviarCorreo = function() {
           var email = document.getElementById("popup_email").value;
           if (email) {
             fetch("/newsletter/popup", {
@@ -30,9 +35,19 @@
               body: JSON.stringify({ email: email }),
             }).then(() => {
               alert("¡Correo enviado! Revisa tu bandeja.");
+              // Opcional: fechar o popup após o envio
+              var popupContainer = document.querySelector("#popup_email").closest("div[style*='position:fixed']");
+              if (popupContainer) {
+                  popupContainer.remove();
+              }
+            }).catch(error => {
+                console.error("Erro ao enviar e-mail:", error);
+                alert("Ocorreu um erro ao enviar o seu e-mail.");
             });
+          } else {
+              alert("Por favor, insira o seu e-mail.");
           }
-        }
+        };
       </script>
     </xpath>
   </template>
