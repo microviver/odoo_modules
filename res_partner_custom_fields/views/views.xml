@@ -1,6 +1,6 @@
 <odoo>
     <template id="custom_checkout_fields" inherit_id="website_sale.checkout_fields">
-        <xpath expr="//div[hasclass('o_wsale_website_form_separator_shippings')]" position="before">
+        <xpath expr="//div[@id='div_name']" position="after">
             <div class="row s_website_form_row form-group">
                 <label for="nombre" class="col-sm-auto col-form-label s_website_form_label">
                     <span class="s_website_form_label_content">Nome</span>
