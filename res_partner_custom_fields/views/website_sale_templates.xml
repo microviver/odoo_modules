@@ -1,23 +1,14 @@
+# views/website_sale_templates.xml
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Extend the billing address form in website checkout -->
+    <!-- Add DNI field after Email and Phone row -->
     <template id="address_form_dni" inherit_id="website_sale.address_form">
-        <xpath expr="//div[hasclass('row')][./div/input[@name='phone']]" position="after">
+        <xpath expr="//div[hasclass('row')][.//input[@name='phone']]" position="after">
             <div class="row">
                 <div class="col-lg-6">
                     <label class="col-form-label label-optional" for="dni">DNI</label>
-                    <input type="text" name="dni" class="form-control" t-att-value="'dni' in checkout and checkout['dni'] or partner.dni"/>
+                    <input type="text" name="dni" class="form-control" t-att-value="'dni' in checkout and checkout['dni'] or partner.dni" placeholder="e.g. 12345678A"/>
                 </div>
-            </div>
-        </xpath>
-    </template>
-    
-    <!-- Alternative: Add DNI field after phone field in the same row -->
-    <template id="address_form_dni_inline" inherit_id="website_sale.address_form" active="False">
-        <xpath expr="//input[@name='phone']" position="after">
-            <div class="col-lg-6">
-                <label class="col-form-label label-optional" for="dni">DNI</label>
-                <input type="text" name="dni" class="form-control" t-att-value="'dni' in checkout and checkout['dni'] or partner.dni" placeholder="Document Number"/>
             </div>
         </xpath>
     </template>
