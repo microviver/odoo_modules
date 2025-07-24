@@ -1,13 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <template id="add_dni_to_checkout" inherit_id="website_sale.address" priority="20">
-    <xpath expr="//input[@name='email']" position="after">
+  <template id="add_dni_to_checkout" inherit_id="website_sale.address">
+    <xpath expr="//div[@id='o_wsale_address_form']//div[contains(@class,'form-group')][last()]" position="after">
       <div class="form-group col-lg-6 col-md-6 col-sm-12">
         <label for="dni">DNI / NIF / CPF</label>
-        <input type="text"
-               class="form-control"
-               name="dni"
-               t-att-value="partner.dni or ''"/>
+        <input type="text" name="dni" t-att-value="partner.dni or ''" class="form-control"/>
       </div>
     </xpath>
   </template>
