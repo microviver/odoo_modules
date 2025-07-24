@@ -78,7 +78,7 @@
                         renderChatbotBox();
                         if (chatbotBox.style.display === 'none' || chatbotBox.style.display === '') {
                             chatbotBox.style.display = 'flex';
-                            toggleButton.textContent = '✖️';
+                            toggleButton.textContent = '✖ ';
                             toggleButton.style.backgroundColor = '#dc3545';
                         } else {
                             chatbotBox.style.display = 'none';
@@ -121,7 +121,7 @@
                         .then(data => {
                             typingIndicator.style.display = "none";
                             const botMsg = document.createElement("div");
-                            botMsg.textContent = data?.result?.answer || "❌ Erro ou resposta inesperada.";
+                            botMsg.textContent = data?.result?.answer || "🛑 Erro ou resposta inesperada.";
                             botMsg.style.cssText = `
                                 margin-bottom: 10px;
                                 text-align: left;
@@ -141,7 +141,7 @@
                         .catch(err => {
                             typingIndicator.style.display = "none";
                             const errMsg = document.createElement("div");
-                            errMsg.textContent = "❌ Erro ao contactar o servidor.";
+                            errMsg.textContent = "🛑 Erro ao contactar o servidor.";
                             errMsg.style.cssText = `
                                 margin-bottom: 10px;
                                 text-align: left;
