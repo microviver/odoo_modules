@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="add_dni_to_checkout" inherit_id="website_sale.address">
+        <xpath expr="//div[@id='div_name']" position="replace">
+            <div t-attf-class="form-group #{'col-lg-6' if country.state_required else 'col-lg-12'}">
+                <label for="firstname" class="control-label">Nombre</label>
+                <input type="text" name="firstname" t-att-value="partner_sudo.firstname or ''"
+                       class="form-control o_website_form_input" required="True"/>
+            </div>
+            <div t-attf-class="form-group #{'col-lg-6' if country.state_required else 'col-lg-12'}">
+                <label for="lastname" class="control-label">Apellidos</label>
+                <input type="text" name="lastname" t-att-value="partner_sudo.lastname or ''"
+                       class="form-control o_website_form_input" required="True"/>
+            </div>
+        </xpath>
+
         <xpath expr="//div[@id='div_phone']" position="after">
-            <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                <label for="dni">DNI / NIF / CPF</label>
-                <input type="text" name="dni" t-att-value="partner.dni or ''" class="form-control"/>
+            <div t-attf-class="form-group #{'col-lg-6' if country.state_required else 'col-lg-12'}">
+                <label for="dni" class="control-label">DNI </label>
+                <input type="text" name="dni" t-att-value="partner_sudo.dni or ''"
+                       class="form-control o_website_form_input" required="True"/>
             </div>
         </xpath>
     </template>
