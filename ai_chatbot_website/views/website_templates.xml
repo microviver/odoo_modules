@@ -84,7 +84,7 @@
         inputField = document.getElementById("chatbot-input");
         messageContainer = document.getElementById("chatbot-messages-container");
         maximizeButton = document.getElementById("chatbot-maximize-button");
-        resizeHandle = document.getElementById("chatbot-resize-handle");
+        resizeHandle = document.getElementById("chatbot-resize-handle"); 
 
         const sendButton = document.getElementById("chatbot-send-button");
         const closeButton = document.getElementById("chatbot-inline-close-button");
