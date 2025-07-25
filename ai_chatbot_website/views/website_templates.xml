@@ -67,7 +67,7 @@
                 <div id="chatbot-resize-handle" style="width: 15px; height: 15px; background: rgba(255,255,255,0.2); border-radius: 3px; cursor: nwse-resize; position: absolute; top: 0; left: 0; transform: translate(-50%, -50%); z-index: 10;"></div>
                 <span>Simbi <span style="font-size: 1.2em; vertical-align: middle;">🧠</span></span>
                 <div style="display: flex; gap: 8px;">
-                    <button id="chatbot-maximize-button" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 0;">
+                    <button id="chatbot-maximize-button" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 0;"> 
                         &#x26F6; </button>
                     <button id="chatbot-inline-close-button" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0;">&times;</button>
                 </div>
