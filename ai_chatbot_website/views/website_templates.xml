@@ -8,7 +8,7 @@
         </button>
 
         <script type="module">
-              <![CDATA[
+            <![CDATA[
             document.addEventListener("DOMContentLoaded", function () {
                 let chatbotBox = null;
                 let isChatboxMaximized = false;
@@ -18,35 +18,40 @@
                 const storedHeight = localStorage.getItem("chatboxHeight");
                 const isChatOpen = localStorage.getItem("chatboxOpen") === "true";
 
-                const chatbotButton = document.createElement("div");
-                chatbotButton.innerText = "💬";
-                chatbotButton.id = "chatbot-launcher-button";
-                chatbotButton.style.cssText = `
-                    position: fixed;
-                    bottom: 20px;
-                    right: 20px;
-                    width: 60px;
-                    height: 60px;
-                    background-color: #007bff;
-                    color: white;
-                    font-size: 30px;
-                    text-align: center;
-                    line-height: 60px;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    z-index: 9999;
-                    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-                `;
-                document.body.appendChild(chatbotButton);
+                // ****** ALTERAÇÃO AQUI: Selecionar o botão existente ******
+                const chatbotButton = document.getElementById("chatbot-toggle-button"); 
+                // Remova todo o código que cria um novo 'div' para o botão, seus estilos e o 'appendChild'
+                // chatbotButton.innerText = "💬"; // Não precisa
+                // chatbotButton.id = "chatbot-launcher-button"; // Não precisa
+                // chatbotButton.style.cssText = `...`; // O estilo já está no XML, mas pode ser ajustado aqui se quiser
+                // document.body.appendChild(chatbotButton); // Não precisa
 
-                chatbotButton.addEventListener("click", function () {
-                    chatbotButton.style.display = "none";
-                    if (!chatbotBox) {
+                // Certifique-se de que o botão foi encontrado (boa prática)
+                if (chatbotButton) {
+                    chatbotButton.addEventListener("click", function () {
+                        chatbotButton.style.display = "none";
+                        if (!chatbotBox) {
+                            createChatbox();
+                        }
+                        chatbotBox.style.display = "flex";
+                        localStorage.setItem("chatboxOpen", "true");
+                    });
+
+                    // Auto-criação se estiver aberto
+                    if (isChatOpen) {
                         createChatbox();
+                        // Se o chat estiver aberto, o botão deve estar oculto
+                        chatbotButton.style.display = "none"; 
+                    } else {
+                        // Se o chat NÃO estiver aberto, o botão deve estar visível
+                        chatbotButton.style.display = "block";
                     }
-                    chatbotBox.style.display = "flex";
-                    localStorage.setItem("chatboxOpen", "true");
-                });
+
+                } else {
+                    console.error("Chatbot button not found in the DOM!");
+                }
+                // **********************************************************
+
 
                 function createChatbox() {
                     chatbotBox = document.createElement("div");
@@ -73,12 +78,13 @@
                     `;
 
                     const header = document.createElement("div");
+                    // ... (restante do código do header e botões de maximize/fechar)
                     header.style.cssText = `
                         padding: 10px;
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-                        background-color: #007bff;
+                        background-color: #6a0dad; /* Cor alterada para combinar com o botão */
                         color: white;
                         border-top-left-radius: 10px;
                         border-top-right-radius: 10px;
@@ -86,7 +92,6 @@
                         position: relative;
                     `;
 
-                    // ✅ Indicador de redimensionamento no canto superior esquerdo
                     const resizeGrip = document.createElement("div");
                     resizeGrip.style.cssText = `
                         position: absolute;
@@ -137,7 +142,7 @@
                     chatbotBox.appendChild(header);
 
                     const iframe = document.createElement("iframe");
-                    iframe.src = "https://chat.openai.com";
+                    iframe.src = "https://chat.openai.com"; // Considere usar uma URL dinâmica ou do Odoo aqui
                     iframe.style.cssText = `
                         width: 100%;
                         height: 100%;
@@ -147,13 +152,13 @@
                     chatbotBox.appendChild(iframe);
                     document.body.appendChild(chatbotBox);
 
-                    if (!isChatOpen) chatbotButton.style.display = "block";
-                    else chatbotButton.style.display = "none";
+                    // A lógica de visibilidade do botão já foi movida para fora da função createChatbox
+                    // e agora controla o botão do XML.
 
                     maximizeButton.addEventListener("click", toggleChatboxSize);
                     closeButton.addEventListener("click", function () {
                         chatbotBox.style.display = "none";
-                        chatbotButton.style.display = "block";
+                        chatbotButton.style.display = "block"; // Mostrar o botão do XML
                         localStorage.setItem("chatboxOpen", "false");
                     });
 
@@ -186,14 +191,8 @@
                     }
                     isChatboxMaximized = !isChatboxMaximized;
                 }
-
-                // Auto-criação se estiver aberto
-                if (isChatOpen) {
-                    createChatbox();
-                }
             });
-        ]]>
-       
+            ]]>
         </script>
     </xpath>
 </template>
