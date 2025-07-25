@@ -8,17 +8,17 @@
       <field name="model_id" ref="model_popup_discount_code"/>
       <field name="auto_delete" eval="True"/>
       <field name="body_html"><![CDATA[
-        <div style="font-family:Arial, sans-serif; font-size:14px;">
-          <p>Olá,</p>
-          <p>¡Gracias por suscribirte! Como prometido, aquí tienes tu código exclusivo para obtener un <strong>5% de descuento</strong> en tu próxima compra:</p>
-          <p style="text-align:center;">
-            <span style="font-size:20px; font-weight:bold;">${object.code}</span>
-          </p>
-          <p>Este código pode ser usado uma única vez.</p>
-          <p>Nos alegra tenerte con nosotros. Estate atento a nuestras próximas novedades.</p>
-          <br/>
-          <p>Saludos,<br/>El equipo de Tu Tienda</p>
-        </div>
+<div style="font-family:Arial, sans-serif; font-size:14px;">
+  <p>Olá,</p>
+  <p>¡Gracias por suscribirte! Como prometido, aquí tienes tu código exclusivo para obtener un <strong>5% de descuento</strong> en tu próxima compra:</p>
+  <p style="text-align:center;">
+    <span style="font-size:20px; font-weight:bold;">${object.code}</span>
+  </p>
+  <p>Este código puede ser usado una única vez.</p>
+  <p>Nos alegra tenerte con nosotros. Estate atento a nuestras próximas novedades.</p>
+  <br/>
+  <p>Saludos,<br/>El equipo de Tu Tienda</p>
+</div>
       ]]></field>
     </record>
   </data>
