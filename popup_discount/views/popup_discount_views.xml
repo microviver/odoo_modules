@@ -10,7 +10,6 @@
         <field name="used"/>
       </tree>
     </field>
-    <field name="type">tree</field>
   </record>
 
   <!-- Form View -->
