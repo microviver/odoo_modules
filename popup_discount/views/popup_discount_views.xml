@@ -2,6 +2,7 @@
   <record id="view_popup_discount_code_tree" model="ir.ui.view">
     <field name="name">popup.discount.code.tree</field>
     <field name="model">popup.discount.code</field>
+    <field name="type">tree</field> <!-- esta linha é obrigatória -->
     <field name="arch" type="xml">
       <tree>
         <field name="email"/>
@@ -14,6 +15,7 @@
   <record id="view_popup_discount_code_form" model="ir.ui.view">
     <field name="name">popup.discount.code.form</field>
     <field name="model">popup.discount.code</field>
+    <field name="type">form</field> <!-- também é bom colocar aqui -->
     <field name="arch" type="xml">
       <form>
         <sheet>
@@ -36,3 +38,4 @@
   <menuitem id="menu_popup_discount_root" name="Descontos Popup" sequence="100"/>
   <menuitem id="menu_popup_discount_code" name="Códigos de Desconto" parent="menu_popup_discount_root" action="action_popup_discount_code"/>
 </odoo>
+
