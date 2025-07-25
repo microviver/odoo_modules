@@ -1,3 +1,4 @@
+<odoo>
 <template id="chatbot_assets" name="AI Chatbot Assets" inherit_id="web.assets_frontend">
     <xpath expr="." position="inside">
         <script type="text/javascript">
@@ -189,4 +190,4 @@
         </script>
     </xpath>
 </template>
-
+</odoo>
