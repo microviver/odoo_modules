@@ -1,6 +1,5 @@
 <odoo>
   <data noupdate="1">
-
     <record id="popup_discount_template" model="mail.template">
       <field name="name">Descuento Bienvenida Popup</field>
       <field name="email_from">${(user.company_id.email or 'info@tutienda.com')}</field>
@@ -21,6 +20,5 @@
         </div>
       ]]></field>
     </record>
-
   </data>
 </odoo>
