@@ -1,153 +1,191 @@
 <template id="chatbot_assets" name="AI Chatbot Assets" inherit_id="web.assets_frontend">
     <xpath expr="." position="inside">
         <script type="text/javascript">
-            <![CDATA[
-                document.addEventListener("DOMContentLoaded", function () {
-                    let chatbotBox = null;
-                    let isChatboxMaximized = false;
-                    const defaultChatboxWidth = "400px";
-                    const defaultChatboxHeight = "500px";
-                    const storedWidth = localStorage.getItem("chatboxWidth");
-                    const storedHeight = localStorage.getItem("chatboxHeight");
+        <![CDATA[
+            document.addEventListener("DOMContentLoaded", function () {
+                let chatbotBox = null;
+                let isChatboxMaximized = false;
+                const defaultChatboxWidth = "400px";
+                const defaultChatboxHeight = "500px";
+                const storedWidth = localStorage.getItem("chatboxWidth");
+                const storedHeight = localStorage.getItem("chatboxHeight");
+                const isChatOpen = localStorage.getItem("chatboxOpen") === "true";
 
-                    const chatbotButton = document.createElement("div");
-                    chatbotButton.innerText = "💬";
-                    chatbotButton.id = "chatbot-launcher-button";
-                    chatbotButton.style.cssText = `
+                const chatbotButton = document.createElement("div");
+                chatbotButton.innerText = "💬";
+                chatbotButton.id = "chatbot-launcher-button";
+                chatbotButton.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    width: 60px;
+                    height: 60px;
+                    background-color: #007bff;
+                    color: white;
+                    font-size: 30px;
+                    text-align: center;
+                    line-height: 60px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    z-index: 9999;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                `;
+                document.body.appendChild(chatbotButton);
+
+                chatbotButton.addEventListener("click", function () {
+                    chatbotButton.style.display = "none";
+                    if (!chatbotBox) {
+                        createChatbox();
+                    }
+                    chatbotBox.style.display = "flex";
+                    localStorage.setItem("chatboxOpen", "true");
+                });
+
+                function createChatbox() {
+                    chatbotBox = document.createElement("div");
+                    chatbotBox.id = "chatbot-box";
+                    chatbotBox.style.cssText = `
+                        display: ${isChatOpen ? 'flex' : 'none'};
                         position: fixed;
-                        bottom: 20px;
+                        bottom: 90px;
                         right: 20px;
-                        width: 60px;
-                        height: 60px;
+                        width: ${storedWidth || defaultChatboxWidth};
+                        height: ${storedHeight || defaultChatboxHeight};
+                        background-color: white;
+                        border: 1px solid #e0e0e0;
+                        border-radius: 10px;
+                        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+                        z-index: 9999;
+                        flex-direction: column;
+                        overflow: hidden;
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        transition: all 0.3s ease;
+                        resize: both;
+                        min-width: 300px;
+                        min-height: 350px;
+                    `;
+
+                    const header = document.createElement("div");
+                    header.style.cssText = `
+                        padding: 10px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
                         background-color: #007bff;
                         color: white;
-                        font-size: 30px;
-                        text-align: center;
-                        line-height: 60px;
-                        border-radius: 50%;
-                        cursor: pointer;
-                        z-index: 9999;
-                        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                        border-top-left-radius: 10px;
+                        border-top-right-radius: 10px;
+                        cursor: move;
+                        position: relative;
                     `;
-                    document.body.appendChild(chatbotButton);
 
-                    chatbotButton.addEventListener("click", function () {
-                        chatbotButton.style.display = "none";
-                        if (!chatbotBox) {
-                            createChatbox();
-                        }
-                        chatbotBox.style.display = "flex";
+                    // ✅ Indicador de redimensionamento no canto superior esquerdo
+                    const resizeGrip = document.createElement("div");
+                    resizeGrip.style.cssText = `
+                        position: absolute;
+                        top: 2px;
+                        left: 4px;
+                        width: 10px;
+                        height: 10px;
+                        background-color: white;
+                        border-radius: 50%;
+                        opacity: 0.5;
+                        cursor: nwse-resize;
+                    `;
+                    header.appendChild(resizeGrip);
+
+                    const title = document.createElement("span");
+                    title.innerText = "AI Chat";
+                    title.style.fontWeight = "bold";
+
+                    const buttons = document.createElement("div");
+
+                    const maximizeButton = document.createElement("button");
+                    maximizeButton.id = "maximize-button";
+                    maximizeButton.innerHTML = "&#x26F6;";
+                    maximizeButton.style.cssText = `
+                        margin-right: 10px;
+                        background: none;
+                        border: none;
+                        color: white;
+                        font-size: 18px;
+                        cursor: pointer;
+                    `;
+
+                    const closeButton = document.createElement("button");
+                    closeButton.id = "close-button";
+                    closeButton.innerHTML = "&times;";
+                    closeButton.style.cssText = `
+                        background: none;
+                        border: none;
+                        color: white;
+                        font-size: 18px;
+                        cursor: pointer;
+                    `;
+
+                    buttons.appendChild(maximizeButton);
+                    buttons.appendChild(closeButton);
+                    header.appendChild(title);
+                    header.appendChild(buttons);
+                    chatbotBox.appendChild(header);
+
+                    const iframe = document.createElement("iframe");
+                    iframe.src = "https://chat.openai.com";
+                    iframe.style.cssText = `
+                        width: 100%;
+                        height: 100%;
+                        border: none;
+                        flex: 1;
+                    `;
+                    chatbotBox.appendChild(iframe);
+                    document.body.appendChild(chatbotBox);
+
+                    if (!isChatOpen) chatbotButton.style.display = "block";
+                    else chatbotButton.style.display = "none";
+
+                    maximizeButton.addEventListener("click", toggleChatboxSize);
+                    closeButton.addEventListener("click", function () {
+                        chatbotBox.style.display = "none";
+                        chatbotButton.style.display = "block";
+                        localStorage.setItem("chatboxOpen", "false");
                     });
 
-                    function createChatbox() {
-                        chatbotBox = document.createElement("div");
-                        chatbotBox.id = "chatbot-box";
-                        chatbotBox.style.cssText = `
-                            display: none;
-                            position: fixed;
-                            bottom: 90px;
-                            right: 20px;
-                            width: ${storedWidth || defaultChatboxWidth};
-                            height: ${storedHeight || defaultChatboxHeight};
-                            background-color: white;
-                            border: 1px solid #e0e0e0;
-                            border-radius: 10px;
-                            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-                            z-index: 9999;
-                            flex-direction: column;
-                            overflow: auto;
-                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                            transition: all 0.3s ease;
-                            resize: both;
-                            min-width: 300px;
-                            min-height: 350px;
-                        `;
+                    // Persistência do tamanho com ResizeObserver
+                    new ResizeObserver(() => {
+                        localStorage.setItem("chatboxWidth", chatbotBox.style.width);
+                        localStorage.setItem("chatboxHeight", chatbotBox.style.height);
+                    }).observe(chatbotBox);
+                }
 
-                        const header = document.createElement("div");
-                        header.innerHTML = `
-                            <div style="padding: 10px; display: flex; justify-content: space-between; align-items: center; background-color: #007bff; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                                <span style="font-weight: bold;">AI Chat</span>
-                                <div>
-                                    <button id="maximize-button" style="margin-right: 10px; background: none; border: none; color: white; font-size: 18px; cursor: pointer;">&#x26F6;</button>
-                                    <button id="close-button" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">&times;</button>
-                                </div>
-                            </div>
-                        `;
-
-                        const iframe = document.createElement("iframe");
-                        iframe.src = "https://chat.openai.com";
-                        iframe.style.cssText = `
-                            width: 100%;
-                            height: 100%;
-                            border: none;
-                            flex: 1;
-                        `;
-
-                        chatbotBox.appendChild(header);
-                        chatbotBox.appendChild(iframe);
-                        document.body.appendChild(chatbotBox);
-
-                        // Grip visual no canto superior esquerdo
-                        const grip = document.createElement("div");
-                        grip.style.cssText = `
-                            position: absolute;
-                            width: 20px;
-                            height: 20px;
-                            top: 2px;
-                            left: 2px;
-                            background: repeating-linear-gradient(
-                                45deg,
-                                #ccc,
-                                #ccc 2px,
-                                transparent 2px,
-                                transparent 4px
-                            );
-                            pointer-events: none;
-                            opacity: 0.5;
-                        `;
-                        chatbotBox.appendChild(grip);
-
-                        // Event listeners
-                        const maximizeButton = document.getElementById("maximize-button");
-                        const closeButton = document.getElementById("close-button");
-
-                        maximizeButton.addEventListener("click", toggleChatboxSize);
-                        closeButton.addEventListener("click", function () {
-                            chatbotBox.style.display = "none";
-                            chatbotButton.style.display = "block";
-                        });
-
-                        // Save size on resize
-                        new ResizeObserver(() => {
-                            localStorage.setItem("chatboxWidth", chatbotBox.style.width);
-                            localStorage.setItem("chatboxHeight", chatbotBox.style.height);
-                        }).observe(chatbotBox);
+                function toggleChatboxSize() {
+                    if (isChatboxMaximized) {
+                        chatbotBox.style.width = defaultChatboxWidth;
+                        chatbotBox.style.height = defaultChatboxHeight;
+                        chatbotBox.style.right = "20px";
+                        chatbotBox.style.bottom = "90px";
+                        chatbotBox.style.left = "auto";
+                        chatbotBox.style.top = "auto";
+                        chatbotBox.style.resize = "both";
+                        document.getElementById("maximize-button").innerHTML = "&#x26F6;";
+                    } else {
+                        chatbotBox.style.width = "calc(100% - 40px)";
+                        chatbotBox.style.height = "calc(100% - 110px)";
+                        chatbotBox.style.right = "20px";
+                        chatbotBox.style.bottom = "90px";
+                        chatbotBox.style.left = "20px";
+                        chatbotBox.style.top = "20px";
+                        chatbotBox.style.resize = "none";
+                        document.getElementById("maximize-button").innerHTML = "&#x25A1;";
                     }
+                    isChatboxMaximized = !isChatboxMaximized;
+                }
 
-                    function toggleChatboxSize() {
-                        if (isChatboxMaximized) {
-                            chatbotBox.style.width = defaultChatboxWidth;
-                            chatbotBox.style.height = defaultChatboxHeight;
-                            chatbotBox.style.right = "20px";
-                            chatbotBox.style.bottom = "90px";
-                            chatbotBox.style.left = "auto";
-                            chatbotBox.style.top = "auto";
-                            chatbotBox.style.resize = "both";
-                            document.getElementById("maximize-button").innerHTML = "&#x26F6;";
-                        } else {
-                            chatbotBox.style.width = "calc(100% - 40px)";
-                            chatbotBox.style.height = "calc(100% - 110px)";
-                            chatbotBox.style.right = "20px";
-                            chatbotBox.style.bottom = "90px";
-                            chatbotBox.style.left = "20px";
-                            chatbotBox.style.top = "20px";
-                            chatbotBox.style.resize = "none";
-                            document.getElementById("maximize-button").innerHTML = "&#x25A1;";
-                        }
-                        isChatboxMaximized = !isChatboxMaximized;
-                    }
-                });
-            ]]>
+                // Auto-criação se estiver aberto
+                if (isChatOpen) {
+                    createChatbox();
+                }
+            });
+        ]]>
         </script>
     </xpath>
 </template>
