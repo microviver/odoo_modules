@@ -110,7 +110,7 @@
             if (toggleButton) {
                 toggleButton.style.display = 'block'; // Ou 'flex', dependendo de como está no seu CSS
                 toggleButton.textContent = '💬'; // Restaura o ícone original
-                toggleButton.style.backgroundColor = '#2E4C1Es'; // Restaura a cor original
+                toggleButton.style.backgroundColor = '#2E4C1E'; // Restaura a cor original
             }
             if (isChatboxMaximized) {
                 toggleChatboxSize(); // Desmaximiza ao fechar se estava maximizado
