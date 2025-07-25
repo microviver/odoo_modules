@@ -177,14 +177,15 @@
                     if (chatbotBox.style.display === 'none' || chatbotBox.style.display === '') {
                         chatbotBox.style.display = 'flex';
                         toggleButton.textContent = '✖️';
-                        toggleButton.style.backgroundColor = '#dc3545';
+                        toggleButton.style.
+                        backgroundColor = '#dc3545';
                         if (isChatboxMaximized) {
                             toggleChatboxSize();
                         }
                     } else {
                         chatbotBox.style.display = 'none';
                         toggleButton.textContent = '💬';
-                        toggleButton.style.backgroundColor = '#6a0dad';
+                        toggleButton.style.backgroundColor = '#2E4C1E';
                     }
                 }
 
