@@ -4,9 +4,9 @@
     "author": "Wadiana",
     "category": "Website",
     "depends": ["website_sale", "mass_mailing"],
-    "data": [
+      "data": [
         "views/popup_discount_views.xml",
-        "static/src/xml/homepage_popup.xml",
+        "views/homepage_popup.xml", # Caminho Correto
     ],
     "installable": True,
     "application": False,
