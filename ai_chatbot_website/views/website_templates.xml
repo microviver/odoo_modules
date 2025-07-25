@@ -23,6 +23,8 @@
         </style>
 
         <script type="module">
+        
+        <![CDATA[
             document.addEventListener('DOMContentLoaded', function () {
                 console.log("✅ chatbot inline ativo");
 
@@ -73,7 +75,7 @@
                                 <span>Simbi 🧠</span>
                                 <div style="display: flex; gap: 8px;">
                                     <button id="chatbot-maximize-button" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 0;">&#x26F6;</button>
-                                    <button id="chatbot-inline-close-button" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0;">&times;</button>
+                                    <button id="chatbot-inline-close-button" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0;">×</button>
                                 </div>
                             </div>
                             <div id="chatbot-messages-container" style="flex-grow: 1; padding: 15px; overflow-y: auto; background-color: #fcfcfc; scroll-behavior: smooth;"></div>
@@ -235,6 +237,7 @@
 
                 if (toggleButton) toggleButton.addEventListener("click", toggleChatbotVisibility);
             });
+            ]]>
         </script>
     </xpath>
 </template>
