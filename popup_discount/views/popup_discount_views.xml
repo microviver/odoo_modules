@@ -36,4 +36,3 @@
   <menuitem id="menu_popup_discount_root" name="Descontos Popup" sequence="100"/>
   <menuitem id="menu_popup_discount_code" name="Códigos de Desconto" parent="menu_popup_discount_root" action="action_popup_discount_code"/>
 </odoo>
-
