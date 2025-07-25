@@ -1,334 +1,252 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <template id="chatbot_button_and_script" name="Chatbot Button" inherit_id="website.layout">
-        <xpath expr="//body" position="inside">
-            <button id="chatbot-toggle-button"
-                    style="position: fixed; bottom: 20px; right: 20px; 
-                           background-color: #006400; /* Verde Escuro (DarkGreen) */ 
-                           color: white; border: none; 
-                           border-radius: 50%; width: 60px; height: 60px; 
-                           box-shadow: 0 4px 12px rgba(0,0,0,0.4); font-size: 30px; 
-                           z-index: 10000; cursor: pointer; 
-                           transition: background-color 0.3s ease, transform 0.2s ease;">
-                💬
-            </button>
+<template id="chatbot_button_and_script" name="Chatbot Button" inherit_id="website.layout">
+    <xpath expr="//body" position="inside">
+        <button id="chatbot-toggle-button"
+                style="position: fixed; bottom: 20px; right: 20px; background-color: #6a0dad; color: white; border: none; border-radius: 50%; width: 60px; height: 60px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); font-size: 30px; z-index: 10000; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease;">
+            💬
+        </button>
 
-            <script type="module">
-                <![CDATA[
-                document.addEventListener('DOMContentLoaded', function () {
-                    console.log("✅ chatbot inline ativo");
+        <script type="module">
+            document.addEventListener('DOMContentLoaded', function () {
+                console.log("✅ chatbot inline ativo");
 
-                    const toggleButton = document.getElementById('chatbot-toggle-button');
-                    let chatbotBox = null;
-                    let typingIndicator = null;
-                    let inputField = null;
-                    let messageContainer = null;
-                    let maximizeButton = null;
-                    let closeButtonHeader = null; // Referência para o botão 'X' no header
+                const toggleButton = document.getElementById('chatbot-toggle-button');
+                let chatbotBox = null;
+                let typingIndicator = null;
+                let inputField = null;
+                let messageContainer = null;
+                let maximizeButton = null; // Referência para o novo botão de maximizar
 
-                    const defaultChatboxWidth = '400px'; 
-                    const defaultChatboxHeight = '500px';
+                const defaultChatboxWidth = '350px';
+                const defaultChatboxHeight = '450px';
 
-                    let isChatboxMaximized = false;
+                // Estado para controlar se o chat está maximizado
+                let isChatboxMaximized = false;
 
-                    // Para persistência de tamanho e estado
-                    const storedWidth = localStorage.getItem("chatboxWidth");
-                    const storedHeight = localStorage.getItem("chatboxHeight");
-                    const isChatOpenInitially = localStorage.getItem("chatboxOpen") === "true";
-
-                    // --- FUNÇÕES ---
-
-                    function createChatbox() {
-                        if (chatbotBox) return; // Só cria se ainda não existe
-
+                function renderChatbotBox() {
+                    if (!chatbotBox) {
                         chatbotBox = document.createElement("div");
                         chatbotBox.id = "chatbot-box";
                         chatbotBox.style.cssText = `
-                            display: none; /* Começa oculto */
+                            display: none;
                             position: fixed;
                             bottom: 90px;
                             right: 20px;
-                            width: ${storedWidth || defaultChatboxWidth};
-                            height: ${storedHeight || defaultChatboxHeight};
+                            width: ${defaultChatboxWidth};
+                            height: ${defaultChatboxHeight};
                             background-color: white;
                             border: 1px solid #e0e0e0;
                             border-radius: 10px;
-                            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+                            box-shadow: 0 8px 25px rgba(0,0,0,0.2); /* Sombra mais acentuada */
                             z-index: 9999;
                             flex-direction: column;
                             overflow: hidden;
                             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                            transition: all 0.3s ease;
-                            resize: both; /* HABILITA REDIMENSIONAMENTO */
-                            min-width: 300px;
-                            min-height: 350px;
+                            transition: all 0.3s ease; /* Transição para redimensionamento */
                         `;
                         chatbotBox.innerHTML = `
-                            <div id="chatbot-header" style="background-color: #006400; /* Verde Escuro */
-                                color: white; padding: 12px 15px; border-top-left-radius: 9px; 
-                                border-top-right-radius: 9px; display: flex; justify-content: space-between; 
-                                align-items: center; font-size: 1.1em; font-weight: bold; 
-                                user-select: none; cursor: grab; position: relative;">
-                                <div style="position: absolute; top: 2px; left: 4px; width: 10px; height: 10px; 
-                                    background-color: rgba(255,255,255,0.5); border-radius: 50%; 
-                                    cursor: nwse-resize; opacity: 0;"></div> 
-
+                            <div id="chatbot-header" style="background-color: #6a0dad; color: white; padding: 12px 15px; border-top-left-radius: 9px; border-top-right-radius: 9px; display: flex; justify-content: space-between; align-items: center; font-size: 1.1em; font-weight: bold; user-select: none; cursor: grab;">
                                 <span>Simbi <span style="font-size: 1.2em; vertical-align: middle;">🧠</span></span>
                                 <div style="display: flex; gap: 8px;">
                                     <button id="chatbot-maximize-button" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 0;">
                                         &#x26F6; </button>
-                                    <button id="chatbot-close-header-button" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0;">&times;</button>
+                                    <button id="chatbot-inline-close-button" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0;">&times;</button>
                                 </div>
                             </div>
                             <div id="chatbot-messages-container" style="flex-grow: 1; padding: 15px; overflow-y: auto; background-color: #fcfcfc; scroll-behavior: smooth;"></div>
                             <div id="chatbot-typing" style="padding: 8px 15px; font-style: italic; color: #888; text-align: center; display: none; font-size: 0.9em;"><em>digitando...</em></div>
-                            <div style="padding: 15px; border-top: 1px solid #f0f0f0; display: flex; align-items: center; background-color: #ffffff; min-height: 70px;"> 
-                                <input type="text" id="chatbot-input" placeholder="Digite sua mensagem..." style="flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; margin-right: 10px; font-size: 0.95em; outline: none; transition: border-color 0.3s ease; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);"/>
+                            <div style="padding: 15px; border-top: 1px solid #f0f0f0; display: flex; align-items: center; background-color: #ffffff; min-height: 70px;"> <input type="text" id="chatbot-input" placeholder="Digite sua mensagem..." style="flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; margin-right: 10px; font-size: 0.95em; outline: none; transition: border-color 0.3s ease; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);"/>
                                 <button id="chatbot-send-button" style="background-color: #4CAF50; color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; font-size: 0.95em; font-weight: bold; transition: background-color 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Enviar</button>
                             </div>
                         `;
                         document.body.appendChild(chatbotBox);
 
-                        // Agora que o chatbotBox e seus elementos estão no DOM, podemos obter as referências
                         typingIndicator = document.getElementById("chatbot-typing");
                         inputField = document.getElementById("chatbot-input");
                         messageContainer = document.getElementById("chatbot-messages-container");
-                        maximizeButton = document.getElementById("chatbot-maximize-button");
-                        closeButtonHeader = document.getElementById("chatbot-close-header-button"); 
+                        maximizeButton = document.getElementById("chatbot-maximize-button"); // Obtém o novo botão
 
                         const sendButton = document.getElementById("chatbot-send-button");
-                        const header = document.getElementById('chatbot-header');
+                        const closeButton = document.getElementById("chatbot-inline-close-button");
 
-                        // Adiciona Event Listeners
+                        // Event listeners
                         inputField.addEventListener("focus", () => {
-                            inputField.style.borderColor = '#006400'; 
-                            inputField.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.05), 0 0 0 2px rgba(0, 100, 0, 0.2)'; 
+                            inputField.style.borderColor = '#6a0dad';
+                            inputField.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.05), 0 0 0 2px rgba(106, 13, 173, 0.2)'; // Foco com sombra suave
                         });
                         inputField.addEventListener("blur", () => {
                             inputField.style.borderColor = '#ddd';
                             inputField.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.05)';
                         });
+
                         inputField.addEventListener("keypress", (e) => {
                             if (e.key === "Enter") handleInput();
                         });
                         sendButton.addEventListener("click", handleInput);
-                        maximizeButton.addEventListener("click", toggleChatboxSize);
-                        closeButtonHeader.addEventListener("click", closeChatbot); // O 'X' no header CHAMA closeChatbot()
+                        closeButton.addEventListener("click", toggleChatbotVisibility);
+                        maximizeButton.addEventListener("click", toggleChatboxSize); // Evento para o botão de maximizar
 
-                        // Dragging functionality
+                        // Torna o header arrastável
                         let isDragging = false;
                         let offset = { x: 0, y: 0 };
+                        const header = document.getElementById('chatbot-header');
 
                         header.addEventListener('mousedown', (e) => {
-                            if (e.target.tagName === 'BUTTON' || e.target.style.cursor === 'nwse-resize') return; 
-
+                            if (e.target.tagName === 'BUTTON') return; // Não arrastar se clicar nos botões do header
                             isDragging = true;
                             header.style.cursor = 'grabbing';
                             offset = {
                                 x: chatbotBox.offsetLeft - e.clientX,
                                 y: chatbotBox.offsetTop - e.clientY
                             };
-                            chatbotBox.style.transition = 'none'; 
                         });
 
                         document.addEventListener('mousemove', (e) => {
                             if (!isDragging) return;
-                            
+                            chatbotBox.style.left = (e.clientX + offset.x) + 'px';
+                            chatbotBox.style.top = (e.clientY + offset.y) + 'px';
+                            // Para garantir que o chatbox não saia da tela
                             let newLeft = e.clientX + offset.x;
                             let newTop = e.clientY + offset.y;
 
-                            newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - chatbotBox.offsetWidth));
-                            newTop = Math.max(0, Math.min(newTop, window.innerHeight - chatbotBox.offsetHeight));
+                            if (newLeft < 0) newLeft = 0;
+                            if (newTop < 0) newTop = 0;
+                            if (newLeft + chatbotBox.offsetWidth > window.innerWidth) {
+                                newLeft = window.innerWidth - chatbotBox.offsetWidth;
+                            }
+                            if (newTop + chatbotBox.offsetHeight > window.innerHeight) {
+                                newTop = window.innerHeight - chatbotBox.offsetHeight;
+                            }
 
                             chatbotBox.style.left = newLeft + 'px';
                             chatbotBox.style.top = newTop + 'px';
-                            chatbotBox.style.right = 'auto'; 
+
+                            // Garante que a posição 'right' e 'bottom' não interfira
+                            chatbotBox.style.right = 'auto';
                             chatbotBox.style.bottom = 'auto';
                         });
 
                         document.addEventListener('mouseup', () => {
-                            if (isDragging) {
-                                isDragging = false;
-                                header.style.cursor = 'grab';
-                                chatbotBox.style.transition = 'all 0.3s ease'; 
-
-                                localStorage.setItem("chatboxLeft", chatbotBox.style.left);
-                                localStorage.setItem("chatboxTop", chatbotBox.style.top);
-                            }
+                            isDragging = false;
+                            header.style.cursor = 'grab';
                         });
-
-                        // Persistir o tamanho ao redimensionar
-                        new ResizeObserver(() => {
-                            if (!isDragging) { 
-                                localStorage.setItem("chatboxWidth", chatbotBox.style.width);
-                                localStorage.setItem("chatboxHeight", chatbotBox.style.height);
-                            }
-                        }).observe(chatbotBox);
-
-                        // Carregar posição e tamanho salvos ao criar
-                        const storedLeft = localStorage.getItem("chatboxLeft");
-                        const storedTop = localStorage.getItem("chatboxTop");
-                        if (storedLeft && storedTop) {
-                            chatbotBox.style.left = storedLeft;
-                            chatbotBox.style.top = storedTop;
-                            chatbotBox.style.right = 'auto';
-                            chatbotBox.style.bottom = 'auto';
-                        }
                     }
+                }
 
-                    // Função para ABRIR o chatbot
-                    function openChatbot() {
-                        if (!chatbotBox) {
-                            createChatbox(); // Cria o chatbox se ainda não existir
-                        }
-                        if (chatbotBox.style.display === 'none' || chatbotBox.style.display === '') {
-                            chatbotBox.style.display = 'flex';
-                            localStorage.setItem("chatboxOpen", "true");
-
-                            // Se estava maximizado e abriu, restaura para o estado salvo
-                            if (localStorage.getItem("isChatboxMaximized") === "true") {
-                                isChatboxMaximized = false; // Define para falso para que toggleChatboxSize maximize
-                                toggleChatboxSize(); // Chamada para maximizar
-                            } else {
-                                isChatboxMaximized = true; // Define para verdadeiro para que toggleChatboxSize restaure
-                                toggleChatboxSize(); // Chamada para restaurar (se não estava maximizado antes, volta ao normal)
-                            }
-                            // O botão flutuante NÃO muda de ícone ou cor. Ele fica "sempre de abrir".
-                            toggleButton.style.display = 'none'; // Esconde o botão flutuante quando o chat está aberto
-                        }
+                function toggleChatboxSize() {
+                    if (isChatboxMaximized) {
+                        // Restaurar para o tamanho padrão
+                        chatbotBox.style.width = defaultChatboxWidth;
+                        chatbotBox.style.height = defaultChatboxHeight;
+                        chatbotBox.style.right = '20px'; // Volta para a posição original
+                        chatbotBox.style.bottom = '90px'; // Volta para a posição original
+                        chatbotBox.style.left = 'auto'; // Remove a posição 'left' se arrastado
+                        chatbotBox.style.top = 'auto'; // Remove a posição 'top' se arrastado
+                        maximizeButton.innerHTML = '&#x26F6;'; // Ícone de maximizar (quadrado)
+                    } else {
+                        // Maximizar para ocupar mais tela
+                        chatbotBox.style.width = 'calc(100% - 40px)'; // 100% da largura menos margens
+                        chatbotBox.style.height = 'calc(100% - 110px)'; // 100% da altura menos margens e botão
+                        chatbotBox.style.right = '20px';
+                        chatbotBox.style.bottom = '90px';
+                        chatbotBox.style.left = '20px'; // Preencher a largura
+                        chatbotBox.style.top = '20px'; // Preencher a altura
+                        maximizeButton.innerHTML = '&#x25A1;'; // Ícone de restaurar (quadrado vazado) ou outro de sua preferência
                     }
+                    isChatboxMaximized = !isChatboxMaximized; // Inverte o estado
+                }
 
-                    // Função para FECHAR o chatbot (chamada apenas pelo botão 'X' no header)
-                    function closeChatbot() {
-                        if (chatbotBox) { // Garante que o chatbox existe antes de tentar fechar
-                            chatbotBox.style.display = 'none';
-                            localStorage.setItem("chatboxOpen", "false");
-                            localStorage.removeItem("isChatboxMaximized"); // Limpa o estado de maximizado ao fechar
-                            toggleButton.style.display = 'block'; // Mostra o botão flutuante novamente
-                        }
-                    }
-
-                    function toggleChatboxSize() {
+                function toggleChatbotVisibility() {
+                    renderChatbotBox();
+                    if (chatbotBox.style.display === 'none' || chatbotBox.style.display === '') {
+                        chatbotBox.style.display = 'flex';
+                        toggleButton.textContent = '✖️';
+                        toggleButton.style.backgroundColor = '#dc3545';
+                        // Resetar o tamanho para o padrão ao abrir, se estava maximizado
                         if (isChatboxMaximized) {
-                            // Restaurar para o tamanho padrão (ou o último salvo)
-                            const currentWidth = localStorage.getItem("chatboxWidth") || defaultChatboxWidth;
-                            const currentHeight = localStorage.getItem("chatboxHeight") || defaultChatboxHeight;
-                            chatbotBox.style.width = currentWidth;
-                            chatbotBox.style.height = currentHeight;
-                            chatbotBox.style.right = '20px'; 
-                            chatbotBox.style.bottom = '90px'; 
-                            chatbotBox.style.left = 'auto'; 
-                            chatbotBox.style.top = 'auto'; 
-                            chatbotBox.style.resize = "both"; // Habilita o redimensionamento manual
-                            maximizeButton.innerHTML = '&#x26F6;'; // Ícone de maximizar
-                        } else {
-                            // Maximizar para ocupar mais tela
-                            chatbotBox.style.width = 'calc(100% - 40px)'; 
-                            chatbotBox.style.height = 'calc(100% - 110px)'; 
-                            chatbotBox.style.right = '20px';
-                            chatbotBox.style.bottom = '90px';
-                            chatbotBox.style.left = '20px'; 
-                            chatbotBox.style.top = '20px'; 
-                            chatbotBox.style.resize = "none"; // Desabilita o redimensionamento manual
-                            maximizeButton.innerHTML = '&#x25A1;'; // Ícone de restaurar
+                            toggleChatboxSize(); // Chamada para desmaximizar
                         }
-                        isChatboxMaximized = !isChatboxMaximized; // Inverte o estado
-                        localStorage.setItem("isChatboxMaximized", isChatboxMaximized); 
+                    } else {
+                        chatbotBox.style.display = 'none';
+                        toggleButton.textContent = '💬';
+                        toggleButton.style.backgroundColor = '#6a0dad';
                     }
+                }
 
-                    function handleInput() {
-                        const question = inputField.value.trim();
-                        if (!question) return;
+                function handleInput() {
+                    const question = inputField.value.trim();
+                    if (!question) return;
 
-                        const userMsg = document.createElement("div");
-                        userMsg.textContent = question;
-                        userMsg.style.cssText = `
+                    const userMsg = document.createElement("div");
+                    userMsg.textContent = question;
+                    userMsg.style.cssText = `
+                        margin-bottom: 10px;
+                        text-align: right;
+                        background-color: #e3f2fd;
+                        padding: 10px 15px;
+                        border-radius: 18px 18px 3px 18px;
+                        max-width: 85%;
+                        margin-left: auto;
+                        color: #333;
+                        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                        word-wrap: break-word;
+                    `;
+                    messageContainer.appendChild(userMsg);
+
+                    inputField.value = "";
+                    typingIndicator.style.display = "block";
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+
+                    fetch("/ai_chatbot/ask", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ question })
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        typingIndicator.style.display = "none";
+                        const botMsg = document.createElement("div");
+                        botMsg.textContent = data?.result?.answer || "❌ Erro ou resposta inesperada.";
+                        botMsg.style.cssText = `
                             margin-bottom: 10px;
-                            text-align: right;
-                            background-color: #e3f2fd;
+                            text-align: left;
+                            background-color: #f1f8e9;
                             padding: 10px 15px;
-                            border-radius: 18px 18px 3px 18px;
+                            border-radius: 18px 18px 18px 3px;
                             max-width: 85%;
-                            margin-left: auto;
+                            margin-right: auto;
                             color: #333;
                             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
                             word-wrap: break-word;
                         `;
-                        messageContainer.appendChild(userMsg);
-
-                        inputField.value = "";
-                        typingIndicator.style.display = "block";
+                        messageContainer.appendChild(botMsg);
                         messageContainer.scrollTop = messageContainer.scrollHeight;
+                    })
+                    .catch(err => {
+                        typingIndicator.style.display = "none";
+                        const errMsg = document.createElement("div");
+                        errMsg.textContent = "❌ Erro ao contactar o servidor.";
+                        errMsg.style.cssText = `
+                            margin-bottom: 10px;
+                            text-align: left;
+                            background-color: #ffebee;
+                            padding: 10px 15px;
+                            border-radius: 18px;
+                            max-width: 85%;
+                            margin-right: auto;
+                            color: #c62828;
+                            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                            word-wrap: break-word;
+                        `;
+                        messageContainer.appendChild(errMsg);
+                        messageContainer.scrollTop = messageContainer.scrollHeight;
+                    });
+                }
 
-                        fetch("/ai_chatbot/ask", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ question })
-                        })
-                        .then(r => r.json())
-                        .then(data => {
-                            typingIndicator.style.display = "none";
-                            const botMsg = document.createElement("div");
-                            botMsg.textContent = data?.result?.answer || "❌ Erro ou resposta inesperada.";
-                            botMsg.style.cssText = `
-                                margin-bottom: 10px;
-                                text-align: left;
-                                background-color: #f1f8e9;
-                                padding: 10px 15px;
-                                border-radius: 18px 18px 18px 3px;
-                                max-width: 85%;
-                                margin-right: auto;
-                                color: #333;
-                                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-                                word-wrap: break-word;
-                            `;
-                            messageContainer.appendChild(botMsg);
-                            messageContainer.scrollTop = messageContainer.scrollHeight;
-                        })
-                        .catch(err => {
-                            typingIndicator.style.display = "none";
-                            const errMsg = document.createElement("div");
-                            errMsg.textContent = "❌ Erro ao contactar o servidor.";
-                            errMsg.style.cssText = `
-                                margin-bottom: 10px;
-                                text-align: left;
-                                background-color: #ffebee;
-                                padding: 10px 15px;
-                                border-radius: 18px;
-                                max-width: 85%;
-                                margin-right: auto;
-                                color: #c62828;
-                                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-                                word-wrap: break-word;
-                            `;
-                            messageContainer.appendChild(errMsg);
-                            messageContainer.scrollTop = messageContainer.scrollHeight;
-                        });
-                    }
-
-                    // --- INICIALIZAÇÃO ---
-
-                    // O botão flutuante flutuante AGORA SÓ ABRE O CHAT
-                    if (toggleButton) {
-                        toggleButton.addEventListener("click", openChatbot);
-                    } else {
-                        console.error("Botão de toggle do chatbot não encontrado!");
-                    }
-
-                    // Lógica para abrir o chat automaticamente se estava aberto
-                    if (isChatOpenInitially) {
-                        createChatbox(); 
-                        chatbotBox.style.display = 'flex'; 
-                        toggleButton.style.display = 'none'; // Esconde o botão flutuante se o chat está aberto
-
-                        if (localStorage.getItem("isChatboxMaximized") === "true") {
-                            isChatboxMaximized = false; 
-                            toggleChatboxSize(); // Maximiza
-                        }
-                    }
-                });
-                ]]>
-            </script>
-        </xpath>
-    </template>
+                if (toggleButton) toggleButton.addEventListener("click", toggleChatbotVisibility);
+            });
+        </script>
+    </xpath>
+</template>
 </odoo>
