@@ -3,19 +3,19 @@
     <xpath expr="//body" position="inside">
       <script type="module">
         <![CDATA[
-          // Adicionar um console.log inicial para verificar se o script está sequer a ser carregado
           console.log("🚀 Popup module script started loading.");
 
           document.addEventListener("DOMContentLoaded", function () {
             console.log("✅ DOMContentLoaded fired. Checking popup_shown status.");
 
-            // Limpe esta chave no localStorage para testar sempre
-            localStorage.removeItem("popup_shown"); // Descomente temporariamente para forçar o aparecimento em todos os recarregamentos
+            // Remova ou comente a linha abaixo em produção. Ela é útil apenas para testes.
+            // localStorage.removeItem("popup_shown");
 
+            // Verifica se o usuário já viu o popup ou se é um usuário logado com desconto.
+            // Poderíamos fazer uma chamada ao backend aqui para verificar se o usuário logado já tem um código.
             if (!localStorage.getItem("popup_shown")) {
               console.log("LocalStorage 'popup_shown' not found. Creating popup.");
               var popup = document.createElement("div");
-              // Adicione um ID ao div principal para fácil inspeção
               popup.id = "main-discount-popup-container";
               popup.innerHTML = `
                 <div style="position:fixed;top:20%;left:50%;transform:translateX(-50%);
@@ -25,13 +25,13 @@
                   <input type="email" id="popup_email" placeholder="Tu correo" style="width: calc(100% - 22px); padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;" />
                   <button id="popup_send_email_button" style="background-color: rgb(46, 76, 30); color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer;">Enviar</button>
                   <button id="popup_close_button" style="background-color: #dc3545; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">X</button>
+                  <p id="popup_message" style="color: red; margin-top: 10px;"></p>
                 </div>
               `;
               document.body.appendChild(popup);
               localStorage.setItem("popup_shown", "true");
               console.log("🌟 Popup added to DOM and popup_shown set in localStorage.");
 
-              // Adicionar event listeners via JS, em vez de onclick no HTML, é uma prática mais robusta para modules
               document.getElementById('popup_send_email_button').addEventListener('click', enviarCorreo);
               document.getElementById('popup_close_button').addEventListener('click', function() {
                   document.getElementById('main-discount-popup-container').remove();
@@ -43,36 +43,56 @@
             }
           });
 
-          // Esta função precisa de estar no escopo global para ser acessível via onclick
-          // Se usar addEventListener (recomendado), não precisa de ser global
           window.enviarCorreo = async function() {
-            var email = document.getElementById("popup_email").value;
-            if (email) {
-              console.log("Attempting to send email:", email);
-              try {
-                  const response = await fetch("/newsletter/popup", {
-                      method: "POST",
-                      headers: {
-                          "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({ email: email }),
-                  });
-                  if (response.ok) {
-                      alert("¡Correo enviado! Revisa tu bandeja.");
-                      // Fechar o popup após o envio bem-sucedido
-                      document.getElementById('main-discount-popup-container').remove();
-                  } else {
-                      const errorData = await response.json();
-                      alert(`Ocorreu um erro: ${errorData.message || response.statusText}`);
-                      console.error("Server error:", errorData);
-                  }
-              } catch (error) {
-                  alert("Ocorreu um erro de rede ou servidor.");
-                  console.error("Fetch error:", error);
-              }
-            } else {
-                alert("Por favor, insira o seu e-mail.");
-                console.log("Email field is empty.");
+            var emailInput = document.getElementById("popup_email");
+            var email = emailInput.value;
+            var messageElement = document.getElementById("popup_message");
+            messageElement.textContent = ""; // Limpa mensagens anteriores
+
+            if (!email) {
+                messageElement.textContent = "Por favor, insira o seu e-mail.";
+                emailInput.focus();
+                return;
+            }
+
+            // Simple email validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                messageElement.textContent = "Por favor, insira um e-mail válido.";
+                emailInput.focus();
+                return;
+            }
+
+            console.log("Attempting to send email:", email);
+            try {
+                const response = await fetch("/newsletter/popup", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email: email }),
+                });
+
+                const data = await response.json(); // Sempre tentar ler a resposta JSON
+
+                if (response.ok) {
+                    if (data.status === 'ok') {
+                        alert("¡Correo enviado! Revisa tu bandeja.");
+                        document.getElementById('main-discount-popup-container').remove();
+                    } else if (data.status === 'exists') {
+                        alert("Este e-mail já tem um código de desconto registado. Verifique a sua caixa de entrada.");
+                        document.getElementById('main-discount-popup-container').remove();
+                    } else {
+                        // This case should ideally not happen if backend consistently sends 'ok' or 'exists' for success
+                        alert(`Ocorreu um erro inesperado: ${data.message || 'Resposta desconhecida'}`);
+                        console.error("Unexpected server response:", data);
+                    }
+                } else {
+                    alert(`Ocorreu um erro: ${data.message || response.statusText}`);
+                    console.error("Server error:", data);
+                }
+            } catch (error) {
+                alert("Ocorreu um erro de rede ou servidor.");
+                console.error("Fetch error:", error);
             }
           };
         ]]>
