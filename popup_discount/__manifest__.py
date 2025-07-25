@@ -8,7 +8,6 @@
         "views/popup_discount_views.xml",
         "static/src/xml/homepage_popup.xml",
     ],
-    "assets": {},
     "installable": True,
     "application": False,
 }
