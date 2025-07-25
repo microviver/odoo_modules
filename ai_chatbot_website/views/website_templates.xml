@@ -7,6 +7,21 @@
             💬
         </button>
 
+        <style>
+            #chatbot-resize-grip {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                bottom: 0;
+                right: 0;
+                background: linear-gradient(135deg, transparent 40%, #ccc 40%, #ccc 60%, transparent 60%);
+                background-repeat: no-repeat;
+                background-position: center;
+                cursor: se-resize;
+                z-index: 10001;
+            }
+        </style>
+
         <script type="module">
             document.addEventListener('DOMContentLoaded', function () {
                 console.log("✅ chatbot inline ativo");
@@ -17,17 +32,16 @@
                 let inputField = null;
                 let messageContainer = null;
                 let maximizeButton = null;
+                let resizeGrip = null;
 
                 const defaultChatboxWidth = '350px';
                 const defaultChatboxHeight = '450px';
 
-                // Estado para controlar se o chat está maximizado
                 let isChatboxMaximized = false;
 
-                // Variáveis para funcionalidade de arrastar
                 let isDragging = false;
                 let offset = { x: 0, y: 0 };
-                let chatbotHeader = null; // Definir aqui para escopo global
+                let chatbotHeader = null;
 
                 function renderChatbotBox() {
                     if (!chatbotBox) {
@@ -46,17 +60,19 @@
                             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
                             z-index: 9999;
                             flex-direction: column;
-                            overflow: hidden;
+                            overflow: auto;
                             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                             transition: all 0.3s ease;
+                            resize: both;
+                            min-width: 300px;
+                            min-height: 350px;
                         `;
+
                         chatbotBox.innerHTML = `
-                            <div id="chatbot-header" style="background-color: #6a0dad; color: white; padding: 12px 15px; border-top-left-radius: 9px; border-top-right-radius: 9px; display: flex; justify-content: space-between; align-items: center; font-size: 1.1em; font-weight: bold; user-select: none; cursor: grab;">
-                                <span>Simbi <span style="font-size: 1.2em; vertical-align: middle;">🧠</span></span>
+                            <div id="chatbot-header" style="background-color: #2E4C1E; color: white; padding: 12px 15px; border-top-left-radius: 9px; border-top-right-radius: 9px; display: flex; justify-content: space-between; align-items: center; font-size: 1.1em; font-weight: bold; user-select: none; cursor: grab;">
+                                <span>Simbi 🧠</span>
                                 <div style="display: flex; gap: 8px;">
-                                    <button id="chatbot-maximize-button" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 0;">
-                                        &#x26F6;
-                                    </button>
+                                    <button id="chatbot-maximize-button" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 0;">&#x26F6;</button>
                                     <button id="chatbot-inline-close-button" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0;">&times;</button>
                                 </div>
                             </div>
@@ -67,6 +83,11 @@
                                 <button id="chatbot-send-button" style="background-color: #4CAF50; color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; font-size: 0.95em; font-weight: bold; transition: background-color 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Enviar</button>
                             </div>
                         `;
+
+                        resizeGrip = document.createElement("div");
+                        resizeGrip.id = "chatbot-resize-grip";
+                        chatbotBox.appendChild(resizeGrip);
+
                         document.body.appendChild(chatbotBox);
 
                         typingIndicator = document.getElementById("chatbot-typing");
@@ -75,11 +96,10 @@
                         maximizeButton = document.getElementById("chatbot-maximize-button");
                         const sendButton = document.getElementById("chatbot-send-button");
                         const closeButton = document.getElementById("chatbot-inline-close-button");
-                        chatbotHeader = document.getElementById('chatbot-header'); // Atribuir referência
+                        chatbotHeader = document.getElementById('chatbot-header');
 
-                        // Event listeners para o input
                         inputField.addEventListener("focus", () => {
-                            inputField.style.borderColor = '#6a0dad';
+                            inputField.style.borderColor = '#2E4C1E';
                             inputField.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.05), 0 0 0 2px rgba(106, 13, 173, 0.2)';
                         });
                         inputField.addEventListener("blur", () => {
@@ -94,19 +114,14 @@
                         closeButton.addEventListener("click", toggleChatbotVisibility);
                         maximizeButton.addEventListener("click", toggleChatboxSize);
 
-                        // Lógica de arrastar
                         chatbotHeader.addEventListener('mousedown', (e) => {
-                            // Prevenir arrastar se clicar nos botões dentro do header
-                            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
-                                return;
-                            }
+                            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
                             isDragging = true;
                             chatbotHeader.style.cursor = 'grabbing';
                             offset = {
                                 x: chatbotBox.offsetLeft - e.clientX,
                                 y: chatbotBox.offsetTop - e.clientY
                             };
-                             // Remove as propriedades right e bottom para evitar conflitos durante o arrasto
                             chatbotBox.style.right = 'auto';
                             chatbotBox.style.bottom = 'auto';
                         });
@@ -115,8 +130,6 @@
                             if (!isDragging) return;
                             let newLeft = e.clientX + offset.x;
                             let newTop = e.clientY + offset.y;
-
-                            // Limites para não sair da tela
                             if (newLeft < 0) newLeft = 0;
                             if (newTop < 0) newTop = 0;
                             if (newLeft + chatbotBox.offsetWidth > window.innerWidth) {
@@ -125,7 +138,6 @@
                             if (newTop + chatbotBox.offsetHeight > window.innerHeight) {
                                 newTop = window.innerHeight - chatbotBox.offsetHeight;
                             }
-
                             chatbotBox.style.left = newLeft + 'px';
                             chatbotBox.style.top = newTop + 'px';
                         });
@@ -137,36 +149,25 @@
                     }
                 }
 
-                // Função para converter texto com **negrito** em HTML <strong>negrito</strong>
-                function processMarkdownBold(text) {
-                    // Substitui **texto** por <strong>texto</strong>
-                    let processedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                    // Substitui *texto* por <em>texto</em> ou <strong> se preferir
-                    // Para **negrito**, usaremos <strong>. Se quiser *itálico*, seria <em>
-                    processedText = processedText.replace(/\*(.*?)\*/g, '<em>$1</em>'); // Isso fará itálico para *texto*
-                    return processedText;
-                }
-
-
                 function toggleChatboxSize() {
                     if (isChatboxMaximized) {
-                        // Restaurar para o tamanho padrão
                         chatbotBox.style.width = defaultChatboxWidth;
                         chatbotBox.style.height = defaultChatboxHeight;
                         chatbotBox.style.right = '20px';
                         chatbotBox.style.bottom = '90px';
                         chatbotBox.style.left = 'auto';
                         chatbotBox.style.top = 'auto';
-                        maximizeButton.innerHTML = '&#x26F6;'; // Ícone de maximizar (quadrado)
+                        chatbotBox.style.resize = 'both';
+                        maximizeButton.innerHTML = '&#x26F6;';
                     } else {
-                        // Maximizar para ocupar mais tela
                         chatbotBox.style.width = 'calc(100% - 40px)';
                         chatbotBox.style.height = 'calc(100% - 110px)';
                         chatbotBox.style.right = '20px';
                         chatbotBox.style.bottom = '90px';
                         chatbotBox.style.left = '20px';
                         chatbotBox.style.top = '20px';
-                        maximizeButton.innerHTML = '&#x25A1;'; // Ícone de restaurar (quadrado vazado)
+                        chatbotBox.style.resize = 'none';
+                        maximizeButton.innerHTML = '&#x25A1;';
                     }
                     isChatboxMaximized = !isChatboxMaximized;
                 }
@@ -187,12 +188,18 @@
                     }
                 }
 
+                function processMarkdownBold(text) {
+                    let processedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    processedText = processedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                    return processedText;
+                }
+
                 function handleInput() {
                     const question = inputField.value.trim();
                     if (!question) return;
 
                     const userMsg = document.createElement("div");
-                    userMsg.textContent = question; // Mensagens do usuário continuam como texto puro
+                    userMsg.textContent = question;
                     userMsg.style.cssText = "margin-bottom: 10px; text-align: right; background-color: #e3f2fd; padding: 10px 15px; border-radius: 18px 18px 3px 18px; max-width: 85%; margin-left: auto; color: #333; box-shadow: 0 1px 2px rgba(0,0,0,0.1); word-wrap: break-word;";
                     messageContainer.appendChild(userMsg);
 
@@ -209,9 +216,8 @@
                     .then(data => {
                         typingIndicator.style.display = "none";
                         const botMsg = document.createElement("div");
-                        // *** MUDANÇA AQUI: usar processMarkdownBold e innerHTML ***
                         const botAnswer = data?.result?.answer || "❌ Erro ou resposta inesperada.";
-                        botMsg.innerHTML = processMarkdownBold(botAnswer); // Usa innerHTML e processa o negrito
+                        botMsg.innerHTML = processMarkdownBold(botAnswer);
                         botMsg.style.cssText = "margin-bottom: 10px; text-align: left; background-color: #f1f8e9; padding: 10px 15px; border-radius: 18px 18px 18px 3px; max-width: 85%; margin-right: auto; color: #333; box-shadow: 0 1px 2px rgba(0,0,0,0.1); word-wrap: break-word;";
                         messageContainer.appendChild(botMsg);
                         messageContainer.scrollTop = messageContainer.scrollHeight;
@@ -232,3 +238,4 @@
     </xpath>
 </template>
 </odoo>
+
