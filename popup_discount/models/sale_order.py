@@ -14,4 +14,4 @@ class SaleOrder(models.Model):
                 order.write({'amount_total': order.amount_total - discount})
                 record.write({'used': True})
         return order
-
+ 
