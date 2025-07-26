@@ -58,7 +58,7 @@ class PopupController(http.Controller):
                     [discount_record.id], # <<-- NOVO ARGUMENTO AQUI
                     {'object': discount_record, 'code': code, 'email': email}
                 )
-                
+                 
                 mail_values = {
                     'subject': "¡Tu código de descuento exclusivo está aquí!",
                     'email_from': 'tech@microviver.com', # Pode ser dinâmico ou fixo como agora
