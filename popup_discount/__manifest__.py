@@ -9,6 +9,12 @@
 	    'views/homepage_popup.xml',
 	    'views/popup_discount_views.xml'
 	],
+    'assets': {
+        'web.assets_frontend': [
+            'popup_discount/static/src/js/popup_discount_notification.js',
+            'popup_discount/static/src/css/popup_discount_notification.css',
+        ],
+    },
     "installable": True,
     "application": False,
 }
