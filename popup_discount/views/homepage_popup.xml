@@ -19,11 +19,11 @@
               popup.id = "main-discount-popup-container";
               popup.innerHTML = `
                 <div style="position:fixed;top:20%;left:50%;transform:translateX(-50%);
-                            background:#fff;padding:20px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,0.5);z-index:9999;">
+                             background:#fff;padding:20px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,0.5);z-index:9999;">
                   <h3>🎉 ¡Obtén un 5% de desconto!</h3>
                   <p>Introduce tu correo electrónico para recibir tu código exclusivo.</p>
                   <input type="email" id="popup_email" placeholder="Tu correo" style="width: calc(100% - 22px); padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;" />
-                  <button id="popup_send_email_button" style="background-color: rgb(46, 76, 30); color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer;">Enviar</button>
+                  <button id="popup_send_email_button" style="background-color: rgb(46, 76, 30); color: white; padding: 10px 15px; border: none; border-radius: 4phoenix-4px; cursor: pointer;">Enviar</button>
                   <button id="popup_close_button" style="background-color: #dc3545; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">X</button>
                   <p id="popup_message" style="color: red; margin-top: 10px;"></p>
                 </div>
@@ -69,25 +69,31 @@
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ email: email }),
+                    body: JSON.stringify({ // ** <-- CORREÇÃO AQUI**
+                        jsonrpc: "2.0",
+                        method: "call",
+                        params: {
+                            email: email
+                        }
+                    }),
                 });
 
                 const data = await response.json(); // Sempre tentar ler a resposta JSON
 
                 if (response.ok) {
-                    if (data.status === 'ok') {
+                    if (data.result && data.result.status === 'ok') { // ** <-- CORREÇÃO AQUI (data.result)**
                         alert("¡Correo enviado! Revisa tu bandeja.");
                         document.getElementById('main-discount-popup-container').remove();
-                    } else if (data.status === 'exists') {
+                    } else if (data.result && data.result.status === 'exists') { // ** <-- CORREÇÃO AQUI (data.result)**
                         alert("Este e-mail já tem um código de desconto registado. Verifique a sua caixa de entrada.");
                         document.getElementById('main-discount-popup-container').remove();
                     } else {
                         // This case should ideally not happen if backend consistently sends 'ok' or 'exists' for success
-                        alert(`Ocorreu um erro inesperado: ${data.message || 'Resposta desconhecida'}`);
+                        alert(`Ocorreu um erro inesperado: ${data.result && data.result.message || 'Resposta desconhecida'}`); // ** <-- CORREÇÃO AQUI (data.result)**
                         console.error("Unexpected server response:", data);
                     }
                 } else {
-                    alert(`Ocorreu um erro: ${data.message || response.statusText}`);
+                    alert(`Ocorreu um erro: ${data.result && data.result.message || response.statusText}`); // ** <-- CORREÇÃO AQUI (data.result)**
                     console.error("Server error:", data);
                 }
             } catch (error) {
