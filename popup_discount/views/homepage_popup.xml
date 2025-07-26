@@ -23,7 +23,7 @@
                   <h3>🎉 ¡Obtén un 5% de desconto!</h3>
                   <p>Introduce tu correo electrónico para recibir tu código exclusivo.</p>
                   <input type="email" id="popup_email" placeholder="Tu correo" style="width: calc(100% - 22px); padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;" />
-                  <button id="popup_send_email_button" style="background-color: rgb(46, 76, 30); color: white; padding: 10px 15px; border: none; border-radius: 4phoenix-4px; cursor: pointer;">Enviar</button>
+                  <button id="popup_send_email_button" style="background-color: rgb(46, 76, 30); color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer;">Enviar</button>
                   <button id="popup_close_button" style="background-color: #dc3545; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">X</button>
                   <p id="popup_message" style="color: red; margin-top: 10px;"></p>
                 </div>
@@ -69,7 +69,7 @@
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ // ** <-- CORREÇÃO AQUI**
+                    body: JSON.stringify({
                         jsonrpc: "2.0",
                         method: "call",
                         params: {
@@ -81,24 +81,43 @@
                 const data = await response.json(); // Sempre tentar ler a resposta JSON
 
                 if (response.ok) {
-                    if (data.result && data.result.status === 'ok') { // ** <-- CORREÇÃO AQUI (data.result)**
+                    // Resposta bem-sucedida do servidor (HTTP 200 OK)
+                    // Mas o Odoo pode retornar um "erro lógico" dentro do JSON RPC
+                    if (data.result && data.result.status === 'ok') {
                         alert("¡Correo enviado! Revisa tu bandeja.");
                         document.getElementById('main-discount-popup-container').remove();
-                    } else if (data.result && data.result.status === 'exists') { // ** <-- CORREÇÃO AQUI (data.result)**
+                    } else if (data.result && data.result.status === 'exists') {
                         alert("Este e-mail já tem um código de desconto registado. Verifique a sua caixa de entrada.");
                         document.getElementById('main-discount-popup-container').remove();
+                    } else if (data.error) { // Odoo JSON-RPC error
+                        // Se houver um erro JSON-RPC, exiba a mensagem detalhada do Odoo
+                        const errorMessage = data.error.data && data.error.data.message ? data.error.data.message : data.error.message || 'Erro desconhecido do servidor.';
+                        alert(`Ocorreu um erro interno: ${errorMessage}`);
+                        console.error("Erro do servidor (JSON-RPC):", data.error);
+                        messageElement.textContent = `Erro: ${errorMessage}`;
                     } else {
-                        // This case should ideally not happen if backend consistently sends 'ok' or 'exists' for success
-                        alert(`Ocorreu um erro inesperado: ${data.result && data.result.message || 'Resposta desconhecida'}`); // ** <-- CORREÇÃO AQUI (data.result)**
+                        // Caso inesperado onde response.ok é true mas o status não é 'ok'/'exists' e não há 'error'
+                        alert(`Ocorreu um erro inesperado: ${data.message || 'Resposta desconhecida'}`);
                         console.error("Unexpected server response:", data);
+                        messageElement.textContent = `Erro: ${data.message || 'Resposta inesperada do servidor.'}`;
                     }
                 } else {
-                    alert(`Ocorreu um erro: ${data.result && data.result.message || response.statusText}`); // ** <-- CORREÇÃO AQUI (data.result)**
-                    console.error("Server error:", data);
+                    // Resposta de erro do servidor (HTTP 4xx, 5xx)
+                    let errorMsg = response.statusText;
+                    if (data && data.error && data.error.data && data.error.data.message) {
+                        errorMsg = data.error.data.message; // Mensagem de erro detalhada do Odoo
+                    } else if (data && data.message) {
+                        errorMsg = data.message; // Outras mensagens de erro
+                    }
+                    alert(`Ocorreu um erro: ${errorMsg}`);
+                    console.error("Server error (HTTP):", response.status, data);
+                    messageElement.textContent = `Erro: ${errorMsg}`;
                 }
             } catch (error) {
-                alert("Ocorreu um erro de rede ou servidor.");
+                // Erros de rede, JSON parsing, etc.
+                alert("Ocorreu um erro de rede ou servidor. Verifique sua conexão e tente novamente.");
                 console.error("Fetch error:", error);
+                messageElement.textContent = "Erro de conexão ou parsing. Tente novamente.";
             }
           };
         ]]>
