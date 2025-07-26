@@ -6,7 +6,8 @@
     "depends": ["website_sale", "mass_mailing"],
       'data': [
 	    'data/mail_template.xml',
-	    'views/*.xml',
+	    'views/homepage_popup.xml',
+	    'views/popup_discount_views.xml'
 	],
     "installable": True,
     "application": False,
