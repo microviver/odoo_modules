@@ -53,17 +53,20 @@ class PopupController(http.Controller):
                 # Renderiza o corpo do e-mail com o código gerado
                 # Passe o 'object' para que o template possa usar ${object.code}
                 # CORREÇÃO AQUI: Adicionar [discount_record.id] como segundo argumento para _render_template
-                body_html = template._render(
-		    [discount_record.id],
-		    {'object': discount_record, 'code': code, 'email': email}
+                body_html = template.with_context(
+		    object=discount_record, 
+		    code=code, 
+		    email=email
+		)._render_template(
+		    template.body_html,
+		    [discount_record.id]
 		)
-
                  
                 mail_values = {
                     'subject': "¡Tu código de descuento exclusivo está aquí!",
                     'email_from': 'tech@microviver.com', # Pode ser dinâmico ou fixo como agora
                     'email_to': email,
-                    'body_html': body_html,
+                    '_html': body_html,
                     'model_id': request.env.ref('popup_discount.model_popup_discount_code').id, # Associa ao modelo de códigos
                     'res_id': discount_record.id, # Associa ao registro do código específico
                 }
