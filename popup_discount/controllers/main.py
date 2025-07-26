@@ -41,11 +41,10 @@ class PopupController(http.Controller):
             existing_code = request.env['popup.discount.code'].sudo().search([('email', '=', email)], limit=1)
             if existing_code:
                 _logger.info(f"Email {email} já tem um código de desconto registado.")
-                # Retorna um status 'exists' para o frontend
                 return {'status': 'exists', 'message': 'Código já enviado anteriormente para este e-mail.'}
 
-            code = self._generate_unique_code() # Usar a função que gera código único
-            
+            code = self._generate_unique_code()  # Usar a função que gera código único
+
             # Cria o registro do código de desconto
             discount_record = request.env['popup.discount.code'].sudo().create({
                 'email': email,
@@ -54,22 +53,21 @@ class PopupController(http.Controller):
             })
 
             # Envia o e-mail usando o template
-
-	    template = request.env.ref('popup_discount.popup_discount_template').sudo() 	
+            template = request.env.ref('popup_discount.popup_discount_template').sudo()
             if template:
                 # Renderiza o corpo do e-mail com o código gerado
                 body_html = template._render_template(
                     template.body_html,
                     {'object': discount_record, 'code': code, 'email': email}
                 )
-                
+
                 mail_values = {
                     'subject': "¡Tu código de descuento!",
-                    'email_from': request.env.user.company_id.email or 'info@tutienda.com', # Usa o email da empresa ou fallback
+                    'email_from': request.env.user.company_id.email or 'info@tutienda.com',
                     'email_to': email,
                     'body_html': body_html,
-                    'model_id': request.env.ref('popup_discount.model_popup_discount_code').id, # Associa ao modelo de códigos
-                    'res_id': discount_record.id, # Associa ao registro do código específico
+                    'model_id': request.env.ref('popup_discount.model_popup_discount_code').id,
+                    'res_id': discount_record.id,
                 }
                 mail = request.env['mail.mail'].sudo().create(mail_values)
                 mail.send()
@@ -81,27 +79,24 @@ class PopupController(http.Controller):
             # Adicionar à lista de e-mails, se desejar
             mailing_list = request.env['mailing.list'].sudo().search([('name', '=', 'Newsletter')], limit=1)
             if not mailing_list:
-                # Opcional: criar a lista se não existir
                 mailing_list = request.env['mailing.list'].sudo().create({'name': 'Newsletter'})
                 _logger.info("Lista de mailing 'Newsletter' criada.")
 
             if mailing_list:
-                # Verifica se o contato já existe antes de criar um novo
                 contact = request.env['mailing.contact'].sudo().search([('email', '=', email)], limit=1)
                 if not contact:
-                    contact = request.env['mailing.contact'].sudo().create({'email': email, 'name': email}) # Adiciona nome para o contato
-                
-                # Adiciona o contato à lista de mailing, se ainda não estiver lá
+                    contact = request.env['mailing.contact'].sudo().create({'email': email, 'name': email})
+
                 if contact not in mailing_list.contact_ids:
                     mailing_list.write({'contact_ids': [(4, contact.id)]})
                     _logger.info(f"Email {email} adicionado à lista de mailing 'Newsletter'.")
                 else:
                     _logger.info(f"Email {email} já está na lista de mailing 'Newsletter'.")
 
-
             return {'status': 'ok'}
 
         except Exception as e:
             _logger.error(f"Erro ao processar envio de email de desconto para {email}: {e}", exc_info=True)
-            request.env.cr.rollback() # Garante rollback em caso de erro no banco de dados
+            request.env.cr.rollback()
             return {'status': 'error', 'message': 'Ocorreu um erro interno. Por favor, tente novamente mais tarde.'}
+
