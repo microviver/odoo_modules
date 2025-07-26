@@ -54,7 +54,8 @@ class PopupController(http.Controller):
             })
 
             # Envia o e-mail usando o template
-            template = request.env.ref('popup_discount.popup_discount_template') # Referência ao template XML
+
+	    template = request.env.ref('popup_discount.popup_discount_template').sudo() 	
             if template:
                 # Renderiza o corpo do e-mail com o código gerado
                 body_html = template._render_template(
