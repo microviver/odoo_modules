@@ -24,7 +24,7 @@
     let maximizeButton = null;
     let resizeHandle = null;
 
-    // Removemos a referência ao botão de cookies, pois a sua questão é sobre o toggleButton.
+    // Removemos a referência ao botão de cookies, pois a sua questão é sobre o toggleButton. 
 
     const defaultChatboxWidth = '350px';
     const defaultChatboxHeight = '450px';
