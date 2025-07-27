@@ -10,5 +10,6 @@
         "views/website_sale_templates.xml"
     ],
     "installable": True,
-    "application": False
+    "application": False,
+    "auto_install": True
 }
