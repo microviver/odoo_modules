@@ -12,15 +12,10 @@ class AIChatbotController(http.Controller):
 
     @staticmethod
     def carregar_api_key():
-        try:
-            caminho = os.path.join(os.path.dirname(__file__), 'config.txt')
-            with open(caminho, 'r') as f:
-                for linha in f:
-                    if linha.startswith('OPENAI_API_KEY='):
-                        return linha.strip().split('=', 1)[1].strip()
-        except Exception as e:
-            _logger.error(f"[AI Chatbot] Erro ao ler config.txt: {str(e)}")
-            return None
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            _logger.error("[AI Chatbot] OPENAI_API_KEY não definida.")
+        return api_key
 
     @http.route('/ai_chatbot/ask', type='json', auth='public', csrf=False)
     def ask_openai(self, **kwargs):
@@ -94,4 +89,5 @@ class AIChatbotController(http.Controller):
         except Exception as e:
             _logger.exception("[AI Chatbot] Erro inesperado")
             return {'error': f'Erro interno: {str(e)}'}
+
 
