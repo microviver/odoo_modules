@@ -108,46 +108,46 @@
             messageContainer.scrollTop = messageContainer.scrollHeight;
 
             fetch("/ai_chatbot/ask", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ question: question })
-})
-  .then(response => response.json())
-  .then(raw => {
-    const data = raw.result || raw; // <<– tira o "envelope" jsonrpc do Odoo
-    typingIndicator.style.display = "none";
-    
-    const botMsg = document.createElement("div");
-    botMsg.textContent = data.answer || data.error || "Erro ao obter resposta.";
-    botMsg.style.cssText = `
-      margin-bottom: 10px;
-      text-align: left;
-      background-color: #f1f8e9;
-      padding: 10px 15px;
-      border-radius: 18px;
-      max-width: 85%;
-      margin-right: auto;
-    `;
-    messageContainer.appendChild(botMsg);
-    messageContainer.scrollTop = messageContainer.scrollHeight;
-  })
-  .catch(error => {
-    typingIndicator.style.display = "none";
-    const botMsg = document.createElement("div");
-    botMsg.textContent = "Erro na conexão com o servidor.";
-    botMsg.style.cssText = `
-      margin-bottom: 10px;
-      text-align: left;
-      background-color: #ffe6e6;
-      padding: 10px 15px;
-      border-radius: 18px;
-      max-width: 85%;
-      margin-right: auto;
-      color: #a00;
-    `;
-    messageContainer.appendChild(botMsg);
-  });
-
+	  method: "POST",
+	  headers: { "Content-Type": "application/json" },
+	  body: JSON.stringify({ question: question })
+	})
+	  .then(response => response.json())
+	  .then(raw => {
+	    const data = raw.result || raw; // <<– tira o "envelope" jsonrpc do Odoo
+	    typingIndicator.style.display = "none";
+	    
+	    const botMsg = document.createElement("div");
+	    botMsg.textContent = data.answer || data.error || "Erro ao obter resposta.";
+	    botMsg.style.cssText = `
+	      margin-bottom: 10px;
+	      text-align: left;
+	      background-color: #f1f8e9;
+	      padding: 10px 15px;
+	      border-radius: 18px;
+	      max-width: 85%;
+	      margin-right: auto;
+	    `;
+	    messageContainer.appendChild(botMsg);
+	    messageContainer.scrollTop = messageContainer.scrollHeight;
+	  })
+	  .catch(error => {
+	    typingIndicator.style.display = "none";
+	    const botMsg = document.createElement("div");
+	    botMsg.textContent = "Erro na conexão com o servidor.";
+	    botMsg.style.cssText = `
+	      margin-bottom: 10px;
+	      text-align: left;
+	      background-color: #ffe6e6;
+	      padding: 10px 15px;
+	      border-radius: 18px;
+	      max-width: 85%;
+	      margin-right: auto;
+	      color: #a00;
+	    `;
+	    messageContainer.appendChild(botMsg);
+	  });
+	}
 
           function openChatbot() {
             renderChatbotBox();
