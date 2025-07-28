@@ -4,7 +4,7 @@
         <xpath expr="//div[@id='div_phone']" position="after">
             <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label for="dni"></label>
-                <input type="text" name="dni" t-att-value="checkout.get('dni', '')" class="form-control"/>
+                <input type="text" name="dni" t-att-value="request.params.get('dni', '')" class="form-control"/>
             </div>
         </xpath>
     </template>
