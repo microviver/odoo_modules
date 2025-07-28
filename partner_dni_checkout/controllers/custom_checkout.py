@@ -1,28 +1,20 @@
-<odoo>
-    <template id="add_custom_fields_to_checkout" inherit_id="website_sale.address">
-        <xpath expr="//input[@name='name']" position="replace">
-            <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                <label for="first_name" class="required">Nombre<span class="text-danger">*</span></label>
-                <input type="text" name="first_name" id="first_name" required="required"
-                       t-att-value="request.params.get('first_name', '')"
-                       class="form-control"/>
-            </div>
-            <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                <label for="last_name" class="required">Apellidos<span class="text-danger">*</span></label>
-                <input type="text" name="last_name" id="last_name" required="required"
-                       t-att-value="request.params.get('last_name', '')"
-                       class="form-control"/>
-            </div>
-        </xpath>
+from odoo import http
+from odoo.http import request
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
-        <xpath expr="//div[@id='div_phone']" position="after">
-            <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                <label for="dni" class="required">DNI / NIF / CPF<span class="text-danger">*</span></label>
-                <input type="text" name="dni" id="dni" required="required"
-                       t-att-value="request.params.get('dni', '')"
-                       class="form-control"/>
-            </div>
-        </xpath>
-    </template>
-</odoo>
+class PartnerDniCheckout(WebsiteSale):
+
+    @http.route(['/shop/checkout'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
+    def checkout(self, **post):
+        # Juntar first_name + last_name em name para compatibilidade com o core
+        first_name = post.get('first_name', '').strip()
+        last_name = post.get('last_name', '').strip()
+        full_name = (first_name + ' ' + last_name).strip()
+
+        # Atualiza o parâmetro post com 'name'
+        post = post.copy()
+        post['name'] = full_name
+
+        # Chama o método original com o post atualizado
+        return super(PartnerDniCheckout, self).checkout(**post)
 

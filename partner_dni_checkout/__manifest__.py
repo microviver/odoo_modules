@@ -13,3 +13,4 @@
     "application": False,
     "auto_install": True
 }
+

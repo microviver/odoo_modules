@@ -1,6 +1,11 @@
 <odoo>
     <template id="add_custom_fields_to_checkout" inherit_id="website_sale.address">
         <xpath expr="//input[@name='name']" position="replace">
+            <!-- Campo name oculto para compatibilidade com o JS do Odoo -->
+            <input type="hidden" name="name"
+                   t-att-value="(request.params.get('first_name', '') or '') + ' ' + (request.params.get('last_name', '') or '')"/>
+
+            <!-- Campos visíveis de first_name e last_name -->
             <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label for="first_name" class="required">Nombre<span class="text-danger">*</span></label>
                 <input type="text" name="first_name" id="first_name" required="required"
