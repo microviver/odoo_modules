@@ -10,8 +10,11 @@ _logger = logging.getLogger(__name__)
 
 class AIChatbotController(http.Controller):
 
-    @staticmethod
+   @staticmethod
     def carregar_api_key():
+        from pathlib import Path
+        env_path = Path("/home/odoo/.env")  # Caminho absoluto
+        load_dotenv(dotenv_path=env_path)
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             _logger.error("[AI Chatbot] OPENAI_API_KEY não definida.")
@@ -89,5 +92,6 @@ class AIChatbotController(http.Controller):
         except Exception as e:
             _logger.exception("[AI Chatbot] Erro inesperado")
             return {'error': f'Erro interno: {str(e)}'}
+
 
 
