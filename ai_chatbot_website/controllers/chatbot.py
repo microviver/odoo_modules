@@ -5,12 +5,13 @@ import time
 import json
 from openai import OpenAI
 import os
+from dotenv import load_dotenv
 
 _logger = logging.getLogger(__name__)
 
 class AIChatbotController(http.Controller):
 
-   @staticmethod
+    @staticmethod
     def carregar_api_key():
         from pathlib import Path
         env_path = Path("/home/odoo/.env")  # Caminho absoluto
@@ -92,6 +93,4 @@ class AIChatbotController(http.Controller):
         except Exception as e:
             _logger.exception("[AI Chatbot] Erro inesperado")
             return {'error': f'Erro interno: {str(e)}'}
-
-
 
