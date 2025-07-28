@@ -5,6 +5,8 @@ class PopupDiscountCode(models.Model):
     _description = 'Popup Discount Code'
     _order = 'create_date desc' # Ordena por data de criação
 
+    valid_until = fields.Date(string="Data de Validade")
+	
     name = fields.Char(string='Código de Desconto', compute='_compute_name', store=True) # Nome para exibição
     email = fields.Char(string='E-mail do Cliente', required=True, help="E-mail do cliente que recebeu o código de desconto.")
     code = fields.Char(string='Código', required=True, readonly=True, copy=False, help="Código de desconto único.")
@@ -23,3 +25,4 @@ class PopupDiscountCode(models.Model):
     def _compute_name(self):
         for record in self:
             record.name = f"Código de Desconto: {record.code}"
+

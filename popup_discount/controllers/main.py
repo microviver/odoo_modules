@@ -41,7 +41,7 @@ class PopupController(http.Controller):
                 # ✉️ Criar e enviar email
                 mail = request.env['mail.mail'].sudo().create({
                     'email_to': email,
-                    'email_from': 'tech@microriver.com',
+                    'email_from': 'tech@microviver.com',
                     'subject': '🎁 O teu código promocional exclusivo!',
                     'body_html': f"""
                         <p>Olá {nome},</p>
@@ -75,4 +75,5 @@ class PopupController(http.Controller):
 
         _logger.warning(f"{timestamp} odoo.addons.popup_discount.controllers.main: ❌ Nenhum email fornecido.")
         return {'status': 'error', 'message': 'No email provided'}
+
 
