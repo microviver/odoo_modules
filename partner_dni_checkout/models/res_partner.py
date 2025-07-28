@@ -3,4 +3,7 @@ from odoo import models, fields
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    dni = fields.Char("DNI / NIF / CPF")
+    first_name = fields.Char("Nombre")
+    last_name = fields.Char("Apellidos")
+    dni = fields.Char("DNI")
+
