@@ -1,3 +1,13 @@
+Com certeza\! Aqui está o código Odoo XML completo, incorporando as melhorias discutidas para a funcionalidade de redimensionamento e a correção do corte do botão "Enviar", através de um ajuste no padding.
+
+**Principais Mudanças Implementadas:**
+
+1.  **Redução do `padding` vertical:** Na `div` que contém o input e o botão, o `padding` foi alterado de `15px` para `10px 15px;`. Isso reduz o espaço vertical ocupado por essa seção, dando mais folga para o botão não ser cortado.
+2.  **Melhoria na Função `setupResize`:** A lógica de redimensionamento foi ajustada para garantir que o chatbot mantenha sua posição relativa ao canto inferior direito da tela após o redimensionamento, evitando "saltos" ou desalinhamentos.
+
+<!-- end list -->
+
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
   <template id="chatbot_button_and_script" name="Chatbot Button" inherit_id="website.layout">
@@ -20,7 +30,7 @@
           let isChatboxMaximized = false;
 
           const defaultChatboxWidth = '350px';
-          const defaultChatboxHeight = '450px';
+          const defaultChatboxHeight = '450px'; // Pode ser necessário ajustar ligeiramente se o corte persistir em diferentes navegadores/tamanhos de fonte
           const minChatboxWidth = 300;
           const minChatboxHeight = 200;
 
@@ -59,7 +69,7 @@
               </div>
               <div id="chatbot-messages-container" style="flex-grow: 1; padding: 15px; overflow-y: auto; background-color: #fcfcfc;"></div>
               <div id="chatbot-typing" style="padding: 8px 15px; font-style: italic; color: #888; text-align: center; display: none;">escribiendo...</div>
-              <div style="padding: 15px; border-top: 1px solid #f0f0f0; display: flex;">
+              <div style="padding: 10px 15px; border-top: 1px solid #f0f0f0; display: flex;">
                 <input type="text" id="chatbot-input" placeholder="Escribe tu mensaje..." style="flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; margin-right: 10px; font-size: 1.2em;"/>
                 <button id="chatbot-send-button" style="background-color: #4CAF50; color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer;">Enviar</button>
               </div>
@@ -96,11 +106,11 @@
               if (isChatboxMaximized) {
                 chatbotBox.style.width = defaultChatboxWidth;
                 chatbotBox.style.height = defaultChatboxHeight;
-                maximizeButton.innerHTML = '&#x26F6;';
+                maximizeButton.innerHTML = '&#x26F6;'; // Restore icon for minimize
               } else {
                 chatbotBox.style.width = 'calc(100% - 40px)';
                 chatbotBox.style.height = 'calc(100% - 110px)';
-                maximizeButton.innerHTML = '&#x25A1;';
+                maximizeButton.innerHTML = '&#x25A1;'; // Icon for maximize
               }
               isChatboxMaximized = !isChatboxMaximized;
             });
@@ -114,8 +124,8 @@
             let startY = 0;
             let startWidth = 0;
             let startHeight = 0;
-            let startLeft = 0;
-            let startTop = 0;
+            let startRight = 0;
+            let startBottom = 0;
 
             handle.addEventListener('mousedown', (e) => {
               e.preventDefault();
@@ -126,13 +136,17 @@
               startY = e.clientY;
               startWidth = rect.width;
               startHeight = rect.height;
-              startLeft = rect.left;
-              startTop = rect.top;
 
+              // Store initial right and bottom positions to restore them later
+              startRight = window.innerWidth - rect.right;
+              startBottom = window.innerHeight - rect.bottom;
+
+              // Temporarily switch to 'left' and 'top' for resizing
+              // This is crucial to allow resizing from top-left (nesw-resize)
               chatbotBox.style.right = 'auto';
               chatbotBox.style.bottom = 'auto';
-              chatbotBox.style.left = `${startLeft}px`;
-              chatbotBox.style.top = `${startTop}px`;
+              chatbotBox.style.left = `${rect.left}px`;
+              chatbotBox.style.top = `${rect.top}px`;
               chatbotBox.style.position = 'fixed';
             });
 
@@ -144,8 +158,10 @@
 
               const newWidth = Math.max(minChatboxWidth, startWidth - dx);
               const newHeight = Math.max(minChatboxHeight, startHeight - dy);
-              const newLeft = startLeft + dx;
-              const newTop = startTop + dy;
+
+              // Calculate new left and top based on keeping right and bottom distances
+              const newLeft = window.innerWidth - (startRight + newWidth);
+              const newTop = window.innerHeight - (startBottom + newHeight);
 
               chatbotBox.style.width = `${newWidth}px`;
               chatbotBox.style.height = `${newHeight}px`;
@@ -154,7 +170,16 @@
             });
 
             document.addEventListener('mouseup', () => {
-              isResizing = false;
+              if (isResizing) {
+                isResizing = false;
+                // Revert to 'right' and 'bottom' positioning after resizing
+                // This ensures the chatbox stays anchored to the bottom-right
+                const rect = chatbotBox.getBoundingClientRect();
+                chatbotBox.style.left = 'auto';
+                chatbotBox.style.top = 'auto';
+                chatbotBox.style.right = `${window.innerWidth - rect.right}px`;
+                chatbotBox.style.bottom = `${window.innerHeight - rect.bottom}px`;
+              }
             });
           }
 
@@ -228,4 +253,4 @@
     </xpath>
   </template>
 </odoo>
-
+```
