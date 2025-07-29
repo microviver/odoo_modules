@@ -1,13 +1,3 @@
-Com certeza\! Aqui está o código Odoo XML completo, incorporando as melhorias discutidas para a funcionalidade de redimensionamento e a correção do corte do botão "Enviar", através de um ajuste no padding.
-
-**Principais Mudanças Implementadas:**
-
-1.  **Redução do `padding` vertical:** Na `div` que contém o input e o botão, o `padding` foi alterado de `15px` para `10px 15px;`. Isso reduz o espaço vertical ocupado por essa seção, dando mais folga para o botão não ser cortado.
-2.  **Melhoria na Função `setupResize`:** A lógica de redimensionamento foi ajustada para garantir que o chatbot mantenha sua posição relativa ao canto inferior direito da tela após o redimensionamento, evitando "saltos" ou desalinhamentos.
-
-<!-- end list -->
-
-```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
   <template id="chatbot_button_and_script" name="Chatbot Button" inherit_id="website.layout">
@@ -253,4 +243,3 @@ Com certeza\! Aqui está o código Odoo XML completo, incorporando as melhorias 
     </xpath>
   </template>
 </odoo>
-```
