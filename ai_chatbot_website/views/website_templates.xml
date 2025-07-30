@@ -20,7 +20,7 @@
           let isChatboxMaximized = false;
 
           const defaultChatboxWidth = '350px';
-          const defaultChatboxHeight = '450px'; // Pode ser necessário ajustar ligeiramente se o corte persistir em diferentes navegadores/tamanhos de fonte
+          const defaultChatboxHeight = '450px'; // Manter esta altura e ajustar o padding e font-size internos
           const minChatboxWidth = 300;
           const minChatboxHeight = 200;
 
@@ -59,9 +59,10 @@
               </div>
               <div id="chatbot-messages-container" style="flex-grow: 1; padding: 15px; overflow-y: auto; background-color: #fcfcfc;"></div>
               <div id="chatbot-typing" style="padding: 8px 15px; font-style: italic; color: #888; text-align: center; display: none;">escribiendo...</div>
-              <div style="padding: 10px 15px; border-top: 1px solid #f0f0f0; display: flex;">
-                <input type="text" id="chatbot-input" placeholder="Escribe tu mensaje..." style="flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; margin-right: 10px; font-size: 1.2em;"/>
-                <button id="chatbot-send-button" style="background-color: #4CAF50; color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer;">Enviar</button>
+              <div style="padding: 8px 15px; border-top: 1px solid #f0f0f0; display: flex; align-items: center;">
+                <input type="text" id="chatbot-input" placeholder="Escribe tu mensaje..." style="flex-grow: 1; padding: 10px; border: 1px solid #ddd; border-radius: 25px; margin-right: 10px; font-size: 1.1em;"/>
+                <button id="chatbot-send-button" style="background-color: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.4em;">
+                    &#10148; </button>
               </div>
               <div id="chatbot-resize-handle" style="
                 position: absolute;
@@ -127,12 +128,9 @@
               startWidth = rect.width;
               startHeight = rect.height;
 
-              // Store initial right and bottom positions to restore them later
               startRight = window.innerWidth - rect.right;
               startBottom = window.innerHeight - rect.bottom;
 
-              // Temporarily switch to 'left' and 'top' for resizing
-              // This is crucial to allow resizing from top-left (nesw-resize)
               chatbotBox.style.right = 'auto';
               chatbotBox.style.bottom = 'auto';
               chatbotBox.style.left = `${rect.left}px`;
@@ -149,7 +147,6 @@
               const newWidth = Math.max(minChatboxWidth, startWidth - dx);
               const newHeight = Math.max(minChatboxHeight, startHeight - dy);
 
-              // Calculate new left and top based on keeping right and bottom distances
               const newLeft = window.innerWidth - (startRight + newWidth);
               const newTop = window.innerHeight - (startBottom + newHeight);
 
@@ -162,8 +159,6 @@
             document.addEventListener('mouseup', () => {
               if (isResizing) {
                 isResizing = false;
-                // Revert to 'right' and 'bottom' positioning after resizing
-                // This ensures the chatbox stays anchored to the bottom-right
                 const rect = chatbotBox.getBoundingClientRect();
                 chatbotBox.style.left = 'auto';
                 chatbotBox.style.top = 'auto';
@@ -196,7 +191,7 @@
               typingIndicator.style.display = "none";
 
               const botMsg = document.createElement("div");
-              botMsg.textContent = data.answer || data.error || "Error al obtener respuesta.";
+              botMsg.textContent = data.answer || data.error || "Error al obtener resposta.";
               botMsg.style.cssText = `
                 margin-bottom: 10px;
                 text-align: left;
@@ -212,7 +207,7 @@
             .catch(error => {
               typingIndicator.style.display = "none";
               const botMsg = document.createElement("div");
-              botMsg.textContent = "Error de conexión con el servidor.";
+              botMsg.textContent = "Error de conexão com o servidor.";
               botMsg.style.cssText = `
                 margin-bottom: 10px;
                 text-align: left;
