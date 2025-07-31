@@ -5,7 +5,7 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 class WebsiteSaleDNI(WebsiteSale):
 
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
-    def checkout_form_save(self, **post):
+    def checkout(self, **post):
         first_name = post.get('first_name', '').strip()
         last_name = post.get('last_name', '').strip()
         dni_value = post.get('dni', '').strip()
@@ -16,7 +16,7 @@ class WebsiteSaleDNI(WebsiteSale):
         # Combina para preencher o campo padrão 'name'
         post['name'] = f"{first_name} {last_name}"
 
-        response = super().checkout_form_save(**post)
+        response = super().checkout(**post)
 
         partner = request.website.sale_get_order().partner_id
         if partner:

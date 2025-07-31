@@ -1,6 +1,6 @@
 <odoo>
     <template id="website_sale_checkout_dni" inherit_id="website_sale.checkout" name="Checkout DNI + Nome/Apl">
-        <xpath expr="//div[@id='checkout']//div[contains(@class, 'row')]//div[contains(@class, 'col-lg-6') and contains(@class, 'col-xl-7')]" position="inside">
+        <xpath expr="//div[@id='checkout']//div[hasclass('row')]//div[hasclass('col-lg-6') and hasclass('col-xl-7')]" position="inside">
             
             <div class="form-group mt-3">
                 <label for="first_name">Nome</label>
