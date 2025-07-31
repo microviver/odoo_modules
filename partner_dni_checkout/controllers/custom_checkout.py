@@ -4,36 +4,37 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class PartnerDniCheckout(WebsiteSale):
 
-    @http.route(
-        ['/shop/address/submit'], # This is the correct route for the address form submission
-        type='http', auth="public", methods=['POST'], website=True, sitemap=False
-    )
-    def checkout_form_validate(self, **post):
-        # Call the original method first.
-        # This handles Odoo's default validation for standard fields (including 'name' from your hidden input)
-        # and proceeds to the next step or re-renders the page with errors.
-        response = super(PartnerDniCheckout, self).checkout_form_validate(**post)
+    # This method is called by the checkout process to prepare a partner record
+    # It's the perfect place to inject custom fields before the partner is created/updated
+    def _checkout_form_validate_fields(self, mode, all_form_fields):
+        # The parent method handles validation of standard fields
+        res = super(PartnerDniCheckout, self)._checkout_form_validate_fields(mode, all_form_fields)
+        
+        # Here we can add our custom fields to the list of fields to validate
+        res.append('first_name')
+        res.append('last_name')
+        res.append('dni')
+        
+        return res
+    
+    def _checkout_form_save(self, mode, checkout, all_form_fields):
+        # This method is called to save the checkout data to the partner
+        partner_id = super(PartnerDniCheckout, self)._checkout_form_save(mode, checkout, all_form_fields)
 
-        # After the super call, if an order and partner are successfully associated,
-        # update the custom fields.
-        order = request.website.sale_get_order()
-        partner = order.partner_id if order else None
+        # Get the new partner record to update our custom fields
+        partner = request.env['res.partner'].sudo().browse(partner_id)
 
         if partner:
-            # Get the values for your custom fields from the post data
-            first_name = post.get('first_name', '').strip()
-            last_name = post.get('last_name', '').strip()
-            dni_value = post.get('dni', '').strip()
-
+            # Get the values for our custom fields from the checkout data
+            first_name = checkout.get('first_name', '').strip()
+            last_name = checkout.get('last_name', '').strip()
+            dni_value = checkout.get('dni', '').strip()
+            
             # Update the partner record with the new custom fields
-            # Use .sudo() to ensure you have the necessary permissions to write
-            partner.sudo().write({
+            partner.write({
                 'first_name': first_name,
                 'last_name': last_name,
                 'dni': dni_value
             })
 
-        # Return the response from the original method.
-        # This will either be a redirect to the next step (e.g., payment)
-        # or the current page with validation errors.
-        return response
+        return partner_id
