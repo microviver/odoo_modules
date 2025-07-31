@@ -4,17 +4,21 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class PartnerDniCheckout(WebsiteSale):
 
-    @http.route(['/shop/checkout'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
-    def checkout(self, **post):
-        # Juntar first_name + last_name em name para compatibilidade com o core
+    @http.route(
+        ['/shop/address/submit'],
+        type='http', auth="public", methods=['POST'], website=True, sitemap=False
+    )
+    def checkout_form_validate(self, **post):
+        # Passo 1: Juntar first_name + last_name em name.
+        # Isso garante que a validação do Odoo tenha o campo 'name' preenchido corretamente.
         first_name = post.get('first_name', '').strip()
         last_name = post.get('last_name', '').strip()
-        full_name = (first_name + ' ' + last_name).strip()
+        post['name'] = (first_name + ' ' + last_name).strip()
 
-        # Atualiza o parâmetro post com 'name'
-        post = post.copy()
-        post['name'] = full_name
+        # Passo 2: Chamar o método original do Odoo para a validação.
+        # O método 'super' irá agora processar o 'post' data modificado.
+        # A resposta será o formulário recarregado com o erro ou o redirecionamento para o próximo passo.
+        response = super(PartnerDniCheckout, self).checkout_form_validate(**post)
 
-        # Chama o método original com o post atualizado
-        return super(PartnerDniCheckout, self).checkout(**post)
+        return response
 
