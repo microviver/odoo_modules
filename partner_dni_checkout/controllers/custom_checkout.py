@@ -4,33 +4,26 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class PartnerDniCheckout(WebsiteSale):
 
-    # Método para garantir que os dados do formulário persistam
-    # após uma validação falhada.
-    def _get_checkout_data(self, **kw):
-        # Chama a lógica original para obter o dicionário de dados padrão
-        res = super(PartnerDniCheckout, self)._get_checkout_data(**kw)
-
-        # Adiciona os dados do formulário submetido (request.params)
-        # ao dicionário 'checkout' do Odoo.
-        # Isto garante que os campos personalizados são repovoados no formulário
-        # após um erro de validação.
-        res['checkout'].update(request.params)
-        
-        return res
-
-    # Este método é responsável por guardar os dados no parceiro.
-    # Já o tinha, mas foi ajustado para usar 'checkout' em vez de 'post'.
+    # Este método é chamado para guardar os dados do formulário no parceiro
+    # Vamos usá-lo para garantir que o campo 'name' é preenchido corretamente
     def _checkout_form_save(self, mode, checkout, all_form_fields):
-        # A super-chamada faz a lógica padrão do Odoo, criando/atualizando o parceiro
-        # e preenchendo o campo 'name' com a concatenação.
+        # 1. Preenche o campo 'name' no dicionário 'checkout' antes de chamar a lógica do Odoo.
+        first_name = checkout.get('first_name', '').strip()
+        last_name = checkout.get('last_name', '').strip()
+        
+        # O campo 'name' é a concatenação dos dois nomes, como esperado.
+        full_name = f"{first_name} {last_name}".strip()
+        checkout['name'] = full_name
+
+        # 2. Chama a lógica padrão do Odoo, que agora receberá um campo 'name' preenchido.
         partner_id = super(PartnerDniCheckout, self)._checkout_form_save(mode, checkout, all_form_fields)
         
-        # Agora, atualizamos o parceiro com os nossos campos personalizados.
+        # 3. Atualiza os campos personalizados no registo do parceiro.
         partner = request.env['res.partner'].sudo().browse(partner_id)
         if partner:
             partner.write({
-                'first_name': checkout.get('first_name', '').strip(),
-                'last_name': checkout.get('last_name', '').strip(),
+                'first_name': first_name,
+                'last_name': last_name,
                 'dni': checkout.get('dni', '').strip()
             })
 
