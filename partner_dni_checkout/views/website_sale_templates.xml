@@ -1,34 +1,20 @@
 <odoo>
     <template id="add_custom_fields_to_checkout" inherit_id="website_sale.address">
-        <xpath expr="//input[@name='name']" position="replace">
-            <!-- Hidden field for compatibility with Odoo's core 'name' field -->
-            <input type="hidden" name="name"
-                   t-att-value="(request.params.get('first_name', '') or '') + ' ' + (request.params.get('last_name', '') or '')"/>
-
-            <!-- Row with two side-by-side fields for Name and Last Name -->
-            <div class="row">
-                <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                    <label for="first_name" class="required">Nombre<span class="text-danger"> *</span></label>
-                    <input type="text" name="first_name" id="first_name" required="required"
-                           t-att-value="request.params.get('first_name', '')"
-                           class="form-control"/>
-                </div>
-                <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                    <label for="last_name" class="required">Apellidos<span class="text-danger"> *</span></label>
-                    <input type="text" name="last_name" id="last_name" required="required"
-                           t-att-value="request.params.get('last_name', '')"
-                           class="form-control"/>
-                </div>
+        <xpath expr="//div[@id='div_name']" position="replace">
+            <div id="div_name" class="col-lg-6 mb-2">
+                <label for="name">Nome</label>
+                <input type="text" name="name" id="o_name" class="form-control" required="required" t-att-value="checkout.get('name')"/>
+            </div>
+            <div id="div_last_name" class="col-lg-6 mb-2">
+                <label for="last_name">Apelido</label>
+                <input type="text" name="last_name" id="last_name" class="form-control" t-att-value="checkout.get('last_name')"/>
             </div>
         </xpath>
 
-        <!-- Add DNI field after the phone number field -->
         <xpath expr="//div[@id='div_phone']" position="after">
-            <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                <label for="dni" class="required">DNI<span class="text-danger"> *</span></label>
-                <input type="text" name="dni" id="dni" required="required"
-                       t-att-value="request.params.get('dni', '')"
-                       class="form-control"/>
+            <div id="div_dni" class="col-lg-6 mb-2">
+                <label for="dni">DNI/NIF</label>
+                <input type="text" name="dni" id="dni" class="form-control" required="required" t-att-value="checkout.get('dni')"/>
             </div>
         </xpath>
     </template>
