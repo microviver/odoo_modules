@@ -4,37 +4,34 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class PartnerDniCheckout(WebsiteSale):
 
-    # This method is called by the checkout process to prepare a partner record
-    # It's the perfect place to inject custom fields before the partner is created/updated
-    def _checkout_form_validate_fields(self, mode, all_form_fields):
-        # The parent method handles validation of standard fields
-        res = super(PartnerDniCheckout, self)._checkout_form_validate_fields(mode, all_form_fields)
-        
-        # Here we can add our custom fields to the list of fields to validate
-        res.append('first_name')
-        res.append('last_name')
-        res.append('dni')
+    # Método para garantir que os dados do formulário persistam
+    # após uma validação falhada.
+    def _get_checkout_data(self, **kw):
+        # Chama a lógica original para obter o dicionário de dados padrão
+        res = super(PartnerDniCheckout, self)._get_checkout_data(**kw)
+
+        # Adiciona os dados do formulário submetido (request.params)
+        # ao dicionário 'checkout' do Odoo.
+        # Isto garante que os campos personalizados são repovoados no formulário
+        # após um erro de validação.
+        res['checkout'].update(request.params)
         
         return res
-    
+
+    # Este método é responsável por guardar os dados no parceiro.
+    # Já o tinha, mas foi ajustado para usar 'checkout' em vez de 'post'.
     def _checkout_form_save(self, mode, checkout, all_form_fields):
-        # This method is called to save the checkout data to the partner
+        # A super-chamada faz a lógica padrão do Odoo, criando/atualizando o parceiro
+        # e preenchendo o campo 'name' com a concatenação.
         partner_id = super(PartnerDniCheckout, self)._checkout_form_save(mode, checkout, all_form_fields)
-
-        # Get the new partner record to update our custom fields
+        
+        # Agora, atualizamos o parceiro com os nossos campos personalizados.
         partner = request.env['res.partner'].sudo().browse(partner_id)
-
         if partner:
-            # Get the values for our custom fields from the checkout data
-            first_name = checkout.get('first_name', '').strip()
-            last_name = checkout.get('last_name', '').strip()
-            dni_value = checkout.get('dni', '').strip()
-            
-            # Update the partner record with the new custom fields
             partner.write({
-                'first_name': first_name,
-                'last_name': last_name,
-                'dni': dni_value
+                'first_name': checkout.get('first_name', '').strip(),
+                'last_name': checkout.get('last_name', '').strip(),
+                'dni': checkout.get('dni', '').strip()
             })
 
         return partner_id
