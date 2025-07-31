@@ -1,6 +1,6 @@
 from odoo import http
-from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+
 
 class PartnerDniCheckout(WebsiteSale):
 
@@ -8,17 +8,19 @@ class PartnerDniCheckout(WebsiteSale):
         ['/shop/address/submit'],
         type='http', auth="public", methods=['POST'], website=True, sitemap=False
     )
-    def checkout_form_validate(self, **post):
-        # Passo 1: Juntar first_name + last_name em name.
-        # Isso garante que a validação do Odoo tenha o campo 'name' preenchido corretamente.
-        first_name = post.get('first_name', '').strip()
-        last_name = post.get('last_name', '').strip()
-        post['name'] = (first_name + ' ' + last_name).strip()
+    def address_form_validate(self, mode, all_values, data):
+        """
+        Sobrescreve a validação do formulário de endereço no checkout.
+        Junta first_name + last_name em 'name' antes da validação.
+        """
+        # Garantir que não quebre se os campos não existirem
+        first_name = (data.get('first_name') or "").strip()
+        last_name = (data.get('last_name') or "").strip()
 
-        # Passo 2: Chamar o método original do Odoo para a validação.
-        # O método 'super' irá agora processar o 'post' data modificado.
-        # A resposta será o formulário recarregado com o erro ou o redirecionamento para o próximo passo.
-        response = super(PartnerDniCheckout, self).checkout_form_validate(**post)
+        # Substituir o campo name pela junção
+        if first_name or last_name:
+            data['name'] = (first_name + " " + last_name).strip()
 
-        return response
+        # Continua o fluxo original de validação
+        return super().address_form_validate(mode, all_values, data)
 
