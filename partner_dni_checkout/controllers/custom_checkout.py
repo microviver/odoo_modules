@@ -1,34 +1,30 @@
 from odoo import http
+from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.tools.translate import _
 
+class WebsiteSaleDNI(WebsiteSale):
 
-class PartnerDniCheckout(WebsiteSale):
+    @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
+    def checkout_form_save(self, **post):
+        first_name = post.get('first_name', '').strip()
+        last_name = post.get('last_name', '').strip()
+        dni_value = post.get('dni', '').strip()
 
-    def _merge_name(self, values):
-        """Combina first_name e last_name no campo name."""
-        first_name = (values.get('first_name') or "").strip()
-        last_name = (values.get('last_name') or "").strip()
-        if first_name or last_name:
-            values['name'] = (first_name + " " + last_name).strip()
-        return values
+        if not first_name or not last_name or not dni_value:
+            return request.redirect('/shop/checkout?error=missing_fields')
 
-    def address_form_validate(self, mode, all_values, data):
-        """Valida dados do checkout (nome + DNI obrigatório)."""
-        all_values = self._merge_name(all_values)
+        # Combina para preencher o campo padrão 'name'
+        post['name'] = f"{first_name} {last_name}"
 
-        errors, error_msgs = super().address_form_validate(mode, all_values, data)
+        response = super().checkout_form_save(**post)
 
-        # Validação extra: DNI obrigatório
-        dni = all_values.get('dni', '').strip()
-        if not dni:
-            errors['dni'] = 'missing'
-            error_msgs.append(_("DNI é obrigatório."))
+        partner = request.website.sale_get_order().partner_id
+        if partner:
+            partner.sudo().write({
+                'first_name': first_name,
+                'last_name': last_name,
+                'dni': dni_value
+            })
 
-        return errors, error_msgs
-
-    def address_form_save(self, partner_id, mode, all_values, data):
-        """Salva dados do checkout garantindo nome completo."""
-        all_values = self._merge_name(all_values)
-        return super().address_form_save(partner_id, mode, all_values, data)
+        return response
 

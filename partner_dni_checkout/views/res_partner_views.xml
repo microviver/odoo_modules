@@ -5,9 +5,9 @@
     <field name="inherit_id" ref="base.view_partner_form"/>
     <field name="arch" type="xml">
       <field name="vat" position="after">
-        <field name="first_name"/>
-        <field name="last_name"/>
-        <field name="dni"/>
+        <field name="first_name" required="1"/>
+        <field name="last_name" required="1"/>
+        <field name="dni" required="1"/>
       </field>
     </field>
   </record>
