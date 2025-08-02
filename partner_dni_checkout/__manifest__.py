@@ -5,10 +5,7 @@
     "author": "Wadiana",
     "category": "Website",
     "summary": "Adiciona campo DNI no checkout da loja e no backend",
-    "data": [
-        "views/res_partner_views.xml",
-        "views/website_sale_templates.xml"
-    ],
+    'data': ['views/res_partner_view.xml'],
     "installable": True,
     "application": False,
     "auto_install": False, 
