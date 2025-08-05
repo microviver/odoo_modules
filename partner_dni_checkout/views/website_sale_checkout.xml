@@ -6,7 +6,7 @@
                     <span>Nome</span>
                 </label>
                 <input type="text" name="first_name" id="first_name"
-                       t-att-value="partner.first_name or ''"
+                       t-att-value="checkout.get('first_name', '')"
                        class="form-control" required="required"/>
             </div>
             <div id="div_last_name" class="form-group">
@@ -14,7 +14,7 @@
                     <span>Apelido</span>
                 </label>
                 <input type="text" name="last_name" id="last_name"
-                       t-att-value="partner.last_name or ''"
+                       t-att-value="checkout.get('last_name', '')"
                        class="form-control" required="required"/>
             </div>
         </xpath>
@@ -25,10 +25,9 @@
                     <span>DNI/NIF</span>
                 </label>
                 <input type="text" name="dni" id="dni"
-                       t-att-value="partner.dni or ''"
+                       t-att-value="checkout.get('dni', '')"
                        class="form-control"/>
             </div>
         </xpath>
     </template>
 </odoo>
-
