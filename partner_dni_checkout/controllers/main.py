@@ -23,4 +23,4 @@ class WebsiteSaleInherit(WebsiteSale):
         # A combinação do nome será feita no modelo, então não é
         # necessário fazer a concatenação aqui.
         
-        return super().checkout_form_save(checkout, **kw)
+        return super().checkout_form_save(checkout, **kw) 
