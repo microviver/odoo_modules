@@ -1,0 +1,34 @@
+<odoo>
+    <template id="website_sale_address_dni" inherit_id="website_sale.address">
+        <xpath expr="//div[@id='div_name']" position="after">
+            <div class="form-group">
+                <label for="dni" class="control-label">DNI <span style="color:red">*</span></label>
+                <input type="text" name="dni" t-att-value="partner.dni or ''" required="required"
+                       class="form-control" id="dni"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="website_sale_checkout_form_dni" inherit_id="website_sale.checkout">
+        <xpath expr="//form" position="inside">
+            <t t-if="not partner.dni">
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var form = document.querySelector("form[action='/shop/address']");
+                        if(form) {
+                            form.addEventListener("submit", function(e) {
+                                var dni = document.getElementById("dni");
+                                if (!dni.value.trim()) {
+                                    alert("O campo DNI é obrigatório.");
+                                    e.preventDefault();
+                                    dni.focus();
+                                }
+                            });
+                        }
+                    });
+                </script>
+            </t>
+        </xpath>
+    </template>
+</odoo>
+
