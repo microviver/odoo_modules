@@ -73,7 +73,7 @@
                 cursor: nesw-resize;
                 background: transparent;
                 z-index: 10000;
-              "></div>
+              "></div>  
             `;
 
             typingIndicator = document.getElementById("chatbot-typing");
