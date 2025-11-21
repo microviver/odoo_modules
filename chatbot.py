@@ -17,7 +17,6 @@ class AIChatbotController(http.Controller):
         O ficheiro deve conter: OPENAI_API_KEY=xxxx
         """
         try:
-            # Caminho até à pasta deste ficheiro
             module_path = os.path.dirname(os.path.abspath(__file__))
             config_path = os.path.join(module_path, "config.txt")
 
@@ -43,9 +42,8 @@ class AIChatbotController(http.Controller):
     @http.route('/ai_chatbot/ask', type='json', auth='public', csrf=False)
     def ask_openai(self, **kwargs):
         """
-        Rota que inicia a conversa com o OpenAI, sem bloquear o worker.
-        Retorna imediatamente thread_id + run_id.
-        O frontend faz polling via /ai_chatbot/status.
+        Endpoint principal do chatbot: cria thread, envia pergunta,
+        inicia o run e devolve thread_id + run_id sem bloquear o worker.
         """
         try:
             # Lê JSON do pedido
@@ -84,7 +82,6 @@ class AIChatbotController(http.Controller):
                 assistant_id=assistant_id
             )
 
-            # Não bloqueia — devolve imediatamente
             return {
                 'status': 'processing',
                 'thread_id': thread.id,
@@ -94,5 +91,3 @@ class AIChatbotController(http.Controller):
         except Exception as e:
             _logger.exception("[AI Chatbot] Erro inesperado")
             return {'error': f'Erro interno: {str(e)}'}
-
-
