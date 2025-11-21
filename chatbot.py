@@ -95,5 +95,4 @@ class AIChatbotController(http.Controller):
             _logger.exception("[AI Chatbot] Erro inesperado")
             return {'error': f'Erro interno: {str(e)}'}
 
-    @http.route('/ai_chat_
 
