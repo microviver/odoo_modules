@@ -170,4 +170,6 @@ class AIChatbotController(http.Controller):
 
         except Exception as e:
             _logger.exception("[AI Chatbot] Erro inesperado")
-            return {'error': f'Erro interno: {str(e)}'}
+            return {'error': f'Erro interno: {str(e)}'} 
+             
+ 
