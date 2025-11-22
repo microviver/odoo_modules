@@ -5,7 +5,7 @@ import json
 from openai import OpenAI
 from openai import APIError
 import os
-import time # Necessário para o polling (espera)
+import time
 
 _logger = logging.getLogger(__name__)
 
@@ -15,31 +15,15 @@ class AIChatbotController(http.Controller):
     @staticmethod
     def carregar_api_key():
         """
-        Lê a API key a partir de um ficheiro config.txt no diretório do módulo.
-        O ficheiro deve conter: OPENAI_API_KEY=xxx
+        Lê a API key da variável de ambiente OPENAI_API_KEY.
+        Esta variável deve estar definida no ambiente do Odoo.sh (.env no servidor).
         """
-        try:
-            # Caminho absoluto e seguro ao próprio módulo
-            module_path = os.path.dirname(os.path.abspath(__file__))
-            config_path = os.path.join(module_path, "config.txt")
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            _logger.error("[AI Chatbot] Variável de ambiente OPENAI_API_KEY não encontrada.")
+        return api_key
 
-            if not os.path.exists(config_path):
-                _logger.error(f"[AI Chatbot] config.txt não encontrado em: {config_path}")
-                return None
 
-            with open(config_path, "r") as f:
-                for line in f:
-                    line = line.strip()
-                    if line.startswith("OPENAI_API_KEY="):
-                        return line.split("=", 1)[1].strip()
-
-            _logger.error("[AI Chatbot] OPENAI_API_KEY não encontrada no config.txt")
-            return None
-
-        except Exception as e:
-            _logger.error(f"[AI Chatbot] Falha ao carregar API key: {str(e)}")
-            return None
-  
     @http.route('/ai_chatbot/ask', type='json', auth='public', csrf=False)
     def ask_openai(self, **kwargs):
         try:
@@ -54,77 +38,70 @@ class AIChatbotController(http.Controller):
             if not question:
                 return {'error': 'Pergunta não fornecida'}
 
-            # 2. Carregar a API Key (Ponto Crítico)
+            # 2. Buscar API Key da variável de ambiente
             api_key = AIChatbotController.carregar_api_key()
 
             if not api_key:
-                # Se esta mensagem persistir, o problema está 100% no config.txt ou no caminho
-                return {'error': 'API Key ausente | inválida'}
+                return {'error': 'API Key ausente ou inválida'}
 
             # 3. Inicializar o Cliente
             client = OpenAI(api_key=api_key)
-            
             assistant_id = "asst_jixSPwckEBK7bR6jxIYZP3K0"
 
             # =======================================================
-            # 4. Lógica de Assistant (Threads e Runs) - CORRIGIDA
+            # 4. Lógica do Assistant
             # =======================================================
-            
-            # A. Criar um novo Thread para a conversa
             thread = client.beta.threads.create()
 
-            # B. Adicionar a mensagem do utilizador ao Thread
             client.beta.threads.messages.create(
                 thread_id=thread.id,
                 role="user",
                 content=question
             )
 
-            # C. Iniciar a execução do Assistant no Thread
             run = client.beta.threads.runs.create(
                 thread_id=thread.id,
                 assistant_id=assistant_id
             )
 
-            # D. Polling (Espera) até que o Run esteja concluído
-            # Limite de 10 iterações (10 segundos) para evitar bloqueios longos
             max_polling_time = 10
             start_time = time.time()
-            
+
             while run.status not in ["completed", "failed", "cancelled", "expired"]:
                 if time.time() - start_time > max_polling_time:
-                    _logger.error(f"[AI Chatbot] Tempo de espera do Run excedido. Status: {run.status}")
-                    return {'error': 'O assistente demorou demasiado tempo a responder.'}
-                
-                time.sleep(0.5) # Espera 0.5 segundos
-                run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
+                    _logger.error(f"[AI Chatbot] Timeout no run. Status: {run.status}")
+                    return {'error': 'Assistente demorou demasiado tempo.'}
+
+                time.sleep(0.5)
+                run = client.beta.threads.runs.retrieve(
+                    thread_id=thread.id,
+                    run_id=run.id
+                )
 
             if run.status != "completed":
-                return {'error': f'O Assistant falhou ou foi cancelado. Status: {run.status}'}
+                return {'error': f"Assistente falhou: {run.status}"}
 
-            # E. Obter as mensagens (a mais recente será a resposta)
             messages = client.beta.threads.messages.list(
                 thread_id=thread.id,
                 order="desc",
-                limit=1 # Queremos apenas a última (a resposta)
+                limit=1
             )
 
             answer_text = ""
             if messages.data and messages.data[0].content and messages.data[0].content[0].type == "text":
-                 answer_text = messages.data[0].content[0].text.value
-            
-            # =======================================================
-            # 5. Retornar Resposta
-            # =======================================================
+                answer_text = messages.data[0].content[0].text.value
+
             return {
                 'status': 'completed',
                 'answer': answer_text.strip()
             }
 
         except APIError as e:
-            # Captura erros específicos da OpenAI (Ex: chave inválida, limites, etc.)
-            _logger.exception(f"[AI Chatbot] Erro (!) da API OpenAI: {str(e)}")
-            return {'error': f'Erro(!) da API OpenAI: {e.status_code} - {e.response.json().get("error", {}).get("message", "Detalhes Indisponíveis")}'}
+            _logger.exception(f"[AI Chatbot] Erro na API OpenAI: {str(e)}")
+            return {
+                'error': f'Erro da API OpenAI: {e.status_code} - '
+                         f'{e.response.json().get("error", {}).get("message", "Detalhes indisponíveis")}'
+            }
 
         except Exception as e:
             _logger.exception(f"[AI Chatbot] Erro inesperado: {str(e)}")
