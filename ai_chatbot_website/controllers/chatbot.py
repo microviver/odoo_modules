@@ -12,42 +12,7 @@ _logger = logging.getLogger(__name__)
 
 class AIChatbotController(http.Controller):
 
-    # ... (A sua função carregar_api_key pode permanecer como está)
-    @staticmethod
-    def carregar_api_key():
-        """Lê a API key a partir de config.txt no diretório do módulo."""
-        try:
-            # Caminho real da pasta onde este ficheiro .py está
-            module_path = os.path.dirname(os.path.abspath(__file__))
-            config_path = os.path.join(module_path, "config.txt")
-
-            _logger.warning(f"[AI Chatbot] A procurar config.txt em: {config_path}")
-
-            if not os.path.exists(config_path):
-                _logger.error(f"[AI Chatbot] config.txt não encontrado em: {config_path}")
-                return None
-
-            api_key ="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"
-            #with open(config_path, "r") as f:
-            #    for line in f:
-            #        line = line.strip()
-            #        if line.startswith("OPENAI_API_KEY="):
-            #            api_key = line.split("=", 1)[1].strip()
-            #            if api_key:
-            #                _logger.info("[AI Chatbot] API Key carregada com sucesso.")
-            #                return api_key
-            #            else:
-            #                _logger.error("[AI Chatbot] API Key está vazia.")
-            #                return None
-            # Este log e return só serão alcançados se a chave não for encontrada no ficheiro.
-            #_logger.error("[AI Chatbot] OPENAI_API_KEY não encontrada dentro do config.txt")
-            return api_key
-
-        except Exception as e:
-            _logger.exception(f"[AI Chatbot] Erro ao carregar API key: {str(e)}")
-            return None
-
-
+  
     @http.route('/ai_chatbot/ask', type='json', auth='public', csrf=False)
     def ask_openai(self, **kwargs):
         try:
