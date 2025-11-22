@@ -27,7 +27,7 @@ class AIChatbotController(http.Controller):
                 _logger.error(f"[AI Chatbot] config.txt não encontrado em: {config_path}")
                 return None
 
-            api_key ="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"
+            api_key =""
             #with open(config_path, "r") as f:
             #    for line in f:
             #        line = line.strip()
@@ -130,8 +130,8 @@ class AIChatbotController(http.Controller):
 
         except APIError as e:
             # Captura erros específicos da OpenAI (Ex: chave inválida, limites, etc.)
-            _logger.exception(f"[AI Chatbot] Erro da API OpenAI: {str(e)}")
-            return {'error': f'Erro da API OpenAI: {e.status_code} - {e.response.json().get("error", {}).get("message", "Detalhes Indisponíveis")}'}
+            _logger.exception(f"[AI Chatbot] Erro (!) da API OpenAI: {str(e)}")
+            return {'error': f'Erro(!) da API OpenAI: {e.status_code} - {e.response.json().get("error", {}).get("message", "Detalhes Indisponíveis")}'}
 
         except Exception as e:
             _logger.exception(f"[AI Chatbot] Erro inesperado: {str(e)}")
