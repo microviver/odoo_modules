@@ -63,7 +63,8 @@ class AIChatbotController(http.Controller):
                 return {'error': 'Pergunta não fornecida'}
 
             # 2. Carregar a API Key (Ponto Crítico)
-            api_key = AIChatbotController.carregar_api_key()
+            api_key = os.environ.get("OPENAI_API_KEY")
+
             if not api_key:
                 # Se esta mensagem persistir, o problema está 100% no config.txt ou no caminho
                 return {'error': 'API Key ausente | inválida'}
