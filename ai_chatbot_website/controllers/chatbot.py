@@ -1,7 +1,6 @@
 from odoo import http
 from odoo.http import request
 import logging
-import time
 import json
 from openai import OpenAI
 import os
@@ -13,14 +12,13 @@ class AIChatbotController(http.Controller):
 
     @staticmethod
     def carregar_api_key():
-        """
-        Lê a API key a partir de um ficheiro config.txt no diretório do módulo.
-        O ficheiro deve conter: OPENAI_API_KEY=xxx
-        """
+        """Lê a API key a partir de config.txt no diretório do módulo."""
         try:
-            # Caminho absoluto e seguro ao próprio módulo
+            # Caminho real da pasta onde este ficheiro .py está
             module_path = os.path.dirname(os.path.abspath(__file__))
             config_path = os.path.join(module_path, "config.txt")
+
+            _logger.warning(f"[AI Chatbot] A procurar config.txt em: {config_path}")
 
             if not os.path.exists(config_path):
                 _logger.error(f"[AI Chatbot] config.txt não encontrado em: {config_path}")
@@ -30,13 +28,19 @@ class AIChatbotController(http.Controller):
                 for line in f:
                     line = line.strip()
                     if line.startswith("OPENAI_API_KEY="):
-                        return line.split("=", 1)[1].strip()
+                        api_key = line.split("=", 1)[1].strip()
+                        if api_key:
+                            _logger.info("[AI Chatbot] API Key carregada com sucesso.")
+                            return api_key
+                        else:
+                            _logger.error("[AI Chatbot] API Key está vazia.")
+                            return None
 
-            _logger.error("[AI Chatbot] OPENAI_API_KEY não encontrada no config.txt")
+            _logger.error("[AI Chatbot] OPENAI_API_KEY não encontrada dentro do config.txt")
             return None
 
         except Exception as e:
-            _logger.error(f"[AI Chatbot] Falha ao carregar API key: {str(e)}")
+            _logger.exception(f"[AI Chatbot] Erro ao carregar API key: {str(e)}")
             return None
 
     @http.route('/ai_chatbot/ask', type='json', auth='public', csrf=False)
@@ -55,35 +59,33 @@ class AIChatbotController(http.Controller):
 
             api_key = AIChatbotController.carregar_api_key()
             if not api_key:
-                return {'error': 'API Key ausente ou inválida'}
+                return {'error': 'API Key ausente / inválida'}
 
             client = OpenAI(api_key=api_key)
 
             assistant_id = "asst_jixSPwckEBK7bR6jxIYZP3K0"
 
-            thread = client.beta.threads.create()
-
-            client.beta.threads.messages.create(
-                thread_id=thread.id,
-                role="user",
-                content=question
+            response = client.responses.create(
+                model="gpt-4.1",
+                assistant_id=assistant_id,
+                input=question
             )
 
-            run = client.beta.threads.runs.create(
-                thread_id=thread.id,
-                assistant_id=assistant_id
-            )
+            # Extrair resposta
+            output = response.output or []
+            answer_text = ""
 
-            # ⚠ Importante: NÃO esperas aqui.
-            # Evita loops, sleep e freezes no Odoo.sh.
+            if output:
+                block = output[0]
+                if block.type == "output_text":
+                    for seg in block.text:
+                        answer_text += seg["text"]
+
             return {
-                'status': 'processing',
-                'thread_id': thread.id,
-                'run_id': run.id
+                'status': 'completed',
+                'answer': answer_text.strip()
             }
 
         except Exception as e:
             _logger.exception("[AI Chatbot] Erro inesperado")
-            return {'error': f'Erro interno: {str(e)}'} 
-             
- 
+            return {'error': f'Erro interno: {str(e)}'}
