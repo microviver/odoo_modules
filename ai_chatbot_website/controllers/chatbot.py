@@ -27,20 +27,21 @@ class AIChatbotController(http.Controller):
                 _logger.error(f"[AI Chatbot] config.txt não encontrado em: {config_path}")
                 return None
 
-            with open(config_path, "r") as f:
-                for line in f:
-                    line = line.strip()
-                    if line.startswith("OPENAI_API_KEY="):
-                        api_key = line.split("=", 1)[1].strip()
-                        if api_key:
-                            _logger.info("[AI Chatbot] API Key carregada com sucesso.")
-                            return api_key
-                        else:
-                            _logger.error("[AI Chatbot] API Key está vazia.")
-                            return None
+            api_key ="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"
+            #with open(config_path, "r") as f:
+            #    for line in f:
+            #        line = line.strip()
+            #        if line.startswith("OPENAI_API_KEY="):
+            #            api_key = line.split("=", 1)[1].strip()
+            #            if api_key:
+            #                _logger.info("[AI Chatbot] API Key carregada com sucesso.")
+            #                return api_key
+            #            else:
+            #                _logger.error("[AI Chatbot] API Key está vazia.")
+            #                return None
             # Este log e return só serão alcançados se a chave não for encontrada no ficheiro.
-            _logger.error("[AI Chatbot] OPENAI_API_KEY não encontrada dentro do config.txt")
-            return None
+            #_logger.error("[AI Chatbot] OPENAI_API_KEY não encontrada dentro do config.txt")
+            return api_key
 
         except Exception as e:
             _logger.exception(f"[AI Chatbot] Erro ao carregar API key: {str(e)}")
@@ -65,7 +66,7 @@ class AIChatbotController(http.Controller):
             api_key = AIChatbotController.carregar_api_key()
             if not api_key:
                 # Se esta mensagem persistir, o problema está 100% no config.txt ou no caminho
-                return {'error': 'API Key ausente ou inválida'}
+                return {'error': 'API Key ausente | inválida'}
 
             # 3. Inicializar o Cliente
             client = OpenAI(api_key=api_key)
