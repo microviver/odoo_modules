@@ -27,7 +27,7 @@ class AIChatbotController(http.Controller):
                 _logger.error(f"[AI Chatbot] config.txt não encontrado em: {config_path}")
                 return None
 
-            api_key =""
+            api_key ="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"
             #with open(config_path, "r") as f:
             #    for line in f:
             #        line = line.strip()
