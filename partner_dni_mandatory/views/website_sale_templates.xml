@@ -1,18 +1,13 @@
 <odoo>
     <data>
-        <template id="add_dni_checkout" inherit_id="website_sale.address">
+        <template id="add_dni_checkout_fixed" inherit_id="website_sale.address">
             <xpath expr="//div[@id='div_phone']" position="after">
-                <div t-attf-class="form-group #{(errors or {}).get('dni') and 'o_has_error' or ''} col-lg-6">
+                <div t-attf-class="form-group {{ (errors or {}).get('dni') and 'o_has_error' or '' }} col-lg-6">
                     <label class="col-form-label" for="dni">DNI</label>
                     <input type="text" name="dni"
                            t-att-value="partner.dni"
                            class="form-control"
                            required="True"/>
-                    <t t-if="(errors or {}).get('dni')">
-                        <span t-attf-class="badge badge-danger">
-                            <t t-esc="(errors or {}).get('dni')"/>
-                        </span>
-                    </t>
                 </div>
             </xpath>
         </template>
