@@ -1,6 +1,6 @@
 <odoo>
     <data>
-        <template id="dni_field_on_checkout_correction" inherit_id="website_sale.address_name">
+        <template id="dni_field_on_checkout_v2" inherit_id="website_sale.checkout_form">
             <xpath expr="//div[@id='div_phone']" position="after">
                 <div t-attf-class="form-group #{error.get('dni') and 'o_has_error' or ''} col-lg-6">
                     <label class="col-form-label" for="dni">DNI</label>
