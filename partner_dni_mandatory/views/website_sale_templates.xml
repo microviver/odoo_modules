@@ -8,6 +8,11 @@
                            t-att-value="partner.dni"
                            class="form-control"
                            required="True"/>
+                    <t t-if="(errors or {}).get('dni')">
+                        <span t-attf-class="badge badge-danger">
+                            <t t-esc="(errors or {}).get('dni')"/>
+                        </span>
+                    </t>
                 </div>
             </xpath>
         </template>
