@@ -1,13 +1,8 @@
-<odoo>
-    <data>
-        <template id="dni_field_on_checkout" inherit_id="website_sale.checkout_billing_address">
-            <xpath expr="//div[@id='div_phone']" position="after">
-                <div t-attf-class="form-group #{error.get('dni') and 'o_has_error' or ''} col-lg-6">
-                    <label class="col-form-label" for="dni">DNI</label>
-                    <input type="text" name="dni" t-att-value="partner.dni" 
-                        class="form-control" required="True"/>
-                </div>
-            </xpath>
-        </template>
-    </data>
-</odoo>
+<data inherit_id="website_sale.address">
+    <xpath expr="//div[@id='div_phone']" position="after">
+        <div t-attf-class="form-group #{error.get('dni') and 'o_has_error' or ''} col-lg-6">
+            <label class="col-form-label" for="dni">DNI</label>
+            <input type="text" name="dni" t-att-value="partner.dni" class="form-control" required="True"/>
+        </div>
+    </xpath>
+</data>
