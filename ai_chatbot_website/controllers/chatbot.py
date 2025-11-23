@@ -39,8 +39,9 @@ class AIChatbotController(http.Controller):
                 return {'error': 'Pergunta não fornecida'}
 
             # 2. Buscar API Key da variável de ambiente
-            api_key = AIChatbotController.carregar_api_key()
-
+            #api_key = AIChatbotController.carregar_api_key()
+            api_key = os.environ.get('OPEN_AI_KEY')
+            
             if not api_key:
                 return {'error': 'API Key ausente ou inválida'}
 
