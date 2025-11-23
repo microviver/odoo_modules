@@ -40,7 +40,7 @@ class AIChatbotController(http.Controller):
 
             # 2. Buscar API Key da variável de ambiente
             #api_key = AIChatbotController.carregar_api_key()
-            api_key = os.environ.get('OPEN_AI_KEY')
+            api_key = request.env['ir.config_parameter'].sudo().get_param('microviver.openai_api_key')
             
             if not api_key:
                 return {'error': 'API Key ausente ou inválida'}
